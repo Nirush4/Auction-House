@@ -69,7 +69,7 @@ function template(): string {
         </form>
 
         <!-- Footer -->
-        <p class="mt-8 text-center text-xs sm:text-sm md:text-sm text-gray-500">
+        <p class="mt-8 text-center text-sm md:text-base text-gray-500">
           Don’t have an account?
           <a href="/register" class="font-semibold text-indigo-500 hover:text-indigo-400">Register</a>
         </p>

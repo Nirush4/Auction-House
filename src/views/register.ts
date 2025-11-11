@@ -50,6 +50,7 @@ function template(): string {
             >
               Email
             </label>
+             <lable class="text-gray-400">Only stud.noroff.no emails are allowed to register.</lable>
             <p id="emailError" class="mt-1 text-xs sm:text-sm text-red-500 hidden"></p>
           </div>
 
@@ -59,10 +60,11 @@ function template(): string {
               type="password"
               id="password"
               name="password"
-              placeholder=" "
+              placeholder=""
               required
               class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
             />
+
             <label
               for="password"
               class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
@@ -103,7 +105,7 @@ function template(): string {
         </form>
 
         <!-- Footer -->
-        <p class="mt-8 text-center text-xs sm:text-sm md:text-sm text-gray-500">
+        <p class="mt-8 text-center text-sm md:text-base text-gray-500">
           Already have an account?
           <a href="/login" class="font-semibold text-indigo-500 hover:text-indigo-400">Login</a>
         </p>
