@@ -3,12 +3,14 @@ import { getLocalItem } from '../utils/storage.js';
 
 function template(): string {
   return `
-    <section class=" flex justify-center pt-20 pb-10">
-      <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl p-8 sm:p-10 border border-gray-200">
+    <section class="flex justify-center pt-35">
+      <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">Auction House</h1>
-          <p class="mt-2 text-gray-500 text-sm sm:text-base md:text-lg">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
+            Auction House
+          </h1>
+          <p class="mt-2 text-gray-500 text-base sm:text-lg">
             Create your account to participate in auctions
           </p>
         </div>
@@ -23,15 +25,15 @@ function template(): string {
               name="name"
               placeholder=" "
               required
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"
             />
             <label
               for="name"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Username
             </label>
-            <p id="nameError" class="mt-1 text-xs sm:text-sm text-red-500 hidden"></p>
+            <p id="nameError" class="mt-1 text-xs sm:text-sm md:text-sm text-red-500 hidden"></p>
           </div>
 
           <!-- Email -->
@@ -42,16 +44,16 @@ function template(): string {
               name="email"
               placeholder=" "
               required
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"
             />
             <label
               for="email"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Email
             </label>
-             <lable class="text-gray-400">Only stud.noroff.no emails are allowed to register.</lable>
-            <p id="emailError" class="mt-1 text-xs sm:text-sm text-red-500 hidden"></p>
+            <p class="mt-1 text-gray-400 text-xs sm:text-sm">Only <strong>stud.noroff.no</strong> emails are allowed to register.</p>
+            <p id="emailError" class="mt-1 text-xs sm:text-sm md:text-sm text-red-500 hidden"></p>
           </div>
 
           <!-- Password -->
@@ -60,18 +62,17 @@ function template(): string {
               type="password"
               id="password"
               name="password"
-              placeholder=""
+              placeholder=" "
               required
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"
             />
-
             <label
               for="password"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Password
             </label>
-            <p id="passwordError" class="mt-1 text-xs sm:text-sm text-red-500 hidden"></p>
+            <p id="passwordError" class="mt-1 text-xs sm:text-sm md:text-sm text-red-500 hidden"></p>
           </div>
 
           <!-- Avatar URL -->
@@ -81,21 +82,21 @@ function template(): string {
               id="avatarUrl"
               name="avatarUrl"
               placeholder=" "
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"
             />
             <label
               for="avatarUrl"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Avatar URL (optional)
             </label>
           </div>
 
-          <!-- Submit Button -->
+          <!-- Submit -->
           <button
             type="submit"
             id="submitBtn"
-            class="w-full rounded-xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 px-4 py-3 font-bold text-white shadow-lg hover:scale-105 transform transition duration-300 disabled:opacity-50 text-sm sm:text-base md:text-base cursor-pointer"
+            class="w-full rounded-xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 px-4 py-3 font-bold text-white shadow-lg hover:scale-105 transform transition duration-300 disabled:opacity-50 cursor-pointer text-sm sm:text-base md:text-base"
           >
             Create Account
           </button>
@@ -124,12 +125,8 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
   const emailEl = root.querySelector<HTMLInputElement>('#email')!;
   const passwordEl = root.querySelector<HTMLInputElement>('#password')!;
 
-  root.querySelector<HTMLParagraphElement>('#passwordError')!;
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // ... your existing validation ...
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Creating account...';
@@ -141,7 +138,6 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
         password: passwordEl.value,
       });
 
-      // Optional: create per-user API key once
       const accessToken = getLocalItem<string>('accessToken');
       if (accessToken) {
         try {
@@ -155,7 +151,7 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
       formError.classList.remove('hidden');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Create account';
+      submitBtn.textContent = 'Create Account';
     }
   });
 }

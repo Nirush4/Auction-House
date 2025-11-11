@@ -3,14 +3,14 @@ import { getLocalItem } from '../utils/storage.js';
 
 function template(): string {
   return `
-    <section class=" flex justify-center pt-20">
+    <section class=" flex justify-center pt-35">
       <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
             Auction House
           </h1>
-          <p class="mt-2 text-gray-500 text-sm sm:text-base md:text-lg">
+          <p class="mt-2 text-gray-500 text-base sm:text-lg">
             Sign in to access exclusive auctions and bids
           </p>
         </div>
@@ -25,11 +25,11 @@ function template(): string {
               name="email"
               placeholder=" "
               required
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"
             />
             <label
               for="email"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Email
             </label>
@@ -44,11 +44,11 @@ function template(): string {
               name="password"
               placeholder=" "
               required
-              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base md:text-base"
+              class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 leading-[2.2] pt-5 pb-2 text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-sm sm:text-base "
             />
             <label
               for="password"
-              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-sm md:text-sm transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
+              class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm"
             >
               Password
             </label>
