@@ -55,7 +55,7 @@ The goal is to create a responsive, accessible, and user-friendly interface that
 
 ## 🗂️ Project Structure
 
-````auction-house
+```auction-house
 project-root/
 ├── index.html
 ├── tsconfig.json
@@ -102,7 +102,7 @@ project-root/
         ├── storage.ts
         └── validation.ts
 
----
+```
 
 ## ⚙️ Getting Started
 
@@ -110,7 +110,7 @@ project-root/
 
 ```bash
 git clone https://github.com/Nirush4/Semester-Project-2
-````
+```
 
 ```bash
 npm install
