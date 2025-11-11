@@ -11,21 +11,21 @@ export function renderFooter(): string {
           Auction <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">House</span>
         </p>
 
-        <p class="mt-2 text-sm text-gray-500">
+        <p class="mt-2 text-sm sm:text-base text-gray-500">
           Discover, bid, and win exclusive items in our trusted online auction marketplace.
         </p>
 
         <!-- Links -->
         <div class="flex justify-center gap-6 mt-6 text-sm">
-          <a href="/" class="text-gray-600 hover:text-indigo-500 transition-colors">Home</a>
-          <a href="/search" class="text-gray-600 hover:text-indigo-500 transition-colors">Search</a>
-          <a href="/login" class="text-gray-600 hover:text-indigo-500 transition-colors">Login</a>
-          <a href="/register" class="text-gray-600 hover:text-indigo-500 transition-colors">Register</a>
+          <a href="/" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Home</a>
+          <a href="/search" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Search</a>
+          <a href="/login" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Login</a>
+          <a href="/register" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Register</a>
         </div>
 
         <!-- Divider -->
         <div class="mt-8 border-t border-gray-200 pt-4">
-          <p class="text-xs text-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved.</p>
+          <p class="text-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved.</p>
         </div>
       </div>
 
