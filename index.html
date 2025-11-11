@@ -4,13 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="./src//styles/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Semester-Project-2</title>
+  <title>SP2 Auction SPA</title>
 </head>
 
-<body>
-  <div id="app"></div>
-  <h1 class="text-xl text-red-500">Hei</h1>
+<body class="min-h-screen bg-gray-50 text-gray-900">
+  <div id="app-root" class="flex min-h-screen flex-col">
+    <header id="navbar" class="sticky top-0 z-30"></header>
+    <main id="app" class="container mx-auto flex-1 px-4 py-6"></main>
+    <footer id="footer" class="mt-8"></footer>
+  </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
 
