@@ -19,15 +19,52 @@ interface Route {
 
 function mountNavbar() {
   const header = document.getElementById('navbar');
-  if (header) {
-    header.innerHTML = renderNavbar();
-    const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        await logout();
-        navigateTo('/');
-      });
-    }
+  if (!header) return;
+
+  header.innerHTML = renderNavbar();
+
+  // Desktop logout button
+  const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      await logout();
+      navigateTo('/');
+    });
+  }
+
+  // Mobile logout button
+  const mobileLogoutBtn =
+    header.querySelector<HTMLButtonElement>('#mobileLogoutBtn');
+  if (mobileLogoutBtn) {
+    mobileLogoutBtn.addEventListener('click', async () => {
+      await logout();
+      navigateTo('/');
+    });
+  }
+
+  // Mobile menu toggle
+  const menuBtn = header.querySelector<HTMLButtonElement>('#menuBtn');
+  const mobileMenu = header.querySelector<HTMLDivElement>('#mobileMenu');
+
+  if (menuBtn && mobileMenu) {
+    const [line1, line2, line3] =
+      menuBtn.querySelectorAll<HTMLSpanElement>('span');
+
+    menuBtn.addEventListener('click', () => {
+      if (mobileMenu.classList.contains('max-h-0')) {
+        mobileMenu.classList.remove('max-h-0');
+        mobileMenu.classList.add('max-h-96');
+      } else {
+        mobileMenu.classList.add('max-h-0');
+        mobileMenu.classList.remove('max-h-96');
+      }
+
+      line1.classList.toggle('rotate-45');
+      line3.classList.toggle('-rotate-45');
+      line2.classList.toggle('opacity-0');
+      line1.classList.toggle('translate-y-1.5');
+      line3.classList.toggle('-translate-y-1.5');
+    });
   }
 }
 
@@ -111,7 +148,7 @@ export async function router(): Promise<void> {
   }
 
   app.innerHTML = `
-    <div class="rounded border border-yellow-200 bg-yellow-50 p-4 text-yellow-800">
+    <div class="rounded border border-yellow-200 mt-20 bg-yellow-50 p-4 text-yellow-800">
       <p>Page not found.</p>
       <a class="text-indigo-600 hover:text-indigo-500" href="/">Go home</a>
     </div>
