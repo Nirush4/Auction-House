@@ -102,6 +102,7 @@ project-root/
         ├── storage.ts
         └── validation.ts
 
+---
 
 ## ⚙️ Getting Started
 
