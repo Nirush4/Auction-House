@@ -57,44 +57,51 @@ The goal is to create a responsive, accessible, and user-friendly interface that
 
 ## 🗂️ Project Structure
 
-/project-root
+project-root/
 ├── index.html
 ├── tsconfig.json
 ├── tailwind.config.js
 ├── postcss.config.js
 ├── package.json
 ├── README.md
-├── /styles
-│ └── index.css
-├── /src
-│ ├── main.ts
-│ ├── router.ts
-│ ├── /assets
-│ │ └── images/
-│ │ └── icons/
-│ ├── /types
-│ │ └── listing.ts
-│ │ └── profile.ts
-│ ├── /api
-│ │ ├── auth.ts
-│ │ └── bids.ts
-│ │ └── listings.ts
-│ │ └── profile.ts
-│ ├── /views
-│ │ ├── home.ts
-│ │ ├── login.ts
-│ │ ├── register.ts
-│ │ ├── profile.ts
-│ │ ├── createListing.ts
-│ │ └── listingDetails.ts
-│ ├── /components
-│ │ ├── navbar.ts
-│ │ └── footer.ts
-│ └── /utils
-│ ├── storage.ts
-│ └── validation.ts
-└── /styles
-└── styles.css (built by Tailwind)
+│
+├── styles/
+│ ├── index.css
+│ └── styles.css # built by Tailwind
+│
+└── src/
+├── main.ts
+├── router.ts
+│
+├── assets/
+│ ├── images/
+│ └── icons/
+│
+├── types/
+│ ├── listing.ts
+│ └── profile.ts
+│
+├── api/
+│ ├── auth.ts
+│ ├── bids.ts
+│ ├── listings.ts
+│ └── profile.ts
+│
+├── views/
+│ ├── home.ts
+│ ├── login.ts
+│ ├── register.ts
+│ ├── profile.ts
+│ ├── createListing.ts
+│ └── listingDetails.ts
+│
+├── components/
+│ ├── navbar.ts
+│ └── footer.ts
+│
+└── utils/
+├── storage.ts
+└── validation.ts
 
 ---
 
