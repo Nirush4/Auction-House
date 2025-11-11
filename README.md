@@ -53,10 +53,9 @@ The goal is to create a responsive, accessible, and user-friendly interface that
 | Planning   | **Trello / GitHub Projects**        |
 | Design     | **Figma**                           |
 
----
-
 ## 🗂️ Project Structure
 
+````auction-house
 project-root/
 ├── index.html
 ├── tsconfig.json
@@ -66,44 +65,43 @@ project-root/
 ├── README.md
 │
 ├── styles/
-│ ├── index.css
-│ └── styles.css # built by Tailwind
+│   ├── index.css
+│   └── styles.css # built by Tailwind
 │
 └── src/
-├── main.ts
-├── router.ts
-│
-├── assets/
-│ ├── images/
-│ └── icons/
-│
-├── types/
-│ ├── listing.ts
-│ └── profile.ts
-│
-├── api/
-│ ├── auth.ts
-│ ├── bids.ts
-│ ├── listings.ts
-│ └── profile.ts
-│
-├── views/
-│ ├── home.ts
-│ ├── login.ts
-│ ├── register.ts
-│ ├── profile.ts
-│ ├── createListing.ts
-│ └── listingDetails.ts
-│
-├── components/
-│ ├── navbar.ts
-│ └── footer.ts
-│
-└── utils/
-├── storage.ts
-└── validation.ts
+    ├── main.ts
+    ├── router.ts
+    │
+    ├── assets/
+    │   ├── images/
+    │   └── icons/
+    │
+    ├── types/
+    │   ├── listing.ts
+    │   └── profile.ts
+    │
+    ├── api/
+    │   ├── auth.ts
+    │   ├── bids.ts
+    │   ├── listings.ts
+    │   └── profile.ts
+    │
+    ├── views/
+    │   ├── home.ts
+    │   ├── login.ts
+    │   ├── register.ts
+    │   ├── profile.ts
+    │   ├── createListing.ts
+    │   └── listingDetails.ts
+    │
+    ├── components/
+    │   ├── navbar.ts
+    │   └── footer.ts
+    │
+    └── utils/
+        ├── storage.ts
+        └── validation.ts
 
----
 
 ## ⚙️ Getting Started
 
@@ -111,7 +109,7 @@ project-root/
 
 ```bash
 git clone https://github.com/Nirush4/Semester-Project-2
-```
+````
 
 ```bash
 npm install
