@@ -1,13 +1,13 @@
 export function renderFooter(): string {
   const year = new Date().getFullYear();
   return `
-    <footer class="relative mt-12 bg-white/60 backdrop-blur-xl border-t border-gray-200 shadow-inner">
-      <div class="container mx-auto px-6 py-8 text-center">
+    <footer class="relative bg-white/60 backdrop-blur-xl border-t border-gray-200 shadow-inner">
+      <div class="container mx-auto px-6 py-6 text-center">
         <!-- Gradient line -->
         <div class="mx-auto mb-6 h-[2px] w-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full"></div>
 
         <!-- Brand / Description -->
-        <p class="text-base sm:text-lg font-semibold text-gray-800">
+        <p class="text-lg sm:text-xl font-semibold text-gray-800">
           Auction <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">House</span>
         </p>
 
@@ -25,7 +25,9 @@ export function renderFooter(): string {
 
         <!-- Divider -->
         <div class="mt-8 border-t border-gray-200 pt-4">
-          <p class="text-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved.</p>
+          <p class="text-sm ext-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved. Made with ❤️ by <a href="https://www.linkedin.com/in/nirushan-rajamanoharan/" target="_blank" 
+    rel="noopener noreferrer" 
+    class="font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"> NIRUSH. </a></p>
         </div>
       </div>
 
