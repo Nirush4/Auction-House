@@ -1,10 +1,11 @@
-// import { HomeView } from './views/home.js';
+import { HomeView } from './views/home.js';
 import { LoginView } from './views/login.js';
 import { RegisterView } from './views/register.js';
 import { renderNavbar } from './components/navbar.js';
 import { renderFooter } from './components/footer.js';
 import { isAuthenticated } from './utils/storage.js';
 import { logout } from './api/auth.js';
+import { showToast } from './utils/toast.js';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -28,6 +29,7 @@ function mountNavbar() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       await logout();
+      showToast('success', '✅ You have been logged out!');
       navigateTo('/');
     });
   }
@@ -38,6 +40,7 @@ function mountNavbar() {
   if (mobileLogoutBtn) {
     mobileLogoutBtn.addEventListener('click', async () => {
       await logout();
+      showToast('success', '✅ You have been logged out!');
       navigateTo('/');
     });
   }
@@ -88,7 +91,17 @@ function parseParams(
 
 // 🧭 Define routes without #
 const routes: Route[] = [
-  // { path: /^\/$/, handler: (root) => HomeView(root) },
+  {
+    path: /^\/$/,
+    handler: (root) => {
+      if (isAuthenticated()) {
+        navigateTo('/home');
+      } else {
+        HomeView(root);
+      }
+    },
+  },
+  { path: /^\/home\/?$/, handler: (root) => HomeView(root) },
   { path: /^\/login\/?$/, handler: (root) => LoginView(root) },
   { path: /^\/register\/?$/, handler: (root) => RegisterView(root) },
   {
@@ -119,7 +132,6 @@ const routes: Route[] = [
   },
 ];
 
-// 🚀 Navigation helper (uses history.pushState)
 export function navigateTo(path: string) {
   history.pushState({}, '', path);
   router();
@@ -155,12 +167,10 @@ export async function router(): Promise<void> {
   `;
 }
 
-// 🔁 Handle browser back/forward buttons
 window.addEventListener('popstate', () => {
   router();
 });
 
-// 🔧 Initialize router and intercept <a> clicks
 export function initRouter(): void {
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLAnchorElement;

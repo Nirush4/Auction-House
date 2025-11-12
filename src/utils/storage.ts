@@ -1,39 +1,35 @@
-// storage.ts
 const TOKEN_KEY = 'accessToken';
-const USER_KEY = 'user';
+const USER_NAME = 'userName';
 const API_KEY_KEY = 'api_key';
 
 export function saveAuth(token: string, user: unknown, apiKey?: string) {
   localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+  localStorage.setItem(USER_NAME, JSON.stringify(user));
   if (apiKey) localStorage.setItem(API_KEY_KEY, apiKey);
-}
-
-export function setApiKey(apiKey: string) {
-  localStorage.setItem(API_KEY_KEY, apiKey);
 }
 
 export function clearAuth() {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(USER_NAME);
   localStorage.removeItem(API_KEY_KEY);
+}
+
+// Optional: remove only the user
+export function clearUser() {
+  localStorage.removeItem(USER_NAME);
 }
 
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
 
-export function getApiKey(): string | null {
-  return localStorage.getItem(API_KEY_KEY);
-}
-
 export function getUser<T = unknown>(): T | null {
-  const raw = localStorage.getItem(USER_KEY);
+  const raw = localStorage.getItem(USER_NAME);
   if (!raw || raw === 'undefined' || raw === 'null') return null;
   try {
     return JSON.parse(raw) as T;
   } catch {
-    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(USER_NAME);
     return null;
   }
 }
