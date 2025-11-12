@@ -34,7 +34,12 @@ export async function register(
   });
 
   const data = await handleResponse<AuthResponse>(res);
-  saveAuth(data.accessToken, data.user);
+  console.log('Register response:', data);
+
+  // Try to find user object in response:
+  const user = data.user ?? data; // fallback to entire data if no user key
+
+  saveAuth(data.accessToken, user);
   return data;
 }
 
@@ -49,7 +54,12 @@ export async function login(
   });
 
   const data = await handleResponse<AuthResponse>(res);
-  saveAuth(data.accessToken, data.user);
+  console.log('Login response:', data);
+
+  // Try to find user object in response:
+  const user = data.user ?? data;
+
+  saveAuth(data.accessToken, user);
   return data;
 }
 

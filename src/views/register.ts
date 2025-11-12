@@ -1,13 +1,14 @@
 import { registerUser, fetchApiKey } from '../api/client.js';
 import { getLocalItem } from '../utils/storage.js';
+import { showToast } from '../utils/toast.js';
 
 function template(): string {
   return `
     <section class="flex justify-center pt-35">
-      <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
+      <div class="w-full max-w-md mb-16 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
             Auction House
           </h1>
           <p class="mt-2 text-gray-500 text-base sm:text-lg">
@@ -52,7 +53,7 @@ function template(): string {
             >
               Email
             </label>
-            <p class="mt-1 text-gray-400 text-xs sm:text-sm">Only <strong>stud.noroff.no</strong> emails are allowed to register.</p>
+            <p class="mt-1 text-gray-400 text-xs sm:text-sm">Only <strong class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">@stud.noroff.no</strong> emails are allowed to register.</p>
             <p id="emailError" class="mt-1 text-xs sm:text-sm md:text-sm text-red-500 hidden"></p>
           </div>
 
@@ -116,7 +117,7 @@ function template(): string {
 }
 
 export async function RegisterView(root: HTMLElement): Promise<void> {
-  root.innerHTML = template();
+  root.innerHTML = template(); // your template function remains the same
 
   const form = root.querySelector<HTMLFormElement>('#registerForm')!;
   const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!;
@@ -127,9 +128,9 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     submitBtn.disabled = true;
     submitBtn.textContent = 'Creating account...';
+    formError.classList.add('hidden');
 
     try {
       await registerUser({
@@ -145,10 +146,12 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
         } catch {}
       }
 
+      showToast('success', 'Account created! Please log in.');
       window.location.hash = '/login';
     } catch (err) {
       formError.textContent = (err as Error).message;
       formError.classList.remove('hidden');
+      showToast('error', (err as Error).message);
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Create Account';
