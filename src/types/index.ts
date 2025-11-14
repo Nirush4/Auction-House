@@ -13,6 +13,7 @@ export interface RegisterPayload extends AuthCredentials {
 }
 
 export interface Profile {
+  id: string;
   data: any;
   _count: any;
   banner: any;

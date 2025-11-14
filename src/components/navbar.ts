@@ -1,6 +1,5 @@
 import { isAuthenticated, getUser, clearAuth } from '../utils/storage.js';
 import { navigateTo } from '../router.js';
-import type { Profile } from '../types/index.js';
 
 export function renderNavbar() {
   const authed = isAuthenticated();
