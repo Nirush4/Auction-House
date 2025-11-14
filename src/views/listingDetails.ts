@@ -195,8 +195,11 @@ export async function ListingDetailsView(
 
   try {
     const listing = await getListing(params.id);
-    root.innerHTML = listingTemplate(listing, currentUser ?? null);
-    attachHandlers(root, listing, currentUser ?? null);
+    root.innerHTML = listingTemplate(
+      listing,
+      currentUser as unknown as Profile | null
+    );
+    attachHandlers(root, listing, currentUser as unknown as Profile | null);
   } catch (err) {
     root.innerHTML = `
       <div class="rounded border border-red-200 bg-red-50 p-4 text-red-700">
