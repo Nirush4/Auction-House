@@ -127,13 +127,12 @@ export async function HomeView(root: HTMLElement): Promise<void> {
 
   try {
     const listings = await getListings({
-      limit: 12,
+      limit: 18,
       sort: 'created',
       sortOrder: 'desc',
       _seller: true,
       _bids: true,
     });
-
     if (!listings || listings.length === 0) {
       grid.innerHTML = `
         <div class="col-span-full text-center py-12">
