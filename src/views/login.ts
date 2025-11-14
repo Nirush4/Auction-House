@@ -128,7 +128,7 @@ export async function LoginView(root: HTMLElement): Promise<void> {
         password: passwordEl.value,
       });
 
-      const accessToken = getLocalItem<string>('accessToken');
+      const accessToken = getLocalItem('accessToken');
       if (accessToken) {
         try {
           await fetchApiKey(accessToken);
