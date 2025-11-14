@@ -1,4 +1,5 @@
 import { registerUser, fetchApiKey } from '../api/client.js';
+import { navigateTo } from '../router.js';
 import { getLocalItem } from '../utils/storage.js';
 import { showToast } from '../utils/toast.js';
 
@@ -139,7 +140,7 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
         password: passwordEl.value,
       });
 
-      const accessToken = getLocalItem<string>('accessToken');
+      const accessToken = getLocalItem('accessToken');
       if (accessToken) {
         try {
           await fetchApiKey(accessToken);
@@ -147,7 +148,7 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
       }
 
       showToast('success', 'Account created! Please log in.');
-      window.location.hash = '/login';
+      navigateTo('/login');
     } catch (err) {
       formError.textContent = (err as Error).message;
       formError.classList.remove('hidden');
