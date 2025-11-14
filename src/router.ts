@@ -6,6 +6,7 @@ import { renderFooter } from './components/footer.js';
 import { isAuthenticated } from './utils/storage.js';
 import { logout } from './api/auth.js';
 import { showToast } from './utils/toast.js';
+import { ProfileView } from './views/profile.js';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -106,11 +107,10 @@ const routes: Route[] = [
   { path: /^\/register\/?$/, handler: (root) => RegisterView(root) },
   {
     path: /^\/profile\/?$/,
-    handler: async (root) => {
-      root.innerHTML = '<p>Profile page (TODO)</p>';
-    },
+    handler: async (root) => ProfileView(root),
     protected: true,
   },
+  // Removed the extra comma
   {
     path: /^\/create\/?$/,
     handler: async (root) => {

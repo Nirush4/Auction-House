@@ -14,7 +14,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
   const data = text ? JSON.parse(text) : null;
 
   if (!res.ok) {
-    // Grab error message from API if available
     const message =
       (data && (data.errors?.[0]?.message || data.message)) || res.statusText;
     throw new Error(message);
@@ -23,7 +22,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return data as T;
 }
 
-// Register new user
+// 🧩 Register new user
 export async function register(
   payload: RegisterPayload
 ): Promise<AuthResponse> {
@@ -34,16 +33,17 @@ export async function register(
   });
 
   const data = await handleResponse<AuthResponse>(res);
-  console.log('Register response:', data);
 
-  // Try to find user object in response:
-  const user = data.user ?? data; // fallback to entire data if no user key
+  // Normalize user object
+  const user = data.user ?? data.data ?? data;
+  const userObj = typeof user === 'string' ? { name: user } : user;
 
-  saveAuth(data.accessToken, user);
+  // ✅ Save token + user consistently
+  saveAuth(data.accessToken, userObj, undefined);
   return data;
 }
 
-// Login existing user
+// 🧩 Login existing user
 export async function login(
   credentials: AuthCredentials
 ): Promise<AuthResponse> {
@@ -54,16 +54,18 @@ export async function login(
   });
 
   const data = await handleResponse<AuthResponse>(res);
-  console.log('Login response:', data);
 
-  // Try to find user object in response:
-  const user = data.user ?? data;
+  const user = data.user ?? data.data ?? data;
+  const userObj = typeof user === 'string' ? { name: user } : user;
 
-  saveAuth(data.accessToken, user);
+  // ✅ Save token + user consistently
+  saveAuth(data.accessToken, userObj, undefined);
   return data;
 }
 
+// 🧩 Logout and clear session
 export async function logout() {
   localStorage.removeItem('accessToken');
+  localStorage.removeItem('user');
   localStorage.removeItem('apiKey');
 }

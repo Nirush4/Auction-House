@@ -13,6 +13,10 @@ export interface RegisterPayload extends AuthCredentials {
 }
 
 export interface Profile {
+  id: string;
+  data: any;
+  _count: any;
+  banner: any;
   name: string;
   email: string;
   bio?: string;
@@ -24,6 +28,7 @@ export interface Profile {
 }
 
 export interface AuthResponse {
+  data: Profile;
   accessToken: string;
   user: Profile;
 }
@@ -34,6 +39,8 @@ export interface MediaItem {
 }
 
 export interface Bid {
+  bidder: any;
+  listing: any;
   id: string;
   amount: number;
   bidderName: string;
@@ -41,6 +48,8 @@ export interface Bid {
 }
 
 export interface Listing {
+  price: number;
+  tags: any;
   id: string;
   title: string;
   description?: string;

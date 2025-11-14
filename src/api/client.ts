@@ -21,10 +21,7 @@ export class ApiError extends Error {
 
 /* ------------------------- TOKEN HELPERS ------------------------- */
 export function getToken(): string | null {
-  const raw =
-    getLocalItem<string>('accessToken') ??
-    getLocalItem<string>('token') ??
-    null;
+  const raw = getLocalItem('accessToken') ?? getLocalItem('token') ?? null;
 
   if (!raw) return null;
   if (typeof raw === 'string') return raw;
@@ -65,7 +62,7 @@ export async function apiClient<T = unknown>(
   };
 
   // Headers: API key (env or saved), Authorization
-  const savedApiKey = getLocalItem<string>('apiKey');
+  const savedApiKey = getLocalItem('apiKey');
   const apiKey = PUBLIC_API_KEY || savedApiKey || null;
   const accessToken = getToken();
 
@@ -182,12 +179,17 @@ export async function loginUser(data: { email: string; password: string }) {
     body: JSON.stringify(data),
   });
   const json = await res.json();
+
   if (!res.ok) {
     const message = json?.errors?.[0]?.message || 'Login failed';
     throw new ApiError(message, res.status);
   }
   const token = json?.data?.accessToken || json?.accessToken;
-  if (typeof token === 'string') setToken(token);
+  const username = json?.data?.name || json?.name;
+  if (!token || !username) throw new Error('Missing token or username');
+
+  setLocalItem('accessToken', token);
+  setLocalItem('username', username);
   return json;
 }
 
@@ -210,7 +212,11 @@ export async function registerUser(data: {
     throw new ApiError(message, res.status);
   }
   const token = json?.data?.accessToken || json?.accessToken;
-  if (typeof token === 'string') setToken(token);
+  const username = json?.data?.name || json?.name;
+  if (!token || !username) throw new Error('Missing token or username');
+
+  setLocalItem('accessToken', token);
+  setLocalItem('username', username);
   return json;
 }
 
