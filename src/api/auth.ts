@@ -68,4 +68,5 @@ export async function logout() {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('user');
   localStorage.removeItem('apiKey');
+  localStorage.removeItem('username');
 }

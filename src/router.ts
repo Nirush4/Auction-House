@@ -7,6 +7,7 @@ import { isAuthenticated } from './utils/storage.js';
 import { logout } from './api/auth.js';
 import { showToast } from './utils/toast.js';
 import { ProfileView } from './views/profile.js';
+import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay.js';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -19,32 +20,37 @@ interface Route {
   protected?: boolean;
 }
 
-function mountNavbar() {
+export function mountNavbar() {
   const header = document.getElementById('navbar');
   if (!header) return;
 
   header.innerHTML = renderNavbar();
 
-  // Desktop logout button
-  const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
+  // Logout handler with loading overlay
+  async function handleLogout() {
+    showLoadingOverlay({ message: 'Logging you out...' });
+
+    try {
       await logout();
       showToast('success', '✅ You have been logged out!');
-      navigateTo('/');
-    });
+      setTimeout(() => {
+        hideLoadingOverlay();
+        navigateTo('/login');
+      }, 1000);
+    } catch (err) {
+      showToast('error', '❌ Logout failed.');
+      hideLoadingOverlay();
+    }
   }
+
+  // Desktop logout button
+  const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
+  if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
 
   // Mobile logout button
   const mobileLogoutBtn =
     header.querySelector<HTMLButtonElement>('#mobileLogoutBtn');
-  if (mobileLogoutBtn) {
-    mobileLogoutBtn.addEventListener('click', async () => {
-      await logout();
-      showToast('success', '✅ You have been logged out!');
-      navigateTo('/');
-    });
-  }
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
 
   // Mobile menu toggle
   const menuBtn = header.querySelector<HTMLButtonElement>('#menuBtn');
