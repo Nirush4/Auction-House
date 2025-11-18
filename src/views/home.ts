@@ -12,14 +12,14 @@ function formatExactDateTime(endsAt: string): string {
   });
 }
 
-// Function to handle bid button click (customize as needed)
-function handleBid(listingId: string) {
-  // Example: Navigate to bid page for that listing
-  window.location.href = `/listingDetails/${listingId}/bid`;
+// // Function to handle bid button click (customize as needed)
+// function handleBid(listingId: string) {
+//   // Example: Navigate to bid page for that listing
+//   window.location.href = `/listingDetails/${listingId}/bid`;
 
-  // Or open a bid modal/dialog here instead
-  // ...
-}
+//   // Or open a bid modal/dialog here instead
+//   // ...
+// }
 
 function listingCard(listing: Listing): string {
   const user = getUser(); // detect logged-in state

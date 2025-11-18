@@ -114,14 +114,13 @@ export async function LoginView(root: HTMLElement): Promise<void> {
   const formError = root.querySelector<HTMLDivElement>('#formError')!;
   const emailEl = root.querySelector<HTMLInputElement>('#email')!;
   const passwordEl = root.querySelector<HTMLInputElement>('#password')!;
-  const loadingOverlay = root.querySelector<HTMLDivElement>('#loadingOverlay')!;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     formError.classList.add('hidden');
     submitBtn.disabled = true;
 
-    const overlay = showLoadingOverlay({ message: 'Logging you in...' });
+    showLoadingOverlay({ message: 'Logging you in...' });
 
     try {
       await loginUser({
