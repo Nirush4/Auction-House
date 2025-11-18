@@ -28,7 +28,7 @@ export function mountNavbar() {
 
   // Logout handler with loading overlay
   async function handleLogout() {
-    const overlay = showLoadingOverlay({ message: 'Logging you out...' });
+    showLoadingOverlay({ message: 'Logging you out...' });
 
     try {
       await logout();
