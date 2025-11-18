@@ -65,6 +65,17 @@ export function renderNavbar() {
   `;
 }
 
+export function updateNavbarUser() {
+  const user = getUser();
+  const username = user;
+  const navbarProfile = document.getElementById('navbarProfile');
+  const mobileProfile = document.getElementById('mobileProfile');
+
+  if (navbarProfile)
+    navbarProfile.textContent = `Hei, ${username || 'Profile'}`;
+  if (mobileProfile)
+    mobileProfile.textContent = `Hei, ${username || 'Profile'}`;
+}
 export function setupNavbarActions() {
   const logoutBtn = document.getElementById('logoutBtn');
   const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
@@ -76,16 +87,4 @@ export function setupNavbarActions() {
 
   if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
   if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
-}
-
-export function updateNavbarUser() {
-  const user = getUser();
-  const username = user;
-  const navbarProfile = document.getElementById('navbarProfile');
-  const mobileProfile = document.getElementById('mobileProfile');
-
-  if (navbarProfile)
-    navbarProfile.textContent = `Hei, ${username || 'Profile'}`;
-  if (mobileProfile)
-    mobileProfile.textContent = `Hei, ${username || 'Profile'}`;
 }

@@ -2,6 +2,7 @@ import { loginUser, fetchApiKey } from '../api/client.js';
 import { navigateTo } from '../router.js';
 import { getLocalItem } from '../utils/storage.js';
 import { showToast } from '../utils/toast.js';
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay.js';
 
 function template(): string {
   return `
@@ -118,9 +119,9 @@ export async function LoginView(root: HTMLElement): Promise<void> {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     formError.classList.add('hidden');
-
     submitBtn.disabled = true;
-    loadingOverlay.classList.remove('hidden');
+
+    const overlay = showLoadingOverlay({ message: 'Logging you in...' });
 
     try {
       await loginUser({
@@ -129,26 +130,18 @@ export async function LoginView(root: HTMLElement): Promise<void> {
       });
 
       const accessToken = getLocalItem('accessToken');
-      if (accessToken) {
-        try {
-          await fetchApiKey(accessToken);
-        } catch {}
-      }
+      if (accessToken) await fetchApiKey(accessToken);
 
       showToast('success', '✅ You’re successfully logged in!');
-
       setTimeout(() => {
-        loadingOverlay.classList.add('hidden');
+        hideLoadingOverlay();
         navigateTo('/home');
       }, 1500);
     } catch (err) {
       formError.textContent = (err as Error).message;
       formError.classList.remove('hidden');
-      showToast('error', '❌ Login failed. Please check your credentials.');
-
-      setTimeout(() => {
-        loadingOverlay.classList.add('hidden');
-      }, 800);
+      showToast('error', '❌ Login failed.');
+      setTimeout(() => hideLoadingOverlay(), 800);
     } finally {
       submitBtn.disabled = false;
     }
