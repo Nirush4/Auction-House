@@ -3,6 +3,7 @@ import type { Profile } from '../types';
 const TOKEN_KEY = 'accessToken';
 const USER_KEY = 'user';
 const API_KEY_KEY = 'apiKey';
+const USER_NAME = 'username';
 
 /**
  * Save auth details to localStorage
@@ -29,6 +30,7 @@ export function clearAuth() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
   localStorage.removeItem(API_KEY_KEY);
+  localStorage.removeItem(USER_NAME);
 }
 
 /**

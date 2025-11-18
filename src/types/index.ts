@@ -48,6 +48,7 @@ export interface Bid {
 }
 
 export interface Listing {
+  created: any;
   price: number;
   tags: any;
   id: string;
@@ -63,4 +64,9 @@ export interface Listing {
     name: string;
     avatar?: MediaItem;
   };
+}
+
+export interface OverlayOptions {
+  id?: string;
+  message?: string;
 }
