@@ -5,7 +5,7 @@ import { showToast } from '../utils/toast.js';
 
 function template(): string {
   return `
-    <section class="flex justify-center pt-35">
+    <section class="flex justify-center pt-35 px-4">
       <div class="w-full max-w-md mb-16 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <!-- Header -->
         <div class="text-center mb-8">
