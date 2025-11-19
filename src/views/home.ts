@@ -1,9 +1,94 @@
 import { getListings } from '../api/listings.js';
 import { navigateTo } from '../router.js';
 import type { Listing } from '../types/index.js';
-import { getUser } from '../utils/storage.js'; // Make sure this exists
+import { getUser } from '../utils/storage.js';
+import { HeroSection } from './heroSection.js';
 
-/** Format exact local end date + time */
+/** Home view */
+export async function HomeView(root: HTMLElement): Promise<void> {
+  root.innerHTML = `
+  
+   ${HeroSection()}  
+
+    <section id="listItems" class="pt-14 pb-12 space-y-10 container mx-auto px-6">
+      <header class="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <h1 class=" text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
+          <p class="text-gray-500  text-base md:text-lg">Discover and bid on the newest listings</p>
+        </div>
+        <a href="/search" 
+           class="text-sm sm:text-base font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+          🔍 Advanced search
+        </a>
+      </header>
+
+      <div id="homeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        ${Array.from({ length: 6 })
+          .map(
+            () => `
+            <div class="animate-pulse rounded-2xl border border-gray-200 bg-white/70">
+              <div class="h-48 bg-gray-200"></div>
+              <div class="p-4 space-y-3">
+                <div class="h-4 w-3/5 bg-gray-200 rounded"></div>
+                <div class="h-3 w-2/5 bg-gray-200 rounded"></div>
+                <div class="h-3 w-1/3 bg-gray-200 rounded"></div>
+              </div>
+            </div>`
+          )
+          .join('')}
+      </div>
+    </section>
+  `;
+  const scrollLinks = document.querySelectorAll('a[href="#listItems"]');
+  scrollLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById('listItems');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  const grid = root.querySelector('#homeContent') as HTMLElement;
+
+  try {
+    const listings = await getListings({
+      limit: 28,
+      sort: 'created',
+      sortOrder: 'desc',
+      _seller: true,
+      _bids: true,
+    });
+    if (!listings || listings.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full text-center py-12">
+          <p class="text-gray-500 text-lg">No auctions available right now — check back soon!</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = listings.map(listingCard).join('');
+    startCountdowns(listings);
+
+    const loginButtons =
+      grid.querySelectorAll<HTMLButtonElement>('button[data-login]');
+    loginButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        navigateTo('/login');
+      });
+    });
+  } catch (err) {
+    console.error('Error fetching listings:', err);
+    grid.innerHTML = `
+      <div class="col-span-full rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 text-center">
+        ⚠️ Failed to load auctions: ${(err as Error).message}
+      </div>
+    `;
+  }
+}
+
 function formatExactDateTime(endsAt: string): string {
   const date = new Date(endsAt);
   return date.toLocaleString(undefined, {
@@ -201,77 +286,4 @@ function startCountdowns(listings: Listing[]) {
 
   updateAll();
   setInterval(updateAll, 1000);
-}
-
-/** Home view */
-export async function HomeView(root: HTMLElement): Promise<void> {
-  root.innerHTML = `
-    <section class="pt-24 pb-12 space-y-10 container mx-auto px-6">
-      <header class="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <h1 class=" text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
-          <p class="text-gray-500  text-base md:text-lg">Discover and bid on the newest listings</p>
-        </div>
-        <a href="/search" 
-           class="text-sm sm:text-base font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-          🔍 Advanced search
-        </a>
-      </header>
-
-      <div id="homeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        ${Array.from({ length: 6 })
-          .map(
-            () => `
-            <div class="animate-pulse rounded-2xl border border-gray-200 bg-white/70">
-              <div class="h-48 bg-gray-200"></div>
-              <div class="p-4 space-y-3">
-                <div class="h-4 w-3/5 bg-gray-200 rounded"></div>
-                <div class="h-3 w-2/5 bg-gray-200 rounded"></div>
-                <div class="h-3 w-1/3 bg-gray-200 rounded"></div>
-              </div>
-            </div>`
-          )
-          .join('')}
-      </div>
-    </section>
-  `;
-
-  const grid = root.querySelector('#homeContent') as HTMLElement;
-
-  try {
-    const listings = await getListings({
-      limit: 28,
-      sort: 'created',
-      sortOrder: 'desc',
-      _seller: true,
-      _bids: true,
-    });
-    if (!listings || listings.length === 0) {
-      grid.innerHTML = `
-        <div class="col-span-full text-center py-12">
-          <p class="text-gray-500 text-lg">No auctions available right now — check back soon!</p>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = listings.map(listingCard).join('');
-    startCountdowns(listings);
-
-    // Attach login button click handlers (optional, your inline onclick works)
-    const loginButtons =
-      grid.querySelectorAll<HTMLButtonElement>('button[data-login]');
-    loginButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        navigateTo('/login');
-      });
-    });
-  } catch (err) {
-    console.error('Error fetching listings:', err);
-    grid.innerHTML = `
-      <div class="col-span-full rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 text-center">
-        ⚠️ Failed to load auctions: ${(err as Error).message}
-      </div>
-    `;
-  }
 }
