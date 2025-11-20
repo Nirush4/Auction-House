@@ -1,4 +1,4 @@
-import { getLocalItem, setLocalItem } from '../utils/storage.js';
+import { getLocalItem, setLocalItem } from '../utils/storage';
 
 const API_URL =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/+$/, '') ||

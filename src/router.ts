@@ -1,14 +1,14 @@
-import { HomeView } from './views/home.js';
-import { LoginView } from './views/login.js';
-import { RegisterView } from './views/register.js';
-import { renderNavbar, setupNavbarSearch } from './components/navbar.js';
-import { renderFooter } from './components/footer.js';
-import { isAuthenticated } from './utils/storage.js';
-import { logout } from './api/auth.js';
-import { showToast } from './utils/toast.js';
-import { ProfileView } from './views/profile.js';
-import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay.js';
-import { SearchView } from './views/search.js';
+import { HomeView } from './views/home';
+import { LoginView } from './views/login';
+import { RegisterView } from './views/register';
+import { renderNavbar, setupNavbarSearch } from './components/navbar';
+import { renderFooter } from './components/footer';
+import { isAuthenticated } from './utils/storage';
+import { logout } from './api/auth';
+import { showToast } from './utils/toast';
+import { ProfileView } from './views/profile';
+import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay';
+import { SearchView } from './views/search';
 
 type RouteHandler = (
   root: HTMLElement,

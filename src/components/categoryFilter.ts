@@ -1,6 +1,6 @@
-import { navigateTo } from '../router.js';
-import { startCountdowns } from '../utils/startCountdowns.js';
-import { listingCard } from '../views/home.js';
+import { navigateTo } from '../router';
+import { startCountdowns } from '../utils/startCountdowns';
+import { listingCard } from '../views/home';
 
 const categoryTagMap: Record<string, string | null> = {
   all: null,

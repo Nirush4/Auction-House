@@ -1,9 +1,9 @@
-import { initRouter, router } from './router.js';
+import { initRouter, router } from './router';
 import {
   renderNavbar,
   setupNavbarActions,
   setupNavbarSearch,
-} from './components/navbar.js';
+} from './components/navbar';
 
 function hydrateStaticShell(): void {
   // Render navbar dynamically

@@ -1,6 +1,6 @@
 // LISTING CARD FUNCTION (unchanged)
-import type { Listing } from '../types/index.js';
-import { getUser } from '../utils/storage.js';
+import type { Listing } from '../types/index';
+import { getUser } from '../utils/storage';
 
 export function listingCard(listing: Listing): string {
   const user = getUser(); // Detect logged-in state

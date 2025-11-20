@@ -1,8 +1,8 @@
-import { loginUser, fetchApiKey } from '../api/client.js';
-import { navigateTo } from '../router.js';
-import { getLocalItem } from '../utils/storage.js';
-import { showToast } from '../utils/toast.js';
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay.js';
+import { loginUser, fetchApiKey } from '../api/client';
+import { navigateTo } from '../router';
+import { getLocalItem } from '../utils/storage';
+import { showToast } from '../utils/toast';
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 
 function template(): string {
   return `

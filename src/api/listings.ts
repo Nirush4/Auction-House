@@ -1,7 +1,7 @@
 // src/api/listings.ts
-import type { Listing, MediaItem } from '../types/index.js';
-import { getToken } from '../utils/storage.js';
-import { apiClient } from './client.js';
+import type { Listing, MediaItem } from '../types/index';
+import { getToken } from '../utils/storage';
+import { apiClient } from './client';
 
 const API_BASE = 'https://v2.api.noroff.dev';
 const AUCTION_BASE = `${API_BASE}/auction/listings`;
