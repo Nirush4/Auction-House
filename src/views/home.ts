@@ -1,11 +1,11 @@
-import type { Listing } from '../types/index.js';
-import { getUser } from '../utils/storage.js';
-import { HeroSection } from './heroSection.js';
+import type { Listing } from '../types/index';
+import { getUser } from '../utils/storage';
+import { HeroSection } from './heroSection';
 
 import {
   CategoryFilter,
   setupCategoryScroll,
-} from '../components/CategoryFilter.js';
+} from '../components/CategoryFilter';
 
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `

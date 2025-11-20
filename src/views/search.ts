@@ -1,6 +1,6 @@
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay.js';
-import { showToast } from '../utils/toast.js';
-import { listingCard } from '../views/home.js';
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
+import { showToast } from '../utils/toast';
+import { listingCard } from '../views/home';
 import { startCountdowns } from '../utils/startCountdowns';
 
 export async function SearchView(root: HTMLElement) {
