@@ -1,11 +1,11 @@
 // src/api/listings.ts
-import type { Listing, MediaItem } from '../types/index.js';
-import { getToken } from '../utils/storage.js';
-import { apiClient } from './client.js';
+import type { Listing, MediaItem } from '../types/index';
+import { getToken } from '../utils/storage';
+import { apiClient } from './client';
 
 const API_BASE = 'https://v2.api.noroff.dev';
 const AUCTION_BASE = `${API_BASE}/auction/listings`;
-const BASE = 'auction/listings'; // ✅ Used for apiClient (relative path)
+const BASE = 'auction/listings';
 
 /** ==========================
  *  Types
@@ -18,6 +18,8 @@ export interface ListParams {
   _seller?: boolean;
   _bids?: boolean;
   q?: string;
+  _tag?: string;
+  _active?: boolean;
 }
 
 export interface CreateListingPayload {
@@ -76,6 +78,9 @@ export async function getListings(params: ListParams = {}): Promise<Listing[]> {
   if (params._seller) search.set('_seller', 'true');
   if (params._bids) search.set('_bids', 'true');
   if (params.q) search.set('q', params.q);
+  if (params._tag) search.set('_tag', params._tag);
+  if (params._active !== undefined)
+    search.set('_active', String(params._active));
 
   const url = `${AUCTION_BASE}?${search.toString()}`;
   const res = await fetch(url, { headers: authHeaders() });

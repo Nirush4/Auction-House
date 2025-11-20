@@ -1,7 +1,7 @@
-import { registerUser, fetchApiKey } from '../api/client.js';
-import { navigateTo } from '../router.js';
-import { getLocalItem } from '../utils/storage.js';
-import { showToast } from '../utils/toast.js';
+import { registerUser, fetchApiKey } from '../api/client';
+import { navigateTo } from '../router';
+import { getLocalItem } from '../utils/storage';
+import { showToast } from '../utils/toast';
 
 function template(): string {
   return `

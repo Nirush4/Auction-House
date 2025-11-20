@@ -3,12 +3,12 @@ import {
   updateProfile,
   fetchProfileListings,
   fetchProfileBids,
-} from '../api/profile.js';
-import { createListing } from '../api/listings.js';
-import { getUser, saveAuth } from '../utils/storage.js';
-import type { Profile, Listing, Bid } from '../types/index.js';
-import { navigateTo, router } from '../router.js';
-import { showToast } from '../utils/toast.js';
+} from '../api/profile';
+import { createListing } from '../api/listings';
+import { getUser, saveAuth } from '../utils/storage';
+import type { Profile, Listing, Bid } from '../types/index';
+import { navigateTo, router } from '../router';
+import { showToast } from '../utils/toast';
 
 function qs<T extends HTMLElement>(
   selector: string,
