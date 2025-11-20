@@ -1,5 +1,9 @@
 import { initRouter, router } from './router.js';
-import { renderNavbar, setupNavbarActions } from './components/navbar.js';
+import {
+  renderNavbar,
+  setupNavbarActions,
+  setupNavbarSearch,
+} from './components/navbar.js';
 
 function hydrateStaticShell(): void {
   // Render navbar dynamically
@@ -22,6 +26,7 @@ async function bootstrap(): Promise<void> {
     if (navbarContainer) {
       navbarContainer.innerHTML = renderNavbar();
       setupNavbarActions();
+      setupNavbarSearch();
     }
   });
 
