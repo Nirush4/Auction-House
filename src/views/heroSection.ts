@@ -1,6 +1,6 @@
 export function HeroSection(): string {
   return `
-  <section class="relative w-full h-[95dvh] mb-10 mt-16 md:mt-18 flex items-center justify-center overflow-hidden 
+  <section class="relative w-full h-[95dvh] mb-10 mt-14 md:mt-16 flex items-center justify-center overflow-hidden 
   bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-700 text-white">
 
     <!-- Decorative floating circles - repositioned for better balance -->
@@ -50,7 +50,7 @@ export function HeroSection(): string {
 
       <!-- Scroll down -->
       <div class="mt-20 animate-bounce">
-        <a href="#listItems" class="flex flex-col items-center text-white/80 hover:text-white">
+        <a href="#listItems" id="viewlist" class="flex flex-col items-center text-white/80 hover:text-white">
           <span class="text-sm sm:text-base mb-2">Scroll Down</span>
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
