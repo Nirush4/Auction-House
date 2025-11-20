@@ -2,8 +2,8 @@ import type {
   AuthCredentials,
   RegisterPayload,
   AuthResponse,
-} from '../types/index.js';
-import { saveAuth } from '../utils/storage.js';
+} from '../types/index';
+import { saveAuth } from '../utils/storage';
 
 const API_BASE = 'https://v2.api.noroff.dev';
 const AUTH_BASE = `${API_BASE}/auth`;

@@ -1,57 +1,9 @@
+// LISTING CARD FUNCTION (unchanged)
 import type { Listing } from '../types/index';
 import { getUser } from '../utils/storage';
-import { HeroSection } from './heroSection';
-
-import {
-  CategoryFilter,
-  setupCategoryScroll,
-} from '../components/categoryFilter';
-
-export async function HomeView(root: HTMLElement): Promise<void> {
-  root.innerHTML = `
-    ${HeroSection()}  
-
-    <!-- Category Filter Bar -->
-    <section id="listItems" class="container mx-auto px-6 pt-20 sm:pt-25">
-      ${CategoryFilter()}
-    </section>
-
-    <section class="pt-14 pb-12 space-y-10 container mx-auto px-6">
-      <header class="flex items-end justify-between flex-wrap gap-4">
-        <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
-          <p class="text-gray-500 text-base md:text-lg">Discover and bid on the newest listings</p>
-        </div>
-      </header>
-
-      <!-- 🔥 Container updated by CategoryFilter dynamically -->
-      <div id="homeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="col-span-full text-center py-10">
-          <p class="text-gray-500">Loading listings...</p>
-        </div>
-      </div>
-    </section>
-  `;
-
-  setupCategoryScroll();
-
-  const viewListBtn = root.querySelector('#viewlist');
-  const browseBtn = root.querySelector('a[href="#listItems"]');
-
-  function smoothScroll(e: Event) {
-    e.preventDefault();
-    const section = document.querySelector('#listItems');
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  if (viewListBtn) viewListBtn.addEventListener('click', smoothScroll);
-  if (browseBtn) browseBtn.addEventListener('click', smoothScroll);
-}
 
 export function listingCard(listing: Listing): string {
-  const user = getUser();
+  const user = getUser(); // Detect logged-in state
 
   const img =
     listing.media?.[0]?.url ??
