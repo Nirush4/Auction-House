@@ -5,7 +5,7 @@ import { HeroSection } from './heroSection';
 import {
   CategoryFilter,
   setupCategoryScroll,
-} from '../components/CategoryFilter';
+} from '../components/categoryFilter';
 
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
