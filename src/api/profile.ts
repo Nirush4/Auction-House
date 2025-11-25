@@ -28,10 +28,7 @@ export async function fetchProfileListings(
   username: string
 ): Promise<Listing[]> {
   const { data } = await apiClient<{ data: Listing[] }>(
-    `${BASE}/${encodeURIComponent(username)}/listings`,
-    {
-      method: 'GET',
-    }
+    `${BASE}/${encodeURIComponent(username)}/listings?_seller=true&_bids=true`
   );
   return data;
 }

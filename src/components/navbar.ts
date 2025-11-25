@@ -41,7 +41,7 @@ export function renderNavbar() {
               <a id="navbarProfile" href="/profile" class="px-4 py-2 rounded-full text-indigo-600 font-bold hover:text-indigo-700 hover:bg-gray-100 transition">
                 Hi, ${username || 'Profile'}
               </a>
-              <button id="logoutBtn" class="ml-2 px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Logout</button>
+              <button id="logoutBtn" class="ml-2 px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition cursor-pointer">Logout</button>
             `
               : `
               <a href="/login" class="px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Login</a>

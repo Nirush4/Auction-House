@@ -2,6 +2,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 import { showToast } from '../utils/toast';
 import { listingCard } from '../views/home';
 import { startCountdowns } from '../utils/startCountdowns';
+import { getUser } from '../utils/storage';
 
 export async function SearchView(root: HTMLElement) {
   root.innerHTML = `
@@ -49,9 +50,11 @@ export async function SearchView(root: HTMLElement) {
         return;
       }
 
-      // Render using listingCard
-      resultsContainer.innerHTML = listings.map(listingCard).join('');
+      const currentUserName = getUser() ?? undefined; // null becomes undefined
 
+      resultsContainer.innerHTML = listings
+        .map((listing) => listingCard(listing, currentUserName))
+        .join('');
       // Start countdown timers for all listings
       startCountdowns(listings);
     } catch (err) {
