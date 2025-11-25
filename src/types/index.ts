@@ -48,21 +48,22 @@ export interface Bid {
 }
 
 export interface Listing {
-  created: any;
-  price: number;
-  tags: any;
   id: string;
   title: string;
   description?: string;
-  endsAt: string;
+  created: string; // ISO date string
+  endsAt: string; // ISO date string
+  price: number;
+  tags?: string[];
   media?: MediaItem[];
   _count?: {
     bids?: number;
   };
   bids?: Bid[];
   seller?: {
-    name: string;
-    avatar?: MediaItem;
+    id: string; // seller ID
+    name: string; // seller name
+    avatar?: MediaItem; // optional avatar
   };
 }
 

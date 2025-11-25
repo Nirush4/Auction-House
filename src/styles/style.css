@@ -112,3 +112,53 @@
     scrollbar-width: none;
     /* Firefox */
 }
+
+#calendarPopup.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#calendarDays button {
+    transition: all 0.5s;
+}
+
+#calendarDays button:hover {
+    background: linear-gradient(to right, #7f00ff, #e100ff);
+    color: white;
+    transform: scale(1.15);
+    border-radius: 50%;
+}
+
+#calendarDays button.bg-indigo-200 {
+    background: linear-gradient(to right, #4f46e5, #a855f7);
+    color: white;
+}
+
+#calendarPopup input[type="number"] {
+    -moz-appearance: textfield;
+    /* remove spin buttons on Firefox */
+}
+
+#calendarPopup input::-webkit-outer-spin-button,
+#calendarPopup input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    /* remove spin buttons on Chrome/Safari */
+    margin: 0;
+}
+
+#calendarPopup input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    border-color: transparent;
+}
+
+#calendarPopup input::placeholder {
+    color: #9ca3af;
+    /* soft gray */
+    font-weight: 500;
+}
+
+#calendarPopup input:hover {
+    background: rgba(79, 70, 229, 0.05);
+    /* subtle hover effect */
+}
