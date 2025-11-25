@@ -619,8 +619,6 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   const monthYear = qs<HTMLSpanElement>('#monthYear', root);
   const prevMonthBtn = qs<HTMLButtonElement>('#prevMonth', root);
   const nextMonthBtn = qs<HTMLButtonElement>('#nextMonth', root);
-  const calendarTime = qs<HTMLInputElement>('#calendarTime', root);
-  const calendarSelectBtn = qs<HTMLButtonElement>('#calendarSelectBtn', root);
 
   let selectedDate: Date | null = null;
   let currentMonth: number;

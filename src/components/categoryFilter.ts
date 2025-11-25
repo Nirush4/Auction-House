@@ -92,8 +92,7 @@ export function CategoryFilter(activeCategory: string = 'all') {
     </div>
   `;
 }
-
-function renderListings(listings: any[]) {
+function renderListings(listings: any[], currentUserName?: string) {
   const container = document.getElementById('homeContent');
   if (!container) return;
 
@@ -106,7 +105,9 @@ function renderListings(listings: any[]) {
   }
 
   // Render actual listing cards
-  container.innerHTML = listings.map(listingCard).join('');
+  container.innerHTML = listings
+    .map((listing) => listingCard(listing, currentUserName))
+    .join('');
 
   // ⭐ Start countdown timers
   startCountdowns(listings);
@@ -117,7 +118,7 @@ function renderListings(listings: any[]) {
 
   loginButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      navigateTo('/login'); // <-- NOW FIXED
+      navigateTo('/login');
     });
   });
 }

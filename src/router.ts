@@ -223,7 +223,7 @@ export function initRouter(): void {
 
   router();
 }
-function attachProfileHandlers(root: HTMLElement, arg1: any) {
+function attachProfileHandlers(_root: HTMLElement, _arg1: any) {
   throw new Error('Function not implemented.');
 }
 
