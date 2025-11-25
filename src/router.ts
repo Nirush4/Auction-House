@@ -42,6 +42,13 @@ export function mountNavbar() {
       showToast('error', '❌ Logout failed.');
       hideLoadingOverlay();
     }
+
+    document.querySelectorAll('a[href="/create"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo('/create'); // pushes state and triggers router
+      });
+    });
   }
 
   // Desktop logout button
@@ -121,7 +128,30 @@ const routes: Route[] = [
   {
     path: /^\/create\/?$/,
     handler: async (root) => {
-      root.innerHTML = '<p>Create listing page (TODO)</p>';
+      // Load the profile page view first (so the form exists in DOM)
+      await ProfileView(root);
+
+      // After DOM is ready, trigger the "Create Listing" form
+      const createListingFormContainer = document.getElementById(
+        'createListingFormContainer'
+      );
+      const createListingBtn = document.getElementById('createListingBtn');
+
+      if (createListingFormContainer && createListingBtn) {
+        createListingFormContainer.classList.remove('hidden');
+        createListingFormContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+
+        // Ensure the button is in correct style
+        createListingBtn.textContent = 'Create New Listing';
+        createListingBtn.classList.remove('bg-gray-600');
+        createListingBtn.classList.add('bg-emerald-600');
+      }
+
+      // Attach profile handlers so the form submission works
+      attachProfileHandlers(root, getUserProfileData()); // <-- getUserProfileData() should return the Profile object
     },
     protected: true,
   },
@@ -192,4 +222,11 @@ export function initRouter(): void {
   });
 
   router();
+}
+function attachProfileHandlers(root: HTMLElement, arg1: any) {
+  throw new Error('Function not implemented.');
+}
+
+function getUserProfileData(): any {
+  throw new Error('Function not implemented.');
 }
