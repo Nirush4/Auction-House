@@ -6,6 +6,8 @@ import {
   CategoryFilter,
   setupCategoryScroll,
 } from '../components/categoryFilter';
+import { showLoadingOverlay } from '../utils/overlay';
+import { navigateTo } from '../router';
 
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
@@ -35,34 +37,47 @@ export async function HomeView(root: HTMLElement): Promise<void> {
 
   setupCategoryScroll();
 
+  // Smooth scroll handlers
   const viewListBtn = root.querySelector('#viewlist');
   const browseBtn = root.querySelector('a[href="#listItems"]');
 
   function smoothScroll(e: Event) {
     e.preventDefault();
     const section = document.querySelector('#listItems');
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   if (viewListBtn) viewListBtn.addEventListener('click', smoothScroll);
   if (browseBtn) browseBtn.addEventListener('click', smoothScroll);
+
+  // Show loading overlay when user clicks "Profile"
+  document.querySelectorAll('a[href="/profile"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLoadingOverlay({ message: 'Loading your profile...' });
+      navigateTo('/profile'); // router will handle loading profile
+    });
+  });
 }
 
-export function listingCard(listing: Listing): string {
+export function listingCard(
+  listing: Listing,
+  currentUserName?: string
+): string {
   const user = getUser();
+  const isOwner = currentUserName && listing.seller?.name === currentUserName;
 
   const img =
     listing.media?.[0]?.url ??
     'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800';
-  const alt = listing.media?.[0]?.alt ?? listing.title;
+  const alt = listing.media?.[0]?.alt ?? listing.title ?? 'Listing image';
 
   const bids = listing._count?.bids ?? 0;
   const sellerName = listing.seller?.name ?? 'Unknown seller';
   const sellerAvatar =
     listing.seller?.avatar?.url ??
     'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
+  const sellerAlt = listing.seller?.avatar?.alt ?? sellerName;
 
   const category = listing.tags?.[0] ?? null;
 
@@ -73,7 +88,7 @@ export function listingCard(listing: Listing): string {
 
   const created = listing.created
     ? new Date(listing.created).toLocaleDateString()
-    : null;
+    : 'Unknown';
 
   const description = listing.description?.trim()
     ? listing.description.trim().slice(0, 35) +
@@ -86,11 +101,7 @@ export function listingCard(listing: Listing): string {
     <div class="group relative rounded-2xl border-7 border-gray-100 bg-white/60 backdrop-blur-md overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
 
       <div class="flex items-center gap-3 pt-1 mx-5 my-3">
-        ${
-          sellerAvatar
-            ? `<img src="${sellerAvatar}" class="h-8 w-8 rounded-full object-cover border" />`
-            : `<div class="h-8 w-8 rounded-full bg-gray-300"></div>`
-        }
+        <img src="${sellerAvatar}" alt="${sellerAlt}" class="h-8 w-8 rounded-full object-cover border" />
         <p class="text-sm sm:text-base">
           <span class="font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
                        px-2 py-1 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all">
@@ -121,7 +132,7 @@ export function listingCard(listing: Listing): string {
       <div class="p-5 space-y-3">
         <a href="/listing/${listing.id}">
           <h3 class="font-medium text-xl sm:text-lg xs:text-base text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
-            ${listing.title}
+            ${listing.title ?? 'Untitled'}
           </h3>
         </a>
 
@@ -130,11 +141,7 @@ export function listingCard(listing: Listing): string {
         </p>
 
         <div class="flex justify-between items-center text-sm sm:text-xs xs:text-[10px] text-gray-600">
-          ${
-            created
-              ? `<p class="text-gray-500 text-xs sm:text-[14px]">Created: <span class="font-medium text-gray-800">${created}</span></p>`
-              : `<p></p>`
-          }
+          <p class="text-gray-500 text-xs sm:text-[14px]">Created: <span class="font-medium text-gray-800">${created}</span></p>
           <p class="text-gray-700 text-xs sm:text-[14px] font-bold">
             Highest Bid: <span class="font-bold text-indigo-600 text-lg sm:text-base">$${highestBid}</span>
           </p>
@@ -147,17 +154,22 @@ export function listingCard(listing: Listing): string {
         </div>
 
         ${
-          !user
+          isOwner
+            ? `<div class="flex gap-2 mt-3">
+                 <button class="flex-1 rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" onclick="handleEdit('${listing.id}')">Edit</button>
+                 <button class="flex-1 rounded-lg bg-red-600 py-2 font-medium text-white hover:bg-red-500 transition cursor-pointer" onclick="handleDelete('${listing.id}')">Delete</button>
+               </div>`
+            : user
             ? `<div class="mt-3">
-                 <button data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" onclick="window.location.hash = '/login'">
-                   Login to Bid
-                 </button>
-               </div>`
+                   <button data-bid class="w-full rounded-lg bg-green-600 py-2 font-medium text-white hover:bg-green-500 transition cursor-pointer" onclick="handleBid('${listing.id}')">
+                     Bid Now
+                   </button>
+                 </div>`
             : `<div class="mt-3">
-                 <button data-bid class="w-full rounded-lg bg-green-600 py-2 font-medium text-white hover:bg-green-500 transition cursor-pointer" onclick="handleBid('${listing.id}')">
-                   Bid Now
-                 </button>
-               </div>`
+                   <button data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" onclick="window.location.hash = '/login'">
+                     Login to Bid
+                   </button>
+                 </div>`
         }
 
       </div>
