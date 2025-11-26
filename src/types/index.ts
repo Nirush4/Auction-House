@@ -39,6 +39,8 @@ export interface MediaItem {
 }
 
 export interface Bid {
+  date: string | number | Date;
+  listingTitle: any;
   bidder: any;
   listing: any;
   id: string;

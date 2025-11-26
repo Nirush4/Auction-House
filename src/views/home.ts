@@ -6,8 +6,12 @@ import {
   CategoryFilter,
   setupCategoryScroll,
 } from '../components/categoryFilter';
-import { showLoadingOverlay } from '../utils/overlay';
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 import { navigateTo } from '../router';
+import { startCountdowns } from '../utils/startCountdowns';
+import { showToast } from '../utils/toast';
+
+const LISTINGS_PER_PAGE = 9;
 
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
@@ -18,7 +22,7 @@ export async function HomeView(root: HTMLElement): Promise<void> {
       ${CategoryFilter()}
     </section>
 
-    <section class="pt-14 pb-12 space-y-10 container mx-auto px-6">
+    <section class="pt-14 pb-12 sm:pb-20 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
@@ -26,18 +30,33 @@ export async function HomeView(root: HTMLElement): Promise<void> {
         </div>
       </header>
 
-      <!-- 🔥 Container updated by CategoryFilter dynamically -->
+      <!-- Container for listings -->
       <div id="homeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="col-span-full text-center py-10">
           <p class="text-gray-500">Loading listings...</p>
         </div>
       </div>
+
+     <div
+  id="paginationControls"
+  class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-15"
+></div>
+
     </section>
   `;
 
   setupCategoryScroll();
+  setupSmoothScroll(root);
+  setupProfileLinks();
 
-  // Smooth scroll handlers
+  // Fetch initial listings
+  fetchListings(1);
+}
+
+/**
+ * Smooth scroll for buttons
+ */
+function setupSmoothScroll(root: HTMLElement) {
   const viewListBtn = root.querySelector('#viewlist');
   const browseBtn = root.querySelector('a[href="#listItems"]');
 
@@ -49,17 +68,176 @@ export async function HomeView(root: HTMLElement): Promise<void> {
 
   if (viewListBtn) viewListBtn.addEventListener('click', smoothScroll);
   if (browseBtn) browseBtn.addEventListener('click', smoothScroll);
+}
 
-  // Show loading overlay when user clicks "Profile"
+/**
+ * Show loading overlay when navigating to profile
+ */
+function setupProfileLinks() {
   document.querySelectorAll('a[href="/profile"]').forEach((link) => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       showLoadingOverlay({ message: 'Loading your profile...' });
-      navigateTo('/profile'); // router will handle loading profile
+      navigateTo('/profile'); // router handles the profile
     });
   });
 }
 
+/**
+ * Fetch listings with pagination & sorting
+ */
+async function fetchListings(page = 1, tag = '') {
+  const homeContent = document.getElementById('homeContent')!;
+  const paginationControls = document.getElementById('paginationControls')!;
+
+  showLoadingOverlay({ message: 'Fetching listings...' });
+
+  try {
+    const params = new URLSearchParams({
+      limit: LISTINGS_PER_PAGE.toString(),
+      page: page.toString(),
+      sort: 'created',
+      sortOrder: 'desc',
+      _active: 'true',
+      _seller: 'true',
+      _bids: 'true',
+    });
+
+    if (tag) params.append('_tag', tag);
+
+    const url = `https://v2.api.noroff.dev/auction/listings?${params.toString()}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch listings');
+
+    const json = await res.json();
+
+    const listings: Listing[] = json.data ?? [];
+    const totalListings: number = json.meta?.totalCount ?? listings.length;
+
+    const totalPages = Math.ceil(totalListings / LISTINGS_PER_PAGE);
+
+    if (!listings.length) {
+      homeContent.innerHTML =
+        '<p class="text-gray-500 text-center">No listings found.</p>';
+      paginationControls.innerHTML = '';
+      return;
+    }
+
+    const currentUser = getUser() ?? undefined;
+
+    homeContent.innerHTML = listings
+      .map((l) => listingCard(l, currentUser))
+      .join('');
+
+    startCountdowns(listings);
+
+    renderPagination(paginationControls, totalPages, page, (p) =>
+      fetchListings(p, tag)
+    );
+  } catch (err) {
+    console.error(err);
+    showToast('error', (err as Error).message);
+  } finally {
+    hideLoadingOverlay();
+  }
+}
+
+function renderPagination(
+  container: HTMLElement,
+  totalPages: number,
+  currentPage: number,
+  onPageClick: (page: number) => void
+) {
+  container.innerHTML = '';
+
+  if (totalPages <= 1) return;
+
+  // Previous button
+  const prevBtn = document.createElement('button');
+  prevBtn.innerHTML = '‹';
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.className = `
+    px-3 py-1 rounded transition
+    ${
+      currentPage === 1
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+    }
+  `;
+  prevBtn.addEventListener('click', () => onPageClick(currentPage - 1));
+  container.appendChild(prevBtn);
+
+  // Page buttons (show max 5 pages, with ellipsis)
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+  if (endPage - startPage < maxPagesToShow - 1) {
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  if (startPage > 1) {
+    container.appendChild(createPageBtn(1, currentPage, onPageClick));
+    if (startPage > 2) addEllipsis(container);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    container.appendChild(createPageBtn(i, currentPage, onPageClick));
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) addEllipsis(container);
+    container.appendChild(createPageBtn(totalPages, currentPage, onPageClick));
+  }
+
+  // Next button
+  const nextBtn = document.createElement('button');
+  nextBtn.innerHTML = '›';
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.className = `
+    px-3 py-1 rounded cursor-pointer text-sm sm:text-lg transition
+    ${
+      currentPage === totalPages
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+    }
+  `;
+  nextBtn.addEventListener('click', () => onPageClick(currentPage + 1));
+  container.appendChild(nextBtn);
+
+  // Helper: create page button
+  function createPageBtn(
+    page: number,
+    currentPage: number,
+    onClick: (page: number) => void
+  ) {
+    const btn = document.createElement('button');
+    btn.textContent = page.toString();
+    btn.className = `
+      px-3 py-1 sm:px-4 sm:py-2 rounded text-sm sm:text-base cursor-pointer transition
+      ${
+        page === currentPage
+          ? 'bg-indigo-600 text-white shadow-md'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      }
+    `;
+    btn.addEventListener('click', () => onClick(page));
+    return btn;
+  }
+
+  // Helper: ellipsis
+  function addEllipsis(container: HTMLElement) {
+    const span = document.createElement('span');
+    span.textContent = '...';
+    span.className = 'px-2 py-1 text-gray-500';
+    container.appendChild(span);
+  }
+}
+
+/**
+ * Listing card function (unchanged)
+ */
 export function listingCard(
   listing: Listing,
   currentUserName?: string
@@ -87,7 +265,7 @@ export function listingCard(
       : 0;
 
   const created = listing.created
-    ? new Date(listing.created).toLocaleDateString()
+    ? new Date(listing.created).toLocaleDateString('en-GB')
     : 'Unknown';
 
   const description = listing.description?.trim()
@@ -156,8 +334,16 @@ export function listingCard(
         ${
           isOwner
             ? `<div class="flex gap-2 mt-3">
-                 <button class="flex-1 rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" onclick="handleEdit('${listing.id}')">Edit</button>
-                 <button class="flex-1 rounded-lg bg-red-600 py-2 font-medium text-white hover:bg-red-500 transition cursor-pointer" onclick="handleDelete('${listing.id}')">Delete</button>
+            <button class="editListingBtn flex-1 rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" data-listing-id="${listing.id}">
+  Edit
+</button>
+
+<button 
+  class="deleteListingBtn flex-1 rounded-lg bg-red-600 py-2 font-medium text-white hover:bg-red-500 transition cursor-pointer"
+  data-listing-id="${listing.id}">
+  Delete
+</button>
+
                </div>`
             : user
             ? `<div class="mt-3">
