@@ -7,7 +7,7 @@ import {
   fetchProfileBids,
 } from '../api/profile';
 
-import { createListing } from '../api/listings';
+import { createListing, deleteListing } from '../api/listings';
 import { getUser, saveAuth } from '../utils/storage';
 
 import type { Profile, Listing, Bid } from '../types/index';
@@ -18,6 +18,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 
 import { listingCard } from '../views/home';
 import { startCountdowns } from '../utils/startCountdowns';
+import { showConfirmModal } from '../utils/confirmModal';
 
 // Helper for query selectors
 function qs<T extends HTMLElement>(
@@ -194,7 +195,7 @@ export function listingsSectionTemplate(
   }
 
   return `
-    <section class="pt-10 pb-12 space-y-10 container mx-auto px-6">
+    <section class="pt-10 pb-12 space-y-10 container mx-auto">
       <header class="flex justify-between mb-1">
         <h2 class="text-lg sm:text-2xl font-bold text-gray-800">🛒 Your Listings</h2>
         <span class="text-base sm:text-lg font-bold text-gray-800">${
@@ -316,14 +317,14 @@ function profileTemplate(
 
 
     <!-- Listings Section -->
-    <section class="rounded-2xl bg-white p-6 shadow-lg">
+    <section class="">
       <div id="profileListingsContainer">
         ${listingsSectionTemplate(listings, profile.name)}
       </div>
     </section>
 
     <!-- Recent Bids Section -->
-    <section class="rounded-2xl bg-white p-6 shadow-lg">
+    <section class="">
       <header class="flex justify-between mb-1">
         <h2 class="text-xl font-semibold">Recent bids</h2>
         <span class="text-sm text-gray-600">${bids.length}</span>
@@ -367,6 +368,7 @@ export async function ProfileView(root: HTMLElement): Promise<void> {
 
     // Attach handlers for profile actions
     attachProfileHandlers(root, profile);
+    attachDeleteListingHandlers(root, profile);
   } catch (err) {
     root.innerHTML = `
       <div class="mt-20 p-4 bg-red-50 border border-red-200 text-red-700">
@@ -709,10 +711,32 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   const minuteInput = qs<HTMLInputElement>('#calendarMinute', root);
   const selectBtn = qs<HTMLButtonElement>('#calendarSelectBtn', root);
 
+  // ---------------------------
+  // Real-time input clamping
+  // ---------------------------
+  hourInput?.addEventListener('input', () => {
+    if (!hourInput) return;
+    let val = parseInt(hourInput.value, 10);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > 23) val = 23;
+    hourInput.value = val.toString().slice(0, 2);
+  });
+
+  minuteInput?.addEventListener('input', () => {
+    if (!minuteInput) return;
+    let val = parseInt(minuteInput.value, 10);
+    if (isNaN(val) || val < 0) val = 0;
+    if (val > 59) val = 59;
+    minuteInput.value = val.toString().slice(0, 2);
+  });
+
+  // ---------------------------
+  // Set selected date on click
+  // ---------------------------
   selectBtn?.addEventListener('click', () => {
     if (!selectedDate || !hourInput || !minuteInput) return;
 
-    // Parse hour and minute with bounds checking
+    // Parse hour and minute
     let hour = parseInt(hourInput.value || '0', 10);
     let minute = parseInt(minuteInput.value || '0', 10);
 
@@ -724,14 +748,16 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     selectedDate.setHours(hour);
     selectedDate.setMinutes(minute);
 
-    // Update input field with nicely formatted date & time
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const formatted = `${selectedDate.getFullYear()}-${pad(
-      selectedDate.getMonth() + 1
-    )}-${pad(selectedDate.getDate())}T${pad(selectedDate.getHours())}:${pad(
-      selectedDate.getMinutes()
-    )}`;
-    endsAtInput!.value = formatted;
+    // Human-readable format: "26 Nov 2025, 23:59"
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    endsAtInput!.value = selectedDate.toLocaleString('en-US', options);
 
     // Animate and hide popup
     calendarPopup?.classList.add('hidden');
@@ -752,4 +778,39 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   });
 
   initCalendar();
+}
+
+export function attachDeleteListingHandlers(
+  root: HTMLElement,
+  _profile: Profile
+) {
+  const deleteButtons =
+    root.querySelectorAll<HTMLButtonElement>('.deleteListingBtn');
+
+  deleteButtons.forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const listingId = btn.dataset.listingId;
+      if (!listingId) return;
+
+      // Show confirmation modal
+      const confirmed = await showConfirmModal(
+        'Are you sure you want to delete this listing?'
+      );
+
+      if (!confirmed) return; // User canceled
+
+      // Show loading overlay while deleting
+      showLoadingOverlay({ message: 'Deleting listing...' });
+
+      try {
+        await deleteListing(listingId);
+        showToast('success', 'Listing deleted successfully!');
+        await ProfileView(root); // refresh profile view
+      } catch (err) {
+        showToast('error', `❌ ${(err as Error).message}`);
+      } finally {
+        hideLoadingOverlay();
+      }
+    });
+  });
 }
