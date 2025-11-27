@@ -50,6 +50,8 @@ export interface Bid {
 }
 
 export interface Listing {
+  category: string;
+  startingBid: any;
   id: string;
   title: string;
   description?: string;
