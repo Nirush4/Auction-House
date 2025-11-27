@@ -22,6 +22,8 @@ export async function HomeView(root: HTMLElement): Promise<void> {
       ${CategoryFilter()}
     </section>
 
+    Testing
+
     <section class="pt-14 pb-12 sm:pb-20 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
