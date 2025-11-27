@@ -20,7 +20,9 @@ import { listingCard } from '../views/home';
 import { startCountdowns } from '../utils/startCountdowns';
 import { showConfirmModal } from '../utils/confirmModal';
 
-// Helper for query selectors
+// -------------------------------
+// Helper
+// -------------------------------
 function qs<T extends HTMLElement>(
   selector: string,
   parent: HTMLElement
@@ -29,9 +31,8 @@ function qs<T extends HTMLElement>(
 }
 
 // -------------------------------
-// Templates
+// TEMPLATES
 // -------------------------------
-
 function profileFormTemplate(profile: Profile): string {
   return `
     <form id="profileForm" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 mt-6 sm:p-12 sm:py-25 sm:mt-20">
@@ -44,7 +45,7 @@ function profileFormTemplate(profile: Profile): string {
       <label class="block font-medium text-gray-700 text-sm sm:text-base">
         Bio
         <textarea id="bio" rows="3"
-          class="mt-1 w-full rounded border  border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
+          class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
         >${profile.bio ?? ''}</textarea>
       </label>
 
@@ -136,37 +137,34 @@ function createListingFormTemplate(): string {
       <label class="block text-sm sm:text-base md:text-base font-medium text-gray-700 relative">
   Ends at
   <input id="listingEndsAt" type="text" placeholder="Select date & time" readonly
-    class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base md:text-base cursor-pointer bg-white shadow-sm focus:ring-2 focus:ring-indigo-400" />
+    class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base md:text-base cursor-pointer bg-white shadow-sm focus:ring-2 focus:ring-indigo-400" 
+    aria-label="Select listing end date and time"/>
 
-  <!-- Calendar popup -->
-<div id="calendarPopup"
-     class="absolute left-1/2 top-full mt-2 -translate-x-1/2 bg-white/90 backdrop-blur-lg border border-gray-200 rounded-2xl shadow-2xl p-4 hidden z-50 w-[320px] max-w-[90vw] sm:w-[320px] transition-transform scale-95 opacity-0 origin-top">
+  <div id="calendarPopup"
+       class="absolute left-1/2 top-full mt-2 -translate-x-1/2 bg-white/90 backdrop-blur-lg border border-gray-200 rounded-2xl shadow-2xl p-4 hidden z-50 w-[320px] max-w-[90vw] sm:w-[320px] transition-transform scale-95 opacity-0 origin-top">
 
-  <div class="flex justify-between items-center mb-3">
-    <button type="button" id="prevMonth" class="px-3 py-1 rounded-lg hover:bg-indigo-100 transition cursor-pointer">&lt;</button>
-    <span id="monthYear" class="font-semibold text-gray-800"></span>
-    <button type="button" id="nextMonth" class="px-3 py-1 rounded-lg hover:bg-indigo-100 transition cursor-pointer">&gt;</button>
+    <div class="flex justify-between items-center mb-3">
+      <button type="button" id="prevMonth" aria-label="Previous Month" class="px-3 py-1 rounded-lg hover:bg-indigo-100 transition cursor-pointer">&lt;</button>
+      <span id="monthYear" class="font-semibold text-gray-800"></span>
+      <button type="button" id="nextMonth" aria-label="Next Month" class="px-3 py-1 rounded-lg hover:bg-indigo-100 transition cursor-pointer">&gt;</button>
+    </div>
+
+    <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center text-gray-700"></div>
+
+    <div class="mt-3 flex justify-between items-center gap-2">
+      <input type="number" id="calendarHour" min="0" max="23" placeholder="HH"
+        class="w-1/2 rounded-lg border border-gray-300 px-3 py-2 shadow-inner text-center focus:ring-2 focus:ring-indigo-400 focus:outline-none"/>
+      <span class="text-gray-500 font-semibold">:</span>
+      <input type="number" id="calendarMinute" min="0" max="59" placeholder="MM"
+        class="w-1/2 rounded-lg border border-gray-300 px-3 py-2 shadow-inner text-center focus:ring-2 focus:ring-indigo-400 focus:outline-none"/>
+    </div>
+
+    <button type="button" id="calendarSelectBtn"
+            class="mt-3 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition transform cursor-pointer">
+      Select Date & Time
+    </button>
   </div>
-
-  <div id="calendarDays" class="grid grid-cols-7 gap-1 text-center text-gray-700"></div>
-
-  <!-- Modern Time Selector -->
-  <div class="mt-3 flex justify-between items-center gap-2">
-    <input type="number" id="calendarHour" min="0" max="23" placeholder="HH"
-      class="w-1/2 rounded-lg border border-gray-300 px-3 py-2 shadow-inner text-center focus:ring-2 focus:ring-indigo-400 focus:outline-none"/>
-    <span class="text-gray-500 font-semibold">:</span>
-    <input type="number" id="calendarMinute" min="0" max="59" placeholder="MM"
-      class="w-1/2 rounded-lg border border-gray-300 px-3 py-2 shadow-inner text-center focus:ring-2 focus:ring-indigo-400 focus:outline-none"/>
-  </div>
-
-  <button type="button" id="calendarSelectBtn"
-          class="mt-3 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition transform cursor-pointer">
-    Select Date & Time
-  </button>
-</div>
-
-
-
+</label>
 
       <div class="flex gap-3 pt-2">
         <button type="submit" id="listingSubmitBtn"
@@ -186,13 +184,15 @@ function createListingFormTemplate(): string {
   `;
 }
 
+// -------------------------------
+// LISTINGS + BIDS SECTIONS
+// -------------------------------
 export function listingsSectionTemplate(
   listings: Listing[],
   currentUserName?: string
 ): string {
-  if (!listings.length) {
+  if (!listings.length)
     return `<p class="text-center text-gray-500">No listings found.</p>`;
-  }
 
   return `
     <section class="pt-10 pb-12 space-y-10 container mx-auto">
@@ -202,42 +202,40 @@ export function listingsSectionTemplate(
           listings.length
         } total</span>
       </header>
-
       <p class="text-gray-500 text-base md:text-lg">Manage your auctions and bids here</p>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        ${listings
-          .map((listing) => listingCard(listing, currentUserName))
-          .join('')}
+        ${listings.map((l) => listingCard(l, currentUserName)).join('')}
       </div>
     </section>
   `;
 }
 
 function bidsSectionTemplate(bids: Bid[]): string {
-  if (!bids.length) {
-    return `<p class="text-sm text-gray-600">No bids yet.</p>`;
-  }
+  if (!bids.length) return `<p class="text-sm text-gray-600">No bids yet.</p>`;
 
   return `
     <ul class="space-y-3">
       ${bids
         .slice(0, 5)
         .map(
-          (bid) => `
+          (b) => `
         <li class="rounded border border-gray-200 p-4">
-          <p class="font-medium">${bid.listing?.title ?? 'Listing'}</p>
-          <p class="text-sm text-gray-600">Amount: ${bid.amount}</p>
+          <p class="font-medium">${b.listing?.title ?? 'Listing'}</p>
+          <p class="text-sm text-gray-600">Amount: ${b.amount}</p>
           <p class="text-xs text-gray-500">Placed: ${new Date(
-            bid.created
+            b.created
           ).toLocaleString()}</p>
-        </li>`
+        </li>
+      `
         )
         .join('')}
     </ul>
   `;
 }
 
+// -------------------------------
+// PROFILE PAGE TEMPLATE
+// -------------------------------
 function profileTemplate(
   profile: Profile,
   listings: Listing[],
@@ -249,93 +247,75 @@ function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
 
   return `
-   <section class="mt-16 pb-12 space-y-10 container mx-auto px-6">
+  <section class="mt-16 pb-12 space-y-10 container mx-auto px-6">
 
-  <!-- Banner -->
-  <div class="relative rounded-2xl shadow-lg">
-    <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"
-      class="w-full h-[15rem] sm:h-[20rem] object-cover object-center brightness-90 transition-transform" />
-    <div class="absolute bottom-[-215px] sm:bottom-[-170px] w-full z-20 flex flex-col sm:flex-row items-start sm:justify-between sm:items-center px-5 sm:px-10 gap-4">
-
-      <div class="flex flex-col items-start gap-4">
-        <img src="${avatarUrl}" alt="${profile.avatar?.alt ?? profile.name}"
-          class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 border-white shadow-md object-cover" />
-
-        <div class="text-black drop-shadow-md">
-          <h1 class="text-xl md:text-2xl font-medium">${profile.name}</h1>
-          <p class="text-base text-gray-500">${profile.email}</p>
-          <p id="bioDisplay" class="text-base sm:text-lg mt-1 opacity-80 font-bold">${
-            profile.bio ?? 'No bio yet.'
-          }</p>
+    <div class="relative rounded-2xl shadow-lg">
+      <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"
+        class="w-full h-[15rem] sm:h-[20rem] object-cover object-center brightness-90 transition-transform" />
+      <div class="absolute bottom-[-215px] sm:bottom-[-170px] w-full z-20 flex flex-col sm:flex-row items-start sm:justify-between sm:items-center px-5 sm:px-10 gap-4">
+        <div class="flex flex-col items-start gap-4">
+          <img src="${avatarUrl}" alt="${profile.avatar?.alt ?? profile.name}"
+            class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 border-white shadow-md object-cover" />
+          <div class="text-black drop-shadow-md">
+            <h1 class="text-xl md:text-2xl font-medium">${profile.name}</h1>
+            <p class="text-base text-gray-500">${profile.email}</p>
+            <p id="bioDisplay" class="text-base sm:text-lg mt-1 opacity-80 font-bold">${
+              profile.bio ?? 'No bio yet.'
+            }</p>
+          </div>
         </div>
+
+        <button id="editProfileBtn"
+          class="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 cursor-pointer">
+          Edit Profile
+        </button>
       </div>
-
-      <button id="editProfileBtn"
-        class="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 cursor-pointer">
-        Edit Profile
-      </button>
-
     </div>
-  </div>
 
-  <!-- Stats -->
-  <div class="grid grid-cols-2 gap-5 lg:grid-cols-4 mt-60">
-    <div class="rounded-md sm:rounded-xl bg-indigo-500 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
-      profile.credits
-    }</strong></div>
-    <div class="rounded-md sm:rounded-xl bg-orange-800 p-2 sm:p-4 text-white shadow-lg">Listings: <strong>${
-      listings.length
-    }</strong></div>
-    <div class="rounded-md sm:rounded-xl bg-pink-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
-      bids.length
-    }</strong></div>
-    <div class="rounded-md sm:rounded-xl bg-yellow-600 p-2 sm:p-4 text-white shadow-lg">
-      Value: <strong>${listings.reduce(
+    <div class="grid grid-cols-2 gap-5 lg:grid-cols-4 mt-60">
+      <div class="rounded-md sm:rounded-xl bg-indigo-500 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
+        profile.credits
+      }</strong></div>
+      <div class="rounded-md sm:rounded-xl bg-orange-800 p-2 sm:p-4 text-white shadow-lg">Listings: <strong>${
+        listings.length
+      }</strong></div>
+      <div class="rounded-md sm:rounded-xl bg-pink-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
+        bids.length
+      }</strong></div>
+      <div class="rounded-md sm:rounded-xl bg-yellow-600 p-2 sm:p-4 text-white shadow-lg">Value: <strong>${listings.reduce(
         (acc, l) => acc + (l.price ?? 0),
         0
-      )}</strong>
-    </div>
-  </div>
-
-  <div class="space-y-8">
-
-    <!-- Profile Edit Form -->
-    <div id="profileFormContainer" class="hidden">
-      ${profileFormTemplate(profile)}
+      )}</strong></div>
     </div>
 
-   <!-- Create Listing Form and Button -->
-<div id="createListingFormContainer" class="hidden">
-  ${createListingFormTemplate()}
-</div>
+    <div class="space-y-8">
+      <div id="profileFormContainer" class="hidden">${profileFormTemplate(
+        profile
+      )}</div>
+      <div id="createListingFormContainer" class="hidden">${createListingFormTemplate()}</div>
 
-<button id="createListingBtn"
-  class="w-full rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 cursor-pointer
-         text-sm sm:text-base md:text-lg">
-  Create New Listing
-</button>
+      <button id="createListingBtn"
+        class="w-full rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 cursor-pointer
+               text-sm sm:text-base md:text-lg">
+        Create New Listing
+      </button>
 
+      <section><div id="profileListingsContainer">${listingsSectionTemplate(
+        listings,
+        profile.name
+      )}</div></section>
 
-    <!-- Listings Section -->
-    <section class="">
-      <div id="profileListingsContainer">
-        ${listingsSectionTemplate(listings, profile.name)}
-      </div>
-    </section>
-
-    <!-- Recent Bids Section -->
-    <section class="">
-      <header class="flex justify-between mb-1">
-        <h2 class="text-xl font-semibold">Recent bids</h2>
-        <span class="text-sm text-gray-600">${bids.length}</span>
-      </header>
-      ${bidsSectionTemplate(bids)}
-    </section>
-
-  </div>
-
-</section>
-
+      <section class="">
+        <header class="flex gap-5 align-middle mb-1">
+          <h2 class="text-xl font-semibold">Recent bids</h2>
+          <span class="text-base sm:text-lg font-bold text-gray-800">${
+            bids.length
+          }</span>
+        </header>
+        ${bidsSectionTemplate(bids)}
+      </section>
+    </div>
+  </section>
   `;
 }
 
@@ -346,37 +326,27 @@ export async function ProfileView(root: HTMLElement): Promise<void> {
   const userName = getUser();
   if (!userName) return navigateTo('/login');
 
-  // Show global overlay
   showLoadingOverlay({ message: 'Loading your profile...' });
 
   try {
-    // Fetch profile data + listings + bids
     const [profile, listings, bids] = await Promise.all([
       fetchProfile(userName),
       fetchProfileListings(userName),
       fetchProfileBids(userName),
     ]);
 
-    // Save auth info
     saveAuth(localStorage.getItem('accessToken') ?? '', profile, undefined);
 
-    // Render profile page
     root.innerHTML = profileTemplate(profile, listings, bids);
-
-    // Start countdowns for listings
     startCountdowns(listings);
 
-    // Attach handlers for profile actions
     attachProfileHandlers(root, profile);
     attachDeleteListingHandlers(root, profile);
   } catch (err) {
-    root.innerHTML = `
-      <div class="mt-20 p-4 bg-red-50 border border-red-200 text-red-700">
-        ${(err as Error).message}
-      </div>
-    `;
+    root.innerHTML = `<div class="mt-20 p-4 bg-red-50 border border-red-200 text-red-700">${
+      (err as Error).message
+    }</div>`;
   } finally {
-    // Hide overlay only after API + DOM is ready
     hideLoadingOverlay();
   }
 }

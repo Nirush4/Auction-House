@@ -8,9 +8,9 @@ const LISTINGS_PER_PAGE = 9;
 
 export async function SearchView(root: HTMLElement) {
   root.innerHTML = `
-    <div class="container mx-auto px-5 mt-24 mb-6 sm:mb-20">
+    <div class="container mx-auto px-5 mt-24 mb-12 sm:mb-20">
       <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      <div id="paginationControls" class="flex justify-center gap-3 mt-6 sm:mt-15"></div>
+      <div id="paginationControls" class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-15"></div>
     </div>
   `;
 
@@ -66,7 +66,7 @@ export async function SearchView(root: HTMLElement) {
 
       startCountdowns(paginatedListings);
 
-      // Render pagination buttons
+      // Render pagination like HomeView
       renderPagination(paginationContainer, totalPages, page, (p) =>
         fetchResults(query, p)
       );
@@ -91,7 +91,7 @@ export async function SearchView(root: HTMLElement) {
 }
 
 /**
- * Render pagination buttons
+ * Render pagination buttons (HomeView style)
  */
 function renderPagination(
   container: HTMLElement,
@@ -99,21 +99,87 @@ function renderPagination(
   currentPage: number,
   onPageClick: (page: number) => void
 ) {
-  if (totalPages <= 1) {
-    container.innerHTML = '';
-    return;
+  container.innerHTML = '';
+  if (totalPages <= 1) return;
+
+  // Previous button
+  const prevBtn = document.createElement('button');
+  prevBtn.innerHTML = '‹';
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.className = `
+    px-3 py-1 rounded transition cursor-pointer
+    ${
+      currentPage === 1
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+    }
+  `;
+  prevBtn.addEventListener('click', () => onPageClick(currentPage - 1));
+  container.appendChild(prevBtn);
+
+  // Page buttons with ellipsis (max 5 pages)
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+  if (endPage - startPage < maxPagesToShow - 1) {
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
   }
 
-  container.innerHTML = '';
-  for (let i = 1; i <= totalPages; i++) {
+  if (startPage > 1) {
+    container.appendChild(createPageBtn(1, currentPage, onPageClick));
+    if (startPage > 2) addEllipsis(container);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    container.appendChild(createPageBtn(i, currentPage, onPageClick));
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) addEllipsis(container);
+    container.appendChild(createPageBtn(totalPages, currentPage, onPageClick));
+  }
+
+  // Next button
+  const nextBtn = document.createElement('button');
+  nextBtn.innerHTML = '›';
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.className = `
+    px-3 py-1 rounded transition cursor-pointer
+    ${
+      currentPage === totalPages
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+    }
+  `;
+  nextBtn.addEventListener('click', () => onPageClick(currentPage + 1));
+  container.appendChild(nextBtn);
+
+  // Helper: create page button
+  function createPageBtn(
+    page: number,
+    currentPage: number,
+    onClick: (page: number) => void
+  ) {
     const btn = document.createElement('button');
-    btn.textContent = i.toString();
-    btn.className = `px-3 py-1 rounded ${
-      i === currentPage
-        ? 'bg-indigo-600 text-white'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-    } transition`;
-    btn.addEventListener('click', () => onPageClick(i));
-    container.appendChild(btn);
+    btn.textContent = page.toString();
+    btn.className = `
+      px-3 py-1 sm:px-4 sm:py-2 rounded text-sm sm:text-base cursor-pointer transition
+      ${
+        page === currentPage
+          ? 'bg-indigo-600 text-white shadow-md'
+          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      }
+    `;
+    btn.addEventListener('click', () => onClick(page));
+    return btn;
+  }
+
+  // Helper: ellipsis
+  function addEllipsis(container: HTMLElement) {
+    const span = document.createElement('span');
+    span.textContent = '...';
+    span.className = 'px-2 py-1 text-gray-500';
+    container.appendChild(span);
   }
 }

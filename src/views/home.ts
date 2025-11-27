@@ -10,6 +10,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 import { navigateTo } from '../router';
 import { startCountdowns } from '../utils/startCountdowns';
 import { showToast } from '../utils/toast';
+import { openEditListingModal } from '../components/editListingModal';
 
 const LISTINGS_PER_PAGE = 9;
 
@@ -369,3 +370,13 @@ export function listingCard(
     </div>
   `;
 }
+
+document.addEventListener('click', async (e) => {
+  const btn = (e.target as HTMLElement).closest('.editListingBtn');
+  if (!btn) return;
+
+  const listingId = btn.getAttribute('data-listing-id');
+  if (!listingId) return;
+
+  openEditListingModal(listingId);
+});
