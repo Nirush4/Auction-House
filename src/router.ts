@@ -9,6 +9,7 @@ import { showToast } from './utils/toast';
 import { ProfileView } from './views/profile';
 import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay';
 import { SearchView } from './views/search';
+import { ListingDetailsView } from './views/listingDetails';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -158,7 +159,11 @@ const routes: Route[] = [
   {
     path: /^\/listing\/([^/]+)\/?$/,
     handler: async (root, params) => {
-      root.innerHTML = `<p>Listing details for ${params.id} (TODO)</p>`;
+      if (params.id) {
+        await ListingDetailsView(root, params.id);
+      } else {
+        root.innerHTML = `<p class="text-gray-500 text-center">Invalid listing ID.</p>`;
+      }
     },
   },
   {
