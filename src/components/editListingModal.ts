@@ -1,6 +1,7 @@
 import { getListing, updateListing } from '../api/listings';
 import { showToast } from '../utils/toast';
 import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
+import { navigateTo } from '../router';
 
 export async function openEditListingModal(listingId: string) {
   showLoadingOverlay({ message: 'Loading listing...' });
@@ -150,7 +151,7 @@ export async function openEditListingModal(listingId: string) {
           modal.remove();
 
           showToast('success', 'Listing updated successfully!');
-          location.reload();
+          navigateTo('/profile'); // this triggers client-side router
         } catch (err) {
           hideLoadingOverlay();
           showToast('error', (err as Error).message);
