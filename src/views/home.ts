@@ -7,9 +7,10 @@ import {
   setupCategoryScroll,
 } from '../components/categoryFilter';
 import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
-import { navigateTo } from '../router';
+
 import { startCountdowns } from '../utils/startCountdowns';
 import { showToast } from '../utils/toast';
+import { navigateTo } from '../router';
 
 const LISTINGS_PER_PAGE = 9;
 
