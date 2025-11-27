@@ -179,12 +179,12 @@ export async function ListingDetailsView(
               ${
                 isOwner
                   ? `
-                  <button class="editListingBtn bg-indigo-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-500 transition"
+                  <button class="editListingBtn bg-indigo-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-indigo-500 transition cursor-pointer"
                           data-listing-id="${listing.id}">
                     Edit Listing
                   </button>
 
-                  <button class="deleteListingBtn bg-red-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-red-500 transition"
+                  <button class="deleteListingBtn bg-red-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-red-500 transition cursor-pointer"
                           data-listing-id="${listing.id}">
                     Delete Listing
                   </button>`

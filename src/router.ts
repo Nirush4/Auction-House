@@ -28,7 +28,6 @@ export function mountNavbar() {
 
   header.innerHTML = renderNavbar();
 
-  // Logout handler with loading overlay
   async function handleLogout() {
     showLoadingOverlay({ message: 'Logging you out...' });
 
@@ -47,21 +46,18 @@ export function mountNavbar() {
     document.querySelectorAll('a[href="/create"]').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        navigateTo('/create'); // pushes state and triggers router
+        navigateTo('/create');
       });
     });
   }
 
-  // Desktop logout button
   const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
   if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
 
-  // Mobile logout button
   const mobileLogoutBtn =
     header.querySelector<HTMLButtonElement>('#mobileLogoutBtn');
   if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
 
-  // Mobile menu toggle
   const menuBtn = header.querySelector<HTMLButtonElement>('#menuBtn');
   const mobileMenu = header.querySelector<HTMLDivElement>('#mobileMenu');
 
@@ -125,14 +121,11 @@ const routes: Route[] = [
     handler: async (root) => ProfileView(root),
     protected: true,
   },
-  // Removed the extra comma
   {
     path: /^\/create\/?$/,
     handler: async (root) => {
-      // Load the profile page view first (so the form exists in DOM)
       await ProfileView(root);
 
-      // After DOM is ready, trigger the "Create Listing" form
       const createListingFormContainer = document.getElementById(
         'createListingFormContainer'
       );
@@ -144,15 +137,12 @@ const routes: Route[] = [
           behavior: 'smooth',
           block: 'start',
         });
-
-        // Ensure the button is in correct style
         createListingBtn.textContent = 'Create New Listing';
         createListingBtn.classList.remove('bg-gray-600');
         createListingBtn.classList.add('bg-emerald-600');
       }
 
-      // Attach profile handlers so the form submission works
-      attachProfileHandlers(root, getUserProfileData()); // <-- getUserProfileData() should return the Profile object
+      attachProfileHandlers(root, getUserProfileData());
     },
     protected: true,
   },
@@ -187,7 +177,9 @@ export async function router(): Promise<void> {
   mountFooter();
   setupNavbarSearch();
 
-  const currentPath = window.location.pathname;
+  // ⚡ Normalize path: remove trailing slashes
+  const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+
   for (const route of routes) {
     const keys: string[] = route.path.source.includes('([^/]+)') ? ['id'] : [];
     const match = currentPath.match(route.path);
@@ -228,6 +220,7 @@ export function initRouter(): void {
 
   router();
 }
+
 function attachProfileHandlers(_root: HTMLElement, _arg1: any) {
   throw new Error('Function not implemented.');
 }
