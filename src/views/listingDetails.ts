@@ -3,7 +3,6 @@ import { getUser } from '../utils/storage';
 import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 import { startCountdown } from '../utils/startCountdowns';
 import { showToast } from '../utils/toast';
-import { navigateTo } from '../router'; // fix login button
 
 export async function ListingDetailsView(
   root: HTMLElement,
