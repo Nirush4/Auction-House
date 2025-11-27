@@ -325,9 +325,11 @@ function profileTemplate(
 
     <!-- Recent Bids Section -->
     <section class="">
-      <header class="flex justify-between mb-1">
+      <header class="flex gap-5 align-middle mb-1">
         <h2 class="text-xl font-semibold">Recent bids</h2>
-        <span class="text-sm text-gray-600">${bids.length}</span>
+        <span class="text-base sm:text-lg font-bold text-gray-800">${
+          bids.length
+        }</span>
       </header>
       ${bidsSectionTemplate(bids)}
     </section>

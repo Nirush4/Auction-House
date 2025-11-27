@@ -6,7 +6,7 @@ export function renderNavbar() {
   const username = getUser();
 
   return `
-    <nav class="fixed top-0 left-0 w-full z-100 bg-white/70 backdrop-blur-xl border-b border-gray-200 shadow-sm">
+    <nav class="fixed top-0 left-0 w-full z-500 bg-white/70 backdrop-blur-xl border-b border-gray-200 shadow-sm">
       <div class="container mx-auto px-5 py-3 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="flex items-center gap-2 text-2xl font-bold tracking-tight">
