@@ -130,6 +130,13 @@ async function fetchListings(page = 1, tag = '') {
       .map((l) => listingCard(l, currentUser))
       .join('');
 
+    // Attach login button event
+    document.querySelectorAll('button[data-login]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        navigateTo('/login');
+      });
+    });
+
     startCountdowns(listings);
 
     renderPagination(paginationControls, totalPages, page, (p) =>
@@ -352,7 +359,7 @@ export function listingCard(
                    </button>
                  </div>`
             : `<div class="mt-3">
-                   <button data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" onclick="window.location.hash = '/login'">
+                   <button id="login" data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer">
                      Login to Bid
                    </button>
                  </div>`
