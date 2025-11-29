@@ -23,7 +23,7 @@ export async function HomeView(root: HTMLElement): Promise<void> {
       ${CategoryFilter()}
     </section>
 
-    <section class="pt-14 pb-12 sm:pb-20 space-y-10 container mx-auto px-6">
+    <section class="pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
@@ -317,7 +317,7 @@ export function listingCard(
 
       <div class="p-5 space-y-3">
         <a href="/listing/${listing.id}">
-          <h3 class="font-medium text-xl sm:text-lg xs:text-base text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+          <h3 class="font-medium text-xl sm:text-lg xs:text-base text-gray-900 transition-colors line-clamp-1">
             ${listing.title ?? 'Untitled'}
           </h3>
         </a>
@@ -342,28 +342,32 @@ export function listingCard(
         ${
           isOwner
             ? `<div class="flex gap-2 mt-3">
-            <button class="editListingBtn flex-1 rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer" data-listing-id="${listing.id}">
+       <button
+  class="editListingBtn flex-1 rounded-lg bg-blue-600 py-2 font-medium text-white
+         hover:bg-blue-700 transition-colors cursor-pointer"
+  data-listing-id="${listing.id}">
   Edit
 </button>
 
-<button 
-  class="deleteListingBtn flex-1 rounded-lg bg-red-600 py-2 font-medium text-white hover:bg-red-500 transition cursor-pointer"
+<button
+  class="deleteListingBtn flex-1 rounded-lg bg-red-600 py-2 font-medium text-white
+         hover:bg-red-700 transition-colors cursor-pointer"
   data-listing-id="${listing.id}">
   Delete
 </button>
 
-               </div>`
+      </div>`
             : user
             ? `<div class="mt-3">
-                   <button data-bid class="w-full rounded-lg bg-green-600 py-2 font-medium text-white hover:bg-green-500 transition cursor-pointer" onclick="handleBid('${listing.id}')">
-                     Bid Now
-                   </button>
-                 </div>`
+         <button data-bid data-listing-id="${listing.id}" class="w-full rounded-lg bg-green-600 py-2 font-medium text-white hover:bg-green-500 transition cursor-pointer">
+           <a href="/listing/${listing.id}" class="block w-full h-full">Bid Now</a>
+         </button>
+       </div>`
             : `<div class="mt-3">
-                   <button id="login" data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer">
-                     Login to Bid
-                   </button>
-                 </div>`
+         <button id="login" data-login class="w-full rounded-lg bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-500 transition cursor-pointer">
+           Login to Bid
+         </button>
+       </div>`
         }
 
       </div>
