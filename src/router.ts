@@ -42,13 +42,6 @@ export function mountNavbar() {
       showToast('error', '❌ Logout failed.');
       hideLoadingOverlay();
     }
-
-    document.querySelectorAll('a[href="/create"]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigateTo('/create');
-      });
-    });
   }
 
   const logoutBtn = header.querySelector<HTMLButtonElement>('#logoutBtn');
@@ -101,66 +94,64 @@ function parseParams(
   return params;
 }
 
-// 🧭 Define routes without #
 const routes: Route[] = [
   {
     path: /^\/$/,
     handler: (root) => {
-      if (isAuthenticated()) {
-        navigateTo('/home');
-      } else {
-        HomeView(root);
-      }
+      if (isAuthenticated()) navigateTo('/home');
+      else HomeView(root);
     },
   },
   { path: /^\/home\/?$/, handler: (root) => HomeView(root) },
   { path: /^\/login\/?$/, handler: (root) => LoginView(root) },
   { path: /^\/register\/?$/, handler: (root) => RegisterView(root) },
+
+  // ✅ FIXED: use REAL ProfileView
   {
     path: /^\/profile\/?$/,
-    handler: async (root) => ProfileView(root),
+    handler: async (root) => {
+      await ProfileView(root);
+    },
     protected: true,
   },
+
+  // ✅ FIXED /create page: opens form after rendering profile
   {
     path: /^\/create\/?$/,
     handler: async (root) => {
       await ProfileView(root);
 
-      const createListingFormContainer = document.getElementById(
-        'createListingFormContainer'
-      );
-      const createListingBtn = document.getElementById('createListingBtn');
+      const form = document.getElementById('createListingFormContainer');
+      const button = document.getElementById('createListingBtn');
 
-      if (createListingFormContainer && createListingBtn) {
-        createListingFormContainer.classList.remove('hidden');
-        createListingFormContainer.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-        createListingBtn.textContent = 'Create New Listing';
-        createListingBtn.classList.remove('bg-gray-600');
-        createListingBtn.classList.add('bg-emerald-600');
+      if (form) {
+        form.classList.remove('hidden');
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      attachProfileHandlers(root, getUserProfileData());
+      if (button) {
+        button.textContent = 'Create New Listing';
+        button.classList.remove('bg-gray-600');
+        button.classList.add('bg-emerald-600');
+      }
     },
     protected: true,
   },
+
+  // Listing Details
   {
     path: /^\/listing\/([^/]+)\/?$/,
     handler: async (root, params) => {
-      if (params.id) {
-        await ListingDetailsView(root, params.id);
-      } else {
+      if (params.id) await ListingDetailsView(root, params.id);
+      else
         root.innerHTML = `<p class="text-gray-500 text-center">Invalid listing ID.</p>`;
-      }
     },
   },
+
+  // Search
   {
     path: /^\/search\/?$/,
-    handler: async (root) => {
-      await SearchView(root);
-    },
+    handler: async (root) => SearchView(root),
   },
 ];
 
@@ -177,7 +168,6 @@ export async function router(): Promise<void> {
   mountFooter();
   setupNavbarSearch();
 
-  // ⚡ Normalize path: remove trailing slashes
   const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
 
   for (const route of routes) {
@@ -202,9 +192,7 @@ export async function router(): Promise<void> {
   `;
 }
 
-window.addEventListener('popstate', () => {
-  router();
-});
+window.addEventListener('popstate', () => router());
 
 export function initRouter(): void {
   document.addEventListener('click', (event) => {
@@ -219,12 +207,4 @@ export function initRouter(): void {
   });
 
   router();
-}
-
-function attachProfileHandlers(_root: HTMLElement, _arg1: any) {
-  throw new Error('Function not implemented.');
-}
-
-function getUserProfileData(): any {
-  throw new Error('Function not implemented.');
 }

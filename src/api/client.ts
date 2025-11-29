@@ -3,7 +3,7 @@ import { getLocalItem, setLocalItem } from '../utils/storage';
 const API_URL =
   (import.meta as any).env?.VITE_API_BASE?.replace(/\/+$/, '') ||
   'https://v2.api.noroff.dev';
-const API_KEY_HEADER = 'X-Noroff-API-Key';
+export const API_KEY_HEADER = 'X-Noroff-API-Key';
 const PUBLIC_API_KEY = (import.meta as any).env?.VITE_API_TOKEN || null;
 
 export type ApiClientOptions = Omit<RequestInit, 'body'> & {
@@ -206,18 +206,16 @@ export async function registerUser(data: {
     },
     body: JSON.stringify(data),
   });
+
   const json = await res.json();
+
   if (!res.ok) {
     const message = json?.errors?.[0]?.message || 'Registration failed';
     throw new ApiError(message, res.status);
   }
-  const token = json?.data?.accessToken || json?.accessToken;
-  const username = json?.data?.name || json?.name;
-  if (!token || !username) throw new Error('Missing token or username');
 
-  setLocalItem('accessToken', token);
-  setLocalItem('username', username);
-  return json;
+  // Registration does NOT return a token, so don't check for it
+  return json; // just return the response data
 }
 
 /* ------------------------- API KEY ------------------------- */

@@ -7,7 +7,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 function template(): string {
   return `
     <section class="flex justify-center pt-35 px-4">
-      <div class="w-full max-w-md mb-16 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200 relative overflow-hidden">
+      <div class="w-full max-w-md mb-18 sm:mb-30 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200 relative overflow-hidden">
 
         <!-- Loading Overlay -->
 <div id="loadingOverlay" class="hidden absolute inset-0 bg-white/50 backdrop-blur-lg flex flex-col items-center justify-center z-50 transition-opacity duration-500">
