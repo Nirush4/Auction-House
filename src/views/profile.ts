@@ -11,7 +11,7 @@ import { createListing, deleteListing } from '../api/listings';
 import { getUser, saveAuth } from '../utils/storage';
 
 import type { Profile, Listing, Bid } from '../types/index';
-import { navigateTo, router } from '../router';
+import { navigateTo } from '../router';
 
 import { showToast } from '../utils/toast';
 import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
@@ -19,6 +19,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
 import { listingCard } from '../views/home';
 import { startCountdowns } from '../utils/startCountdowns';
 import { showConfirmModal } from '../utils/confirmModal';
+import { fetchProfileWinnings, winningsCard } from '../api/winnings';
 
 // -------------------------------
 // Helper
@@ -192,7 +193,7 @@ export function listingsSectionTemplate(
   currentUserName?: string
 ): string {
   if (!listings.length)
-    return `<p class="text-center text-gray-500">No listings found.</p>`;
+    return `<p class="text-center text-gray-500 text-base sm:test-lg">No listings found.</p>`;
 
   return `
     <section class="pt-10 pb-12 space-y-10 container mx-auto">
@@ -211,35 +212,141 @@ export function listingsSectionTemplate(
 }
 
 function bidsSectionTemplate(bids: Bid[]): string {
-  if (!bids.length) return `<p class="text-sm text-gray-600">No bids yet.</p>`;
+  if (!bids.length) {
+    return `<p class="text-base sm:text-lg text-gray-600">No bids yet.</p>`;
+  }
 
   return `
-    <ul class="space-y-3">
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       ${bids
         .slice(0, 5)
-        .map(
-          (b) => `
-        <li class="rounded border border-gray-200 p-4">
-          <p class="font-medium">${b.listing?.title ?? 'Listing'}</p>
-          <p class="text-sm text-gray-600">Amount: ${b.amount}</p>
-          <p class="text-xs text-gray-500">Placed: ${new Date(
-            b.created
-          ).toLocaleString()}</p>
-        </li>
-      `
-        )
+        .map((bid) => {
+          const { listing } = bid;
+          if (!listing) return '';
+
+          const {
+            id,
+            title = 'Untitled',
+            description: rawDescription = '',
+            media = [],
+            bids: listingBids = [],
+            created,
+            seller,
+            tags = [],
+          } = listing;
+
+          // Fallback if seller is missing or nested differently
+          const actualSeller =
+            seller ??
+            listing?.user ?? // sometimes seller data might be under user
+            {};
+
+          const sellerName = actualSeller?.name ?? 'Seller';
+          const sellerAvatar =
+            actualSeller?.avatar?.url ??
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
+          const sellerAlt = actualSeller?.avatar?.alt ?? sellerName;
+
+          const listingDescription = rawDescription.trim()
+            ? rawDescription.trim().slice(0, 35) +
+              (rawDescription.trim().length > 35 ? '…' : '')
+            : 'No description provided.';
+
+          const highestBid = listingBids.length
+            ? Math.max(
+                ...listingBids.map(
+                  (b: { amount: any }) => Number(b.amount) || 0
+                )
+              )
+            : 0;
+
+          const createdDate = created
+            ? new Date(created).toLocaleDateString('en-GB')
+            : 'Unknown';
+
+          const mediaUrl =
+            media[0]?.url ??
+            'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800';
+          const mediaAlt = media[0]?.alt ?? title;
+
+          const category = tags[0] ?? null;
+
+          return `
+            <div class="group relative rounded-2xl border-7 border-gray-100 bg-white/60 backdrop-blur-md overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
+
+              <!-- Seller info with gradient badge -->
+              <div class="flex items-center gap-3 pt-1 mx-5 my-3">
+                <img src="${sellerAvatar}" alt="${sellerAlt}" class="h-8 w-8 rounded-full object-cover border" />
+                <p class="text-sm sm:text-base">
+                  <span class="font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
+                               px-2 py-1 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all">
+                    ${sellerName}
+                  </span>
+                </p>
+              </div>
+
+              <!-- Listing image with category tag -->
+              <a href="/listing/${id}">
+                <div class="relative aspect-video overflow-hidden">
+                  <img src="${mediaUrl}" alt="${mediaAlt}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70 group-hover:opacity-80 transition-opacity"></div>
+                  ${
+                    category
+                      ? `<div class="absolute top-3 left-3 bg-indigo-600/90 text-white text-xs font-medium px-2 py-1 rounded shadow">
+                           ${category}
+                         </div>`
+                      : ''
+                  }
+                </div>
+              </a>
+
+              <!-- Inner content following listingCard style -->
+              <div class="p-5 space-y-3">
+                <a href="/listing/${id}">
+                  <h3 class="font-medium text-xl sm:text-lg text-gray-900 line-clamp-1 transition-colors">
+                    ${title}
+                  </h3>
+                </a>
+
+                <p class="text-sm sm:text-[14px] text-gray-600 line-clamp-2 leading-snug">
+                  ${listingDescription}
+                </p>
+
+                <div class="flex justify-between items-center text-sm sm:text-xs text-gray-600">
+                  <p class="text-gray-500 text-xs sm:text-[14px]">Created: <span class="font-medium text-gray-800">${createdDate}</span></p>
+                  <p class="text-gray-700 text-xs sm:text-[14px] font-bold">
+                    Highest Bid: <span class="font-bold text-indigo-600 text-lg sm:text-base">$${highestBid}</span>
+                  </p>
+                </div>
+
+                <p class="text-xs sm:text-[14px] text-gray-600">
+                  Your Bid: <span class="font-semibold text-indigo-600">$${
+                    bid.amount
+                  }</span>
+                </p>
+
+                <div class="mt-3">
+                  <a href="/listing/${id}" class="w-full text-center rounded-lg bg-blue-600 py-2 text-white font-medium hover:bg-blue-700 transition-colors block">
+                    View Listing
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        })
         .join('')}
-    </ul>
+    </div>
   `;
 }
 
 // -------------------------------
 // PROFILE PAGE TEMPLATE
 // -------------------------------
-function profileTemplate(
+export function profileTemplate(
   profile: Profile,
   listings: Listing[],
-  bids: Bid[]
+  bids: Bid[],
+  winnings: Listing[]
 ): string {
   const avatarUrl =
     profile.avatar?.url ?? 'https://via.placeholder.com/120?text=Avatar';
@@ -247,7 +354,7 @@ function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
 
   return `
-  <section class="mt-16 pb-12 space-y-10 container mx-auto px-6">
+  <section class="mt-16 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
 
     <div class="relative rounded-2xl shadow-lg">
       <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"
@@ -255,7 +362,7 @@ function profileTemplate(
       <div class="absolute bottom-[-215px] sm:bottom-[-170px] w-full z-20 flex flex-col sm:flex-row items-start sm:justify-between sm:items-center px-5 sm:px-10 gap-4">
         <div class="flex flex-col items-start gap-4">
           <img src="${avatarUrl}" alt="${profile.avatar?.alt ?? profile.name}"
-            class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 border-white shadow-md object-cover" />
+            class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 bg-white border-white shadow-md object-cover" />
           <div class="text-black drop-shadow-md">
             <h1 class="text-xl md:text-2xl font-medium">${profile.name}</h1>
             <p class="text-base text-gray-500">${profile.email}</p>
@@ -272,17 +379,17 @@ function profileTemplate(
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-5 lg:grid-cols-4 mt-60">
-      <div class="rounded-md sm:rounded-xl bg-indigo-500 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
+    <div class="grid grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-4 mt-65 sm:mt-55">
+      <div class="rounded-md sm:rounded-xl bg-gray-700 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
         profile.credits
       }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-orange-800 p-2 sm:p-4 text-white shadow-lg">Listings: <strong>${
+      <div class="rounded-md sm:rounded-xl bg-gray-600 p-2 sm:p-4 text-white shadow-lg">Listings: <strong>${
         listings.length
       }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-pink-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
+      <div class="rounded-md sm:rounded-xl bg-gray-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
         bids.length
       }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-yellow-600 p-2 sm:p-4 text-white shadow-lg">Value: <strong>${listings.reduce(
+      <div class="rounded-md sm:rounded-xl bg-gray-400 p-2 sm:p-4 text-white shadow-lg">Value: <strong>${listings.reduce(
         (acc, l) => acc + (l.price ?? 0),
         0
       )}</strong></div>
@@ -307,12 +414,21 @@ function profileTemplate(
 
       <section class="">
         <header class="flex gap-5 align-middle mb-1">
-          <h2 class="text-xl font-semibold">Recent bids</h2>
-          <span class="text-base sm:text-lg font-bold text-gray-800">${
-            bids.length
-          }</span>
+          <h2 class="text-lg sm:text-2xl font-bold text-gray-800 mb-10">Recent bids</h2>
         </header>
         ${bidsSectionTemplate(bids)}
+      </section>
+
+      <!-- Winnings Section -->
+      <section id="winningsSection" class="mt-6">
+        <h2 class="text-lg sm:text-2xl font-bold text-gray-800 mb-10">Your Winnings</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          ${
+            winnings.length > 0
+              ? winnings.map((win) => winningsCard(win)).join('')
+              : `<p class="text-base sm:text-lg text-gray-600">No winnings yet.</p>`
+          }
+        </div>
       </section>
     </div>
   </section>
@@ -322,24 +438,29 @@ function profileTemplate(
 // -------------------------------
 // MAIN VIEW
 // -------------------------------
-export async function ProfileView(root: HTMLElement): Promise<void> {
+export async function ProfileView(
+  root: HTMLElement,
+  _profileData?: any
+): Promise<void> {
   const userName = getUser();
   if (!userName) return navigateTo('/login');
 
   showLoadingOverlay({ message: 'Loading your profile...' });
 
   try {
-    const [profile, listings, bids] = await Promise.all([
+    const [profile, listings, bids, winnings] = await Promise.all([
       fetchProfile(userName),
       fetchProfileListings(userName),
       fetchProfileBids(userName),
+      fetchProfileWinnings(userName),
     ]);
 
     saveAuth(localStorage.getItem('accessToken') ?? '', profile, undefined);
 
-    root.innerHTML = profileTemplate(profile, listings, bids);
-    startCountdowns(listings);
+    // Pass Listing[] directly to template
+    root.innerHTML = profileTemplate(profile, listings, bids, winnings);
 
+    startCountdowns(listings);
     attachProfileHandlers(root, profile);
     attachDeleteListingHandlers(root, profile);
   } catch (err) {
@@ -350,6 +471,7 @@ export async function ProfileView(root: HTMLElement): Promise<void> {
     hideLoadingOverlay();
   }
 }
+
 // -------------------------------
 // EVENT HANDLERS
 // -------------------------------
@@ -515,10 +637,11 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   // -------------------------------
   createListingForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
+
     const submitBtn =
       createListingForm.querySelector<HTMLButtonElement>('button');
-    submitBtn!.disabled = true;
 
+    submitBtn!.disabled = true;
     showLoadingOverlay({ message: 'Creating your listing...' });
 
     const title =
@@ -533,7 +656,9 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
 
     listingMessage!.classList.add('hidden');
 
-    // Validation
+    // -----------------------------
+    // VALIDATION
+    // -----------------------------
     if (!title || !endsAtValue) {
       listingMessage!.textContent = 'Title and end date are required.';
       listingMessage!.className = 'text-sm text-red-600';
@@ -544,6 +669,9 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     }
 
     try {
+      // -----------------------------
+      // API CALL
+      // -----------------------------
       await createListing({
         title,
         description,
@@ -559,23 +687,31 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
           : undefined,
       });
 
+      // Success toast
       showToast('success', '🎉 Listing created successfully!');
+
+      // Reset form
       createListingForm.reset();
 
-      // Hide form and reset button
+      // Hide form UI
       createListingFormContainer?.classList.add('hidden');
       createListingBtn!.textContent = 'Create New Listing';
       createListingBtn!.classList.replace('bg-gray-600', 'bg-emerald-600');
 
+      // -----------------------------
+      // REDIRECT TO PROFILE
+      // -----------------------------
       setTimeout(() => {
         hideLoadingOverlay();
-        router();
+        navigateTo('/profile'); // <<--- FIXED
       }, 900);
     } catch (err) {
       listingMessage!.textContent = (err as Error).message;
       listingMessage!.className = 'text-sm text-red-600';
       listingMessage!.classList.remove('hidden');
-      showToast('error', '❌ Create new post failed.');
+
+      showToast('error', '❌ Failed to create listing.');
+
       setTimeout(() => hideLoadingOverlay(), 800);
     } finally {
       submitBtn!.disabled = false;

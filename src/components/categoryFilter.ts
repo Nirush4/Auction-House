@@ -141,19 +141,11 @@ export async function fetchListings(
   activeOnly: boolean = true
 ) {
   const tags = categoryTagMap[categoryId];
-
-  // For "All listings"
-  if (!tags) {
-    return;
-  }
-
   const allResults: any[] = [];
 
-  // Fetch each possible tag separately
-  for (const tag of tags) {
+  // If "all" or no tags, fetch all listings
+  if (categoryId === 'all' || !tags) {
     const params = new URLSearchParams();
-
-    params.append('_tag', tag);
     if (activeOnly) params.append('_active', 'true');
     params.append('_seller', 'true');
     params.append('_bids', 'true');
@@ -166,22 +158,48 @@ export async function fetchListings(
 
     try {
       const res = await fetch(url);
-      if (!res.ok) continue;
+      if (res.ok) {
+        const json = await res.json();
+        const listings = json.data || [];
+        allResults.push(...listings);
+      }
+    } catch (err) {
+      console.error('Failed to fetch all listings', err);
+    }
+  } else {
+    // Fetch listings by each tag
+    for (const tag of tags) {
+      const params = new URLSearchParams();
+      params.append('_tag', tag);
+      if (activeOnly) params.append('_active', 'true');
+      params.append('_seller', 'true');
+      params.append('_bids', 'true');
+      params.append('limit', '9');
+      params.append('page', page.toString());
+      params.append('sort', 'created');
+      params.append('sortOrder', 'desc');
 
-      const json = await res.json();
-      const listings = json.data || [];
+      const url = `https://v2.api.noroff.dev/auction/listings?${params.toString()}`;
 
-      allResults.push(...listings);
-    } catch {
-      // ignore errors for individual tags
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          const json = await res.json();
+          const listings = json.data || [];
+          allResults.push(...listings);
+        }
+      } catch (err) {
+        console.error(`Failed to fetch listings for tag: ${tag}`, err);
+      }
     }
   }
 
-  // Remove duplicates (same listing ID)
+  // Remove duplicates by listing ID
   const uniqueResults = Array.from(
     new Map(allResults.map((item) => [item.id, item])).values()
   );
 
+  // Render the listings
   renderListings(uniqueResults);
 }
 
