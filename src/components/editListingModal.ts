@@ -60,7 +60,7 @@ export async function openEditListingModal(listingId: string) {
 
           <div class="flex gap-3 pt-2">
             <button type="submit" id="listingSubmitBtn"
-              class="flex-1 rounded sm:rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 flex justify-center items-center gap-2 text-sm sm:text-base md:text-base cursor-pointer">
+              class="flex-1 rounded sm:rounded-lg bg-blue-600  hover:bg-blue-700 transition-colors px-4 py-2 font-medium text-white flex justify-center items-center gap-2 text-sm sm:text-base md:text-base cursor-pointer">
               <span class="submitText">Save Changes</span>
               <span class="loadingSpinner hidden h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
             </button>

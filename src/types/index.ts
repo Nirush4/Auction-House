@@ -50,6 +50,8 @@ export interface Bid {
 }
 
 export interface Listing {
+  success: any;
+  message: string | undefined;
   category: string;
   startingBid: any;
   id: string;
