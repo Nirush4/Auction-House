@@ -198,7 +198,7 @@ export function listingsSectionTemplate(
   return `
     <section class="pt-10 pb-12 space-y-10 container mx-auto">
       <header class="flex justify-between mb-1">
-        <h2 class="text-lg sm:text-2xl font-bold text-gray-800">🛒 Your Listings</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">🛒 Your Listings</h2>
         <span class="text-base sm:text-lg font-bold text-gray-800">${
           listings.length
         } total</span>
@@ -354,7 +354,7 @@ export function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
 
   return `
-  <section class="mt-16 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
+  <section class="mt-16 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6">
 
     <div class="relative rounded-2xl shadow-lg">
       <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"
@@ -379,7 +379,7 @@ export function profileTemplate(
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-4 mt-65 sm:mt-55">
+    <div class="grid px-6 grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-4 mt-65 sm:mt-55">
       <div class="rounded-md sm:rounded-xl bg-gray-700 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
         profile.credits
       }</strong></div>
@@ -389,23 +389,23 @@ export function profileTemplate(
       <div class="rounded-md sm:rounded-xl bg-gray-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
         bids.length
       }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-gray-400 p-2 sm:p-4 text-white shadow-lg">Value: <strong>${listings.reduce(
-        (acc, l) => acc + (l.price ?? 0),
-        0
-      )}</strong></div>
+      <div class="rounded-md sm:rounded-xl bg-gray-400 p-2 sm:p-4 text-white shadow-lg">Wins: <strong>${
+        winnings.length
+      }</strong></div>
     </div>
 
-    <div class="space-y-8">
+    <div class="space-y-8 px-6">
       <div id="profileFormContainer" class="hidden">${profileFormTemplate(
         profile
       )}</div>
       <div id="createListingFormContainer" class="hidden">${createListingFormTemplate()}</div>
 
-      <button id="createListingBtn"
-        class="w-full rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 cursor-pointer
+     <button id="createListingBtn"
+        class="w-full flex items-center justify-center gap-2 rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 cursor-pointer
                text-sm sm:text-base md:text-lg">
-        Create New Listing
-      </button>
+  <i class="fa-solid fa-plus"></i>
+  Create New Listing
+</button>
 
       <section><div id="profileListingsContainer">${listingsSectionTemplate(
         listings,
@@ -414,14 +414,14 @@ export function profileTemplate(
 
       <section class="">
         <header class="flex gap-5 align-middle mb-1">
-          <h2 class="text-lg sm:text-2xl font-bold text-gray-800 mb-10">Recent bids</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Recent bids</h2>
         </header>
         ${bidsSectionTemplate(bids)}
       </section>
 
       <!-- Winnings Section -->
       <section id="winningsSection" class="mt-6">
-        <h2 class="text-lg sm:text-2xl font-bold text-gray-800 mb-10">Your Winnings</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Your Winnings</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           ${
             winnings.length > 0
