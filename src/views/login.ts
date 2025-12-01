@@ -1,4 +1,4 @@
-import { loginUser, fetchApiKey, get } from '../api/client';
+import { loginUser, fetchApiKey } from '../api/client';
 import { navigateTo } from '../router';
 import { getLocalItem, getUser } from '../utils/storage';
 import { showToast } from '../utils/toast';
