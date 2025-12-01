@@ -243,14 +243,14 @@ export function CategoryFilter(activeCategory: string = 'all') {
       </button>
 
       <nav id="categoryContainer" 
-        class="flex gap-2 justify-between py-2 sm:py-4 px-4 sm:px-6 overflow-x-auto scrollbar-hide scroll-smooth">
+        class="flex gap-1 sm:gap-2 justify-between py-2 sm:py-4 px-4 sm:px-6 overflow-x-auto scrollbar-hide scroll-smooth">
         
         ${categories
           .map(
             (cat) => `
           <button 
             data-category="${cat.id}"
-            class="category-btn flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition cursor-pointer 
+            class="category-btn flex flex-col items-center gap-1 px-2 md:px-4 py-2 rounded-lg transition cursor-pointer 
               ${
                 cat.id === activeCategory
                   ? 'bg-gray-200 border border-gray-600 shadow-sm'
@@ -258,7 +258,7 @@ export function CategoryFilter(activeCategory: string = 'all') {
               }"
           >
             <i class="${cat.icon} text-xl text-gray-500"></i>
-            <span class="text-sm whitespace-nowrap">${cat.label}</span>
+            <span class="text-xs whitespace-nowrap">${cat.label}</span>
           </button>`
           )
           .join('')}
