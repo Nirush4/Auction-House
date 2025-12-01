@@ -4,7 +4,7 @@ import { showToast } from '../utils/toast';
 
 function template(): string {
   return `
-    <section class="flex justify-center pt-35 px-4">
+    <section class="flex justify-center pt-35 md:pt-50 px-4">
       <div class="w-full max-w-md mb-18 sm:mb-30 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <div class="text-center mb-8">
           <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">

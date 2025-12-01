@@ -73,7 +73,7 @@ export async function ListingDetailsView(
       listing.seller?.avatar?.alt ?? listing.seller?.name ?? 'Seller';
 
     root.innerHTML = `
-      <section class="container mx-auto px-4 mt-20 sm:mt-25 mb-12 sm:mb-30">
+      <section class="container mx-auto px-6 mt-20 sm:mt-32 mb-12 sm:mb-30">
         <!-- Hero Gallery -->
         <div class="relative w-full rounded-xl overflow-hidden shadow-xl mb-10">
           <img id="mainGalleryImg" src="${mainImage}" alt="${
