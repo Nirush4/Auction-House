@@ -8,7 +8,7 @@ const LISTINGS_PER_PAGE = 9;
 
 export async function SearchView(root: HTMLElement) {
   root.innerHTML = `
-    <div class="container mx-auto px-5 mt-24 mb-12 sm:mb-20">
+    <div class="container mx-auto px-5 mt-23 md:mt-35 mb-12 sm:mb-20">
       <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       <div id="paginationControls" class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-15"></div>
     </div>
