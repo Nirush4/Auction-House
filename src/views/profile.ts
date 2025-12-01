@@ -354,7 +354,7 @@ export function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
 
   return `
-  <section class="mt-16 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6">
+  <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6">
 
     <div class="relative rounded-2xl shadow-lg">
       <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"

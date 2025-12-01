@@ -19,11 +19,11 @@ export async function HomeView(root: HTMLElement): Promise<void> {
     ${HeroSection()}  
 
     <!-- Category Filter Bar -->
-    <section id="listItems" class="container mx-auto px-6 pt-20 sm:pt-25">
+    <section id="listItems" class="container mx-auto px-6 pt-18 sm:pt-23">
       ${CategoryFilter()}
     </section>
 
-    <section class="pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
+    <section class="pt-12 md:pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
