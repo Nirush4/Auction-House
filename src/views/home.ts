@@ -19,11 +19,11 @@ export async function HomeView(root: HTMLElement): Promise<void> {
     ${HeroSection()}  
 
     <!-- Category Filter Bar -->
-    <section id="listItems" class="container mx-auto px-6 pt-20 sm:pt-25">
+    <section id="listItems" class="container mx-auto px-6 pt-18 sm:pt-23">
       ${CategoryFilter()}
     </section>
 
-    <section class="pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
+    <section class="pt-12 md:pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-xl sm:text-2xl font-bold text-gray-800">🏠 Latest Auctions</h1>
@@ -52,6 +52,41 @@ export async function HomeView(root: HTMLElement): Promise<void> {
 
   // Fetch initial listings
   fetchListings(1);
+}
+
+/** Skeleton card HTML */
+function listingSkeleton(): string {
+  return `
+    <div class="animate-pulse flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      
+      <!-- Seller info -->
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 bg-gray-300 rounded-full"></div>
+        <div class="flex-1 space-y-2">
+          <div class="h-3 bg-gray-300 rounded w-3/4"></div>
+        </div>
+      </div>
+
+      <!-- Image placeholder -->
+      <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-300"></div>
+
+      <!-- Title and description -->
+      <div class="space-y-2">
+        <div class="h-5 bg-gray-300 rounded w-3/4"></div>
+        <div class="h-3 bg-gray-300 rounded w-full"></div>
+        <div class="h-3 bg-gray-300 rounded w-5/6"></div>
+      </div>
+
+      <!-- Bid info and countdown -->
+      <div class="flex justify-between items-center mt-3">
+        <div class="h-4 bg-gray-300 rounded w-1/3"></div>
+        <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+      </div>
+
+      <!-- Bid button placeholder -->
+      <div class="h-10 bg-gray-300 rounded-lg mt-3 w-full"></div>
+    </div>
+  `;
 }
 
 /**
@@ -91,6 +126,11 @@ async function fetchListings(page = 1, tag = '') {
   const homeContent = document.getElementById('homeContent')!;
   const paginationControls = document.getElementById('paginationControls')!;
 
+  // Show skeletons while fetching
+  homeContent.innerHTML = Array.from({ length: LISTINGS_PER_PAGE })
+    .map(() => listingSkeleton())
+    .join('');
+
   showLoadingOverlay({ message: 'Fetching listings...' });
 
   try {
@@ -127,9 +167,15 @@ async function fetchListings(page = 1, tag = '') {
 
     const currentUser = getUser() ?? undefined;
 
+    // Render listings with fade-in
     homeContent.innerHTML = listings
       .map((l) => listingCard(l, currentUser))
       .join('');
+    homeContent.classList.add('transition-opacity', 'duration-500');
+    homeContent.style.opacity = '0';
+    setTimeout(() => {
+      homeContent.style.opacity = '1';
+    }, 50);
 
     // Attach login button event
     document.querySelectorAll('button[data-login]').forEach((btn) => {

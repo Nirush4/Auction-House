@@ -4,7 +4,7 @@ import { showToast } from '../utils/toast';
 
 function template(): string {
   return `
-    <section class="flex justify-center pt-35 px-4">
+    <section class="flex justify-center pt-35 md:pt-50 px-4">
       <div class="w-full max-w-md mb-18 sm:mb-30 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <div class="text-center mb-8">
           <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
@@ -15,7 +15,7 @@ function template(): string {
           </p>
         </div>
 
-        <form id="registerForm" class="space-y-6" novalidate>
+        <form id="registerForm" class="space-y-8" novalidate>
           <div class="relative">
             <input type="text" id="name" placeholder=" " required class="peer w-full rounded-xl border border-gray-300 bg-gray-50 px-4 pt-5 pb-2 leading-[2.2] text-gray-900 placeholder-transparent focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none transition text-base sm:text-lg"/>
             <label for="name" class="absolute left-4 top-2.5 text-gray-400 text-xs sm:text-base transition-all peer-placeholder-shown:top-5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-sm peer-focus:top-2.5 peer-focus:text-gray-600 peer-focus:text-sm">Username</label>
@@ -47,7 +47,7 @@ function template(): string {
           <div id="formError" class="hidden rounded-md border border-red-200 bg-red-50 p-3 text-xs sm:text-sm md:text-sm text-red-700"></div>
         </form>
 
-        <p class="mt-8 text-center text-sm md:text-base text-gray-500">
+        <p class="text-center text-sm md:text-base text-gray-500">
           Already have an account?
           <a href="/login" class="font-semibold text-indigo-500 hover:text-indigo-400">Login</a>
         </p>

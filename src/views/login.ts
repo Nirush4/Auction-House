@@ -1,12 +1,13 @@
 import { loginUser, fetchApiKey } from '../api/client';
 import { navigateTo } from '../router';
-import { getLocalItem } from '../utils/storage';
+import { getLocalItem, getUser } from '../utils/storage';
 import { showToast } from '../utils/toast';
 import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
+import { fetchProfile } from '../api/profile';
 
 function template(): string {
   return `
-    <section class="flex justify-center pt-35 px-4">
+    <section class="flex justify-center pt-35 md:pt-50 px-4">
       <div class="w-full max-w-md mb-18 sm:mb-30 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200 relative overflow-hidden">
 
         <!-- Loading Overlay -->
@@ -40,7 +41,7 @@ function template(): string {
         </div>
 
         <!-- Form -->
-        <form id="loginForm" class="space-y-6" novalidate>
+        <form id="loginForm" class="space-y-8" novalidate>
           <!-- Email -->
           <div class="relative">
             <input
@@ -93,7 +94,7 @@ function template(): string {
         </form>
 
         <!-- Footer -->
-        <p class="mt-8 text-center text-sm md:text-base text-gray-500">
+        <p class="text-center text-sm md:text-base text-gray-500">
           Don’t have an account?
           <a href="/register" class="font-semibold text-indigo-500 hover:text-indigo-400">Register</a>
         </p>
@@ -131,7 +132,14 @@ export async function LoginView(root: HTMLElement): Promise<void> {
       const accessToken = getLocalItem('accessToken');
       if (accessToken) await fetchApiKey(accessToken);
 
+      const userName = getUser() ?? '';
+
+      const profileData = await fetchProfile(userName);
+
+      localStorage.setItem('user', JSON.stringify(profileData));
+
       showToast('success', '✅ You’re successfully logged in!');
+
       setTimeout(() => {
         hideLoadingOverlay();
         navigateTo('/home');
@@ -140,6 +148,7 @@ export async function LoginView(root: HTMLElement): Promise<void> {
       formError.textContent = (err as Error).message;
       formError.classList.remove('hidden');
       showToast('error', '❌ Login failed.');
+
       setTimeout(() => hideLoadingOverlay(), 800);
     } finally {
       submitBtn.disabled = false;
