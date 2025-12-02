@@ -3,13 +3,14 @@ import { LoginView } from './views/login';
 import { RegisterView } from './views/register';
 import { renderNavbar, setupNavbarSearch } from './components/navbar';
 import { renderFooter } from './components/footer';
-import { isAuthenticated } from './utils/storage';
+import { isAuthenticated, getUser } from './utils/storage';
 import { logout } from './api/auth';
 import { showToast } from './utils/toast';
 import { ProfileView } from './views/profile';
 import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay';
 import { SearchView } from './views/search';
 import { ListingDetailsView } from './views/listingDetails';
+import { PrivacyPolicyView } from './views/privacyPolicy';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -105,21 +106,32 @@ const routes: Route[] = [
   { path: /^\/home\/?$/, handler: (root) => HomeView(root) },
   { path: /^\/login\/?$/, handler: (root) => LoginView(root) },
   { path: /^\/register\/?$/, handler: (root) => RegisterView(root) },
-
-  // ✅ FIXED: use REAL ProfileView
   {
-    path: /^\/profile\/?$/,
-    handler: async (root) => {
-      await ProfileView(root);
-    },
-    protected: true,
+    path: /^\/privacy-policy\/?$/,
+    handler: (root) => PrivacyPolicyView(root),
   },
 
-  // ✅ FIXED /create page: opens form after rendering profile
+  // ✅ Profile route with optional username
+  {
+    path: /^\/profile(?:\/([^/]+))?\/?$/,
+    handler: async (root, params) => {
+      const requestedProfileName = params.id || null;
+      await ProfileView(root, requestedProfileName);
+    },
+    protected: true, // optionally keep protected
+  },
+
+  // ✅ Create Listing (opens form after rendering profile)
   {
     path: /^\/create\/?$/,
     handler: async (root) => {
-      await ProfileView(root);
+      const username = getUser();
+      if (!username) {
+        navigateTo('/login');
+        return;
+      }
+
+      await ProfileView(root, username);
 
       const form = document.getElementById('createListingFormContainer');
       const button = document.getElementById('createListingBtn');

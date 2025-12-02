@@ -15,19 +15,18 @@ function hydrateStaticShell(): void {
 }
 
 async function bootstrap(): Promise<void> {
+  // Initial navbar
   hydrateStaticShell();
+
+  // Initialize SPA router (handles all <a href="/..."> internal navigation)
   initRouter();
 
-  // Re-render navbar whenever hash changes
-  window.addEventListener('hashchange', () => {
-    const navbarContainer = document.getElementById('navbarContainer');
-    if (navbarContainer) {
-      navbarContainer.innerHTML = renderNavbar();
-      setupNavbarActions();
-      setupNavbarSearch();
-    }
+  // Re-render navbar when browser back/forward is used
+  window.addEventListener('popstate', () => {
+    hydrateStaticShell();
   });
 
+  // Initial route load
   await router();
 }
 
