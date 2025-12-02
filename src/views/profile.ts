@@ -8,7 +8,7 @@ import {
 } from '../api/profile';
 
 import { createListing, deleteListing } from '../api/listings';
-import { getToken, getUser, saveAuth } from '../utils/storage';
+import { getUser, saveAuth } from '../utils/storage';
 
 import type { Profile, Listing, Bid } from '../types/index';
 import { navigateTo } from '../router';
@@ -525,7 +525,6 @@ export async function loadProfileView(username?: string) {
   const root = document.getElementById('app')!;
   root.innerHTML = `<p class="text-gray-500 text-center mt-10 animate-pulse">Loading profile...</p>`;
 
-  const token = getToken();
   const currentUser = getUser();
 
   try {
