@@ -346,7 +346,8 @@ export function profileTemplate(
   profile: Profile,
   listings: Listing[],
   bids: Bid[],
-  winnings: Listing[]
+  winnings: Listing[],
+  isOwner: boolean
 ): string {
   const avatarUrl =
     profile.avatar?.url ?? 'https://via.placeholder.com/120?text=Avatar';
@@ -354,15 +355,24 @@ export function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
 
   return `
-  <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6">
+  <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6" aria-label="User profile">
 
     <div class="relative rounded-2xl shadow-lg">
-      <img src="${bannerUrl}" alt="${profile.banner?.alt ?? 'Profile banner'}"
-        class="w-full h-[15rem] sm:h-[20rem] object-cover object-center brightness-90 transition-transform" />
+      <img 
+        src="${bannerUrl}" 
+        alt="${profile.banner?.alt ?? 'Profile banner'}"
+        class="w-full h-[15rem] sm:h-[20rem] object-cover object-center brightness-90 transition-transform" 
+        role="img"
+        aria-hidden="true"
+      />
       <div class="absolute bottom-[-215px] sm:bottom-[-170px] w-full z-20 flex flex-col sm:flex-row items-start sm:justify-between sm:items-center px-5 sm:px-10 gap-4">
         <div class="flex flex-col items-start gap-4">
-          <img src="${avatarUrl}" alt="${profile.avatar?.alt ?? profile.name}"
-            class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 bg-white border-white shadow-md object-cover" />
+          <img 
+            src="${avatarUrl}" 
+            alt="${profile.avatar?.alt ?? profile.name}"
+            class="h-30 w-30 md:h-34 md:w-34 rounded-full border-4 bg-white border-white shadow-md object-cover" 
+            role="img"
+          />
           <div class="text-black drop-shadow-md">
             <h1 class="text-xl md:text-2xl font-medium">${profile.name}</h1>
             <p class="text-base text-gray-500">${profile.email}</p>
@@ -372,55 +382,70 @@ export function profileTemplate(
           </div>
         </div>
 
-        <button id="editProfileBtn"
-          class="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 cursor-pointer">
-          Edit Profile
-        </button>
+       ${
+         isOwner
+           ? `<button id="editProfileBtn"
+       class="rounded bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 cursor-pointer">
+       Edit Profile
+     </button>`
+           : ''
+       }
+
       </div>
     </div>
 
-    <div class="grid px-6 grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-4 mt-65 sm:mt-55">
-      <div class="rounded-md sm:rounded-xl bg-gray-700 p-2 sm:p-4 text-white shadow-lg">Credits: <strong>${
-        profile.credits
-      }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-gray-600 p-2 sm:p-4 text-white shadow-lg">Listings: <strong>${
-        listings.length
-      }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-gray-500 p-2 sm:p-4 text-white shadow-lg">Bids: <strong>${
-        bids.length
-      }</strong></div>
-      <div class="rounded-md sm:rounded-xl bg-gray-400 p-2 sm:p-4 text-white shadow-lg">Wins: <strong>${
-        winnings.length
-      }</strong></div>
+    <div class="grid px-6 grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-4 mt-65 sm:mt-55" role="region" aria-label="User statistics">
+      <div class="rounded-md sm:rounded-xl bg-gray-700 p-2 sm:p-4 text-white shadow-lg">
+        Credits: <strong>${profile.credits}</strong>
+      </div>
+      <div class="rounded-md sm:rounded-xl bg-gray-600 p-2 sm:p-4 text-white shadow-lg">
+        Listings: <strong>${listings.length}</strong>
+      </div>
+      <div class="rounded-md sm:rounded-xl bg-gray-500 p-2 sm:p-4 text-white shadow-lg">
+        Bids: <strong>${bids.length}</strong>
+      </div>
+      <div class="rounded-md sm:rounded-xl bg-gray-400 p-2 sm:p-4 text-white shadow-lg">
+        Wins: <strong>${winnings.length}</strong>
+      </div>
     </div>
 
     <div class="space-y-8 px-6">
+
       <div id="profileFormContainer" class="hidden">${profileFormTemplate(
         profile
       )}</div>
       <div id="createListingFormContainer" class="hidden">${createListingFormTemplate()}</div>
 
-     <button id="createListingBtn"
-        class="w-full flex items-center justify-center gap-2 rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 cursor-pointer
-               text-sm sm:text-base md:text-lg">
-  <i class="fa-solid fa-plus"></i>
-  Create New Listing
-</button>
+      ${
+        isOwner
+          ? `<button id="createListingBtn"
+              class="w-full flex items-center justify-center gap-2 rounded-md sm:rounded-xl bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 cursor-pointer
+                     text-sm sm:text-base md:text-lg"
+              aria-label="Create new listing"
+            >
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              Create New Listing
+            </button>`
+          : ''
+      }
 
-      <section><div id="profileListingsContainer">${listingsSectionTemplate(
-        listings,
-        profile.name
-      )}</div></section>
+      <section>
+        <div id="profileListingsContainer" role="region" aria-label="${
+          profile.name
+        }'s listings">
+          ${listingsSectionTemplate(listings, profile.name)}
+        </div>
+      </section>
 
-      <section class="">
+      <section>
         <header class="flex gap-5 align-middle mb-1">
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Recent bids</h2>
+          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Recent Bids</h2>
         </header>
         ${bidsSectionTemplate(bids)}
       </section>
 
       <!-- Winnings Section -->
-      <section id="winningsSection" class="mt-6">
+      <section id="winningsSection" class="mt-6" aria-label="User winnings">
         <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Your Winnings</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           ${
@@ -440,35 +465,99 @@ export function profileTemplate(
 // -------------------------------
 export async function ProfileView(
   root: HTMLElement,
-  _profileData?: any
-): Promise<void> {
-  const userName = getUser();
-  if (!userName) return navigateTo('/login');
+  requestedProfileName?: string | null
+) {
+  const loggedInUser = getUser(); // logged-in username (string)
+  if (!loggedInUser) return navigateTo('/login');
 
-  showLoadingOverlay({ message: 'Loading your profile...' });
+  showLoadingOverlay({ message: 'Loading profile...' });
+
+  // Determine which profile to load
+  const nameToLoad = requestedProfileName || loggedInUser;
 
   try {
+    // Fetch profile data in parallel
     const [profile, listings, bids, winnings] = await Promise.all([
-      fetchProfile(userName),
-      fetchProfileListings(userName),
-      fetchProfileBids(userName),
-      fetchProfileWinnings(userName),
+      fetchProfile(nameToLoad),
+      fetchProfileListings(nameToLoad),
+      fetchProfileBids(nameToLoad),
+      fetchProfileWinnings(nameToLoad),
     ]);
 
-    saveAuth(localStorage.getItem('accessToken') ?? '', profile, undefined);
+    const IS_OWNER = nameToLoad === loggedInUser;
 
-    // Pass Listing[] directly to template
-    root.innerHTML = profileTemplate(profile, listings, bids, winnings);
+    // Render profile template
+    root.innerHTML = profileTemplate(
+      profile,
+      listings,
+      bids,
+      winnings,
+      IS_OWNER
+    );
 
+    // Start any countdown timers for listings
     startCountdowns(listings);
-    attachProfileHandlers(root, profile);
-    attachDeleteListingHandlers(root, profile);
+
+    // Attach event handlers based on ownership
+    if (IS_OWNER) {
+      attachProfileHandlers(root, profile);
+      attachDeleteListingHandlers(root, profile);
+    } else {
+      removeOwnerUI(root); // Hide owner-only UI
+    }
   } catch (err) {
-    root.innerHTML = `<div class="mt-20 p-4 bg-red-50 border border-red-200 text-red-700">${
+    root.innerHTML = `<p class="p-4 text-red-600">${
       (err as Error).message
-    }</div>`;
+    }</p>`;
   } finally {
     hideLoadingOverlay();
+  }
+}
+
+function removeOwnerUI(root: HTMLElement) {
+  root.querySelector('#editProfileBtn')?.remove();
+  root.querySelector('#createListingBtn')?.remove();
+  root.querySelector('#profileFormContainer')?.remove();
+  root.querySelector('#createListingFormContainer')?.remove();
+}
+
+export async function loadProfileView(username?: string) {
+  const root = document.getElementById('app')!;
+  root.innerHTML = `<p class="text-gray-500 text-center mt-10 animate-pulse">Loading profile...</p>`;
+
+  const currentUser = getUser();
+
+  try {
+    // Fetch profile by username
+    const profileRes = await fetch(
+      `https://v2.api.noroff.dev/auction/profiles/${
+        username ?? currentUser
+      }?_listings=true&_bids=true&_winnings=true`
+    );
+    if (!profileRes.ok) throw new Error('Failed to fetch profile');
+
+    const profileJson = await profileRes.json();
+    const profile = profileJson.data;
+
+    // Determine if logged-in user owns this profile
+    const isOwner = profile.name === currentUser;
+
+    // Extract listings, bids, winnings
+    const listings = profile.listings ?? [];
+    const bids = profile.bids ?? [];
+    const winnings = profile.winnings ?? [];
+
+    // Render profile template
+    root.innerHTML = profileTemplate(
+      profile,
+      listings,
+      bids,
+      winnings,
+      isOwner
+    );
+  } catch (err) {
+    console.error(err);
+    root.innerHTML = `<p class="text-gray-500 text-center mt-10">Failed to load profile.</p>`;
   }
 }
 

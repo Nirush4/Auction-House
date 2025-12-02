@@ -69,11 +69,10 @@ export async function ListingDetailsView(
     const sellerAvatar =
       listing.seller?.avatar?.url ??
       'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
-    const sellerAlt =
-      listing.seller?.avatar?.alt ?? listing.seller?.name ?? 'Seller';
+    const sellerAlt = listing.seller?.name ?? 'Seller';
 
     root.innerHTML = `
-      <section class="container mx-auto px-6 mt-20 sm:mt-32 mb-12 sm:mb-30">
+      <section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
         <!-- Hero Gallery -->
         <div class="relative w-full rounded-xl overflow-hidden shadow-xl mb-10">
           <img id="mainGalleryImg" src="${mainImage}" alt="${
@@ -92,7 +91,9 @@ export async function ListingDetailsView(
 
         <div class="grid lg:grid-cols-3 gap-8">
           <div class="lg:col-span-1 space-y-6">
-            <div class="bg-white/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg flex items-center gap-4">
+            <div class="bg-white/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg flex items-center gap-4 cursor-pointer sellerAvatar" data-username="${
+              listing.seller?.name ?? ''
+            }">
               <img src="${sellerAvatar}" alt="${sellerAlt}" class="h-12 sm:h-16 w-12 sm:w-16 rounded-full border-2 border-indigo-600 object-cover"/>
               <div>
                 <p class="font-bold text-base sm:text-xl text-gray-900">${
@@ -168,55 +169,52 @@ export async function ListingDetailsView(
 
     startCountdown(listing);
 
-    // --------------------------
-    // Bid history rendering
-    // --------------------------
+    // Render bids
     const bidHistoryList = document.getElementById(
       'bidHistoryList'
     ) as HTMLDivElement;
-
     if (listing.bids?.length) {
       const sortedBids = listing.bids.sort(
         (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
       );
 
       bidHistoryList.innerHTML = `
-    <div class="flex flex-col space-y-2 w-full">
-      ${sortedBids
-        .map(
-          (bid) => `
-        <div class="flex flex-col sm:flex-row justify-between items-center border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors">
-          <!-- Left side: bidder -->
-          <div class="flex items-center w-full sm:w-auto mb-2 sm:mb-0">
-            <img src="${
-              bid.bidder.avatar?.url ??
-              'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
-            }" alt="${
-            bid.bidder.name
-          }" class="h-8 w-8 rounded-full object-cover mr-3">
-            <span class="font-medium text-gray-800 text-sm sm:text-base">${
-              bid.bidder.name
-            }</span>
-          </div>
-          <!-- Right side: amount and date -->
-          <div class="flex flex-col sm:flex-row sm:space-x-4 items-end sm:items-center w-full sm:w-auto text-right">
-            <span class="font-semibold text-indigo-600 text-sm sm:text-base">$${
-              bid.amount
-            }</span>
-            <span class="text-gray-500 text-xs sm:text-sm">${new Date(
-              bid.created
-            ).toLocaleString()}</span>
-          </div>
+        <div class="flex flex-col space-y-2 w-full">
+          ${sortedBids
+            .map(
+              (bid) => `
+              <div class="flex flex-col sm:flex-row justify-between items-center border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors bidderAvatar" data-username="${
+                bid.bidder.name
+              }">
+                <div class="flex items-center w-full sm:w-auto mb-2 sm:mb-0">
+                  <img src="${
+                    bid.bidder.avatar?.url ??
+                    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
+                  }" alt="${
+                bid.bidder.name
+              }" class="h-8 w-8 rounded-full object-cover mr-3"/>
+                  <span class="font-medium text-gray-800 text-sm sm:text-base">${
+                    bid.bidder.name
+                  }</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:space-x-4 items-end sm:items-center w-full sm:w-auto text-right">
+                  <span class="font-semibold text-indigo-600 text-sm sm:text-base">$${
+                    bid.amount
+                  }</span>
+                  <span class="text-gray-500 text-xs sm:text-sm">${new Date(
+                    bid.created
+                  ).toLocaleString()}</span>
+                </div>
+              </div>
+            `
+            )
+            .join('')}
         </div>
-      `
-        )
-        .join('')}
-    </div>
-  `;
+      `;
     } else {
       bidHistoryList.innerHTML = `
-    <p class="py-4 px-4 text-gray-500 text-center border border-gray-200 rounded-lg">No bids yet</p>
-  `;
+        <p class="py-4 px-4 text-gray-500 text-center border border-gray-200 rounded-lg">No bids yet</p>
+      `;
     }
 
     // --------------------------
@@ -243,6 +241,22 @@ export async function ListingDetailsView(
               mainImg.classList.remove('opacity-0', 'scale-105');
             }, 200);
           }
+          return;
+        }
+
+        // Seller avatar click
+        const sellerEl = target.closest('.sellerAvatar');
+        if (sellerEl) {
+          const username = sellerEl.getAttribute('data-username');
+          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`);
+          return;
+        }
+
+        // Bidder avatar click
+        const bidderEl = target.closest('.bidderAvatar');
+        if (bidderEl) {
+          const username = bidderEl.getAttribute('data-username');
+          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`);
           return;
         }
 
@@ -292,9 +306,7 @@ export async function ListingDetailsView(
           return;
         }
 
-        // -----------------------------------------
-        // ⭐ FIX ADDED: Login button now works
-        // -----------------------------------------
+        // Login button
         if (target.closest('.loginBtn')) {
           navigateTo('/login');
           return;

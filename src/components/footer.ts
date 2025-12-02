@@ -18,9 +18,9 @@ export function renderFooter(): string {
         <!-- Links -->
         <div class="flex justify-center gap-6 mt-6 text-sm">
           <a href="/" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Home</a>
-          <a href="/search" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Search</a>
           <a href="/login" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Login</a>
           <a href="/register" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Register</a>
+          <a href="privacy-policy" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">  Privacy Policy</a>
         </div>
 
         <!-- Divider -->
