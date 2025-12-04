@@ -1,32 +1,66 @@
 export function renderFooter(): string {
   const year = new Date().getFullYear();
   return `
-    <footer class="relative bg-white/60 backdrop-blur-xl border-t border-gray-200 shadow-inner">
-      <div class="container mx-auto px-6 py-6 text-center">
-        <!-- Gradient line -->
-        <div class="mx-auto mb-6 h-[2px] w-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full"></div>
+    <footer class="relative bg-gray-800 text-gray-300 border-t border-gray-700 shadow-inner">
+      <div class="container mx-auto px-6 py-8 sm:pt-12 pb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
-        <!-- Brand / Description -->
-        <p class="text-lg sm:text-xl font-semibold text-gray-800">
-          Auction <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">House</span>
-        </p>
+          <!-- Brand / Description -->
+          <div class="text-left md:text-center">
+            <p class="text-xl sm:text-2xl font-bold text-white">
+              Auction <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">House</span>
+            </p>
+            <p class="mt-2 text-sm sm:text-base text-gray-300">
+              Discover, bid, and win exclusive items in our trusted online auction marketplace.
+            </p>
+          </div>
 
-        <p class="mt-2 text-sm sm:text-base text-gray-500">
-          Discover, bid, and win exclusive items in our trusted online auction marketplace.
-        </p>
+          <!-- Quick Links -->
+          <div class="text-left md:text-center">
+            <h3 class="text-base sm:text-lg font-semibold text-white mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-sm sm:text-base">
+              <li><a href="/" class="hover:text-indigo-500 transition-colors">Home</a></li>
+              <li><a href="/login" class="hover:text-indigo-500 transition-colors">Login</a></li>
+              <li><a href="/register" class="hover:text-indigo-500 transition-colors">Register</a></li>
+            </ul>
+          </div>
 
-        <!-- Links -->
-        <div class="flex justify-center flex-wrap gap-3 sm:gap-6 mt-6 text-sm">
-          <a href="/" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Home</a>
-          <a href="/login" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Login</a>
-          <a href="/register" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Register</a>
-          <a href="/privacy-policy" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Privacy Policy</a>
-          <a href="/terms-condition" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Terms and Conditions</a>
+          <!-- Support / Company Info -->
+          <div class="text-left md:text-center">
+            <h3 class="text-base sm:text-lg font-semibold text-white mb-4">Support</h3>
+            <ul class="space-y-2 text-sm sm:text-base">
+              <li><a href="/about" class="hover:text-indigo-500 transition-colors">About Us</a></li>
+              <li><a href="/privacy-policy" class="hover:text-indigo-500 transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms-condition" class="hover:text-indigo-500 transition-colors">Terms & Conditions</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact & Social Media -->
+          <div class="text-left md:text-center">
+            <h3 class="text-base sm:text-lg font-semibold text-white mb-4">Contact Us</h3>
+            <p class="text-sm sm:text-base text-gray-300">Noroff 123, 0587 Oslo</p>
+            <p class="text-sm sm:text-base text-gray-300 mt-1">+47 123 45 678</p>
+            <p class="text-sm sm:text-base text-gray-300 mt-1">nirraj03327@stud.noroff.no</p>
+
+            <!-- Social Media -->
+            <div class="flex justify-start md:justify-center gap-4 mt-4 text-gray-300">
+              <a href="https://facebook.com" target="_blank" class="hover:text-indigo-500 text-xl sm:text-2xl">
+                <i class="fa-brands fa-square-facebook"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" class="hover:text-indigo-500 text-xl sm:text-2xl">
+                <i class="fa-brands fa-square-twitter"></i>
+              </a>
+              <a href="https://linkedin.com" target="_blank" class="hover:text-indigo-500 text-xl sm:text-2xl">
+                <i class="fa-brands fa-linkedin"></i>
+              </a>
+            </div>
+          </div>
+
         </div>
 
         <!-- Divider -->
-        <div class="mt-8 border-t border-gray-200 pt-4">
-          <p class="text-sm ext-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved. Made with ❤️ by 
+        <div class="mt-10 border-t border-gray-700 pt-6 text-center text-sm sm:text-base text-gray-400">
+          <p>&copy; ${year} Auction SPA. All rights reserved. Design and built by 
             <a href="https://www.linkedin.com/in/nirushan-rajamanoharan/" target="_blank" rel="noopener noreferrer" 
                class="font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">NIRUSH.</a>
           </p>
