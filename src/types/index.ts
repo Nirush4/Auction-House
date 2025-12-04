@@ -33,6 +33,20 @@ export interface AuthResponse {
   user: Profile;
 }
 
+export interface User {
+  name: string;
+  email: string;
+  bio?: string;
+  avatar?: Record<string, any>;
+  banner?: Record<string, any>;
+  credits?: number;
+  _count?: {
+    listings?: number;
+    wins?: number;
+  };
+  [key: string]: any; // for any extra properties
+}
+
 export interface MediaItem {
   url: string;
   alt?: string;
