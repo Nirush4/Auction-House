@@ -16,18 +16,20 @@ export function renderFooter(): string {
         </p>
 
         <!-- Links -->
-        <div class="flex justify-center gap-6 mt-6 text-sm">
+        <div class="flex justify-center flex-wrap gap-3 sm:gap-6 mt-6 text-sm">
           <a href="/" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Home</a>
           <a href="/login" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Login</a>
           <a href="/register" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Register</a>
-          <a href="privacy-policy" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">  Privacy Policy</a>
+          <a href="/privacy-policy" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Privacy Policy</a>
+          <a href="/terms-condition" class="text-gray-600 hover:text-indigo-500 transition-colors sm:text-base">Terms and Conditions</a>
         </div>
 
         <!-- Divider -->
         <div class="mt-8 border-t border-gray-200 pt-4">
-          <p class="text-sm ext-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved. Made with ❤️ by <a href="https://www.linkedin.com/in/nirushan-rajamanoharan/" target="_blank" 
-    rel="noopener noreferrer" 
-    class="font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"> NIRUSH. </a></p>
+          <p class="text-sm ext-gray-500">&copy; ${year} Noroff Auction SPA. All rights reserved. Made with ❤️ by 
+            <a href="https://www.linkedin.com/in/nirushan-rajamanoharan/" target="_blank" rel="noopener noreferrer" 
+               class="font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">NIRUSH.</a>
+          </p>
         </div>
       </div>
 

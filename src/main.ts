@@ -5,6 +5,8 @@ import {
   setupNavbarSearch,
 } from './components/navbar';
 
+import { initCookieConsent } from '../src/views/cookieConsentView';
+
 function hydrateStaticShell(): void {
   const navbarContainer = document.getElementById('navbarContainer');
   if (navbarContainer) {
@@ -17,6 +19,12 @@ function hydrateStaticShell(): void {
 async function bootstrap(): Promise<void> {
   // Initial navbar
   hydrateStaticShell();
+
+  // Initialize cookie consent modal
+  const modalRoot = document.getElementById('modal-root');
+  if (modalRoot) {
+    initCookieConsent(modalRoot);
+  }
 
   // Initialize SPA router (handles all <a href="/..."> internal navigation)
   initRouter();

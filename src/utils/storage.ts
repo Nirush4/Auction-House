@@ -62,6 +62,17 @@ export function isAuthenticated() {
   return Boolean(getToken());
 }
 
+export function getUserProfile() {
+  try {
+    const data = localStorage.getItem('user');
+    if (!data || data === 'undefined' || data === 'null') return null;
+    return JSON.parse(data); // return proper object
+  } catch (err) {
+    console.error('Error parsing user from localStorage', err);
+    return null;
+  }
+}
+
 /**
  * Generic helpers for local storage (optional)
  */

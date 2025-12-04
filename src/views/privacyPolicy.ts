@@ -1,6 +1,6 @@
 export function PrivacyPolicyView(root: HTMLElement): void {
   root.innerHTML = `
-    <section class="container mx-auto px-6 mt-20 sm:mt-45 mb-12 sm:mb-30">
+    <section class="container mx-auto px-6 pb-12 sm:pb-30 mt-20 sm:mt-45">
 
       <!-- Header -->
       <header class="mb-10">
@@ -115,10 +115,7 @@ export function PrivacyPolicyView(root: HTMLElement): void {
           Email: <span class="text-indigo-600">nirraj03327@stud.noroff.no</span>
         </p>
       </section>
-
-      <!-- Footer spacing -->
-      <div class="h-10"></div>
-
+      
     </section>
   `;
 }

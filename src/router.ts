@@ -11,6 +11,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from './utils/overlay';
 import { SearchView } from './views/search';
 import { ListingDetailsView } from './views/listingDetails';
 import { PrivacyPolicyView } from './views/privacyPolicy';
+import { TermsConditionView } from './views/termsCondition';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -109,6 +110,10 @@ const routes: Route[] = [
   {
     path: /^\/privacy-policy\/?$/,
     handler: (root) => PrivacyPolicyView(root),
+  },
+  {
+    path: /^\/terms-condition\/?$/,
+    handler: (root) => TermsConditionView(root),
   },
 
   // ✅ Profile route with optional username
