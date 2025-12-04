@@ -139,7 +139,6 @@ async function fetchListings(page = 1, tag = '') {
       page: page.toString(),
       sort: 'created',
       sortOrder: 'desc',
-      _active: 'true',
       _seller: 'true',
       _bids: 'true',
     });

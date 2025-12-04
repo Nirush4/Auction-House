@@ -49,6 +49,10 @@ export async function ListingDetailsView(
     const created = listing.created
       ? new Date(listing.created).toLocaleDateString('en-GB')
       : 'Unknown';
+    const endDate = listing.endsAt ? new Date(listing.endsAt).getTime() : null;
+    const now = Date.now();
+    const hasEnded = endDate !== null && endDate <= now;
+
     const countdownId = `countdown-${listing.id}`;
 
     const mainImage =
@@ -75,13 +79,21 @@ export async function ListingDetailsView(
       <section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
         <!-- Hero Gallery -->
         <div class="relative w-full rounded-xl overflow-hidden shadow-xl mb-10">
-          <img id="mainGalleryImg" src="${mainImage}" alt="${
-      listing.title
-    }" class="w-full h-95 sm:h-106 object-cover transition-transform duration-500"/>
-          <div id="${countdownId}" class="absolute top-4 left-4 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl shadow-lg text-sm sm:text-lg">
-            ⏳ Calculating...
-          </div>
-        </div>
+  <img id="mainGalleryImg" 
+       src="${mainImage}" 
+       alt="${listing.title}"
+       class="w-full h-95 sm:h-106 object-cover transition-transform duration-500"/>
+
+<div id="${countdownId}"
+     class="absolute bottom-4 left-4 px-4 py-2 text-sm md:text-lg font-semibold 
+            text-white rounded-lg shadow-xl border border-white/20 
+            bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+            backdrop-blur-md flex items-center gap-2">
+  <span class="text-xl">⏳</span>
+  <span>${hasEnded ? 'Auction Ended' : 'Calculating...'}</span>
+</div>
+
+</div>
 
         ${
           listing.media && listing.media.length > 1
@@ -167,7 +179,7 @@ export async function ListingDetailsView(
       </section>
     `;
 
-    startCountdown(listing);
+    setTimeout(() => startCountdown(listing), 50);
 
     // Render bids
     const bidHistoryList = document.getElementById(
