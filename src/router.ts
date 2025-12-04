@@ -12,6 +12,7 @@ import { SearchView } from './views/search';
 import { ListingDetailsView } from './views/listingDetails';
 import { PrivacyPolicyView } from './views/privacyPolicy';
 import { TermsConditionView } from './views/termsCondition';
+import { RenderAboutPage } from './views/about';
 
 type RouteHandler = (
   root: HTMLElement,
@@ -115,6 +116,10 @@ const routes: Route[] = [
     path: /^\/terms-condition\/?$/,
     handler: (root) => TermsConditionView(root),
   },
+  {
+    path: /^\/about\/?$/,
+    handler: (root) => RenderAboutPage(root),
+  },
 
   // ✅ Profile route with optional username
   {
@@ -175,6 +180,7 @@ const routes: Route[] = [
 export function navigateTo(path: string) {
   history.pushState({}, '', path);
   router();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 export async function router(): Promise<void> {
@@ -209,7 +215,9 @@ export async function router(): Promise<void> {
   `;
 }
 
-window.addEventListener('popstate', () => router());
+window.addEventListener('popstate', () => {
+  router().then(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+});
 
 export function initRouter(): void {
   document.addEventListener('click', (event) => {
