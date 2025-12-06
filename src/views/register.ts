@@ -1,6 +1,6 @@
-import { registerUser } from '../api/client';
-import { navigateTo } from '../router';
-import { showToast } from '../utils/toast';
+import { registerUser } from '../api/client'
+import { navigateTo } from '../router'
+import { showToast } from '../utils/toast'
 
 function template(): string {
   return `
@@ -53,98 +53,98 @@ function template(): string {
         </p>
       </div>
     </section>
-  `;
+  `
 }
 
 export async function RegisterView(root: HTMLElement): Promise<void> {
-  root.innerHTML = template();
+  root.innerHTML = template()
 
-  const form = root.querySelector<HTMLFormElement>('#registerForm')!;
-  const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!;
-  const formError = root.querySelector<HTMLDivElement>('#formError')!;
-  const nameEl = root.querySelector<HTMLInputElement>('#name')!;
-  const emailEl = root.querySelector<HTMLInputElement>('#email')!;
-  const passwordEl = root.querySelector<HTMLInputElement>('#password')!;
-  const avatarEl = root.querySelector<HTMLInputElement>('#avatarUrl')!;
+  const form = root.querySelector<HTMLFormElement>('#registerForm')!
+  const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!
+  const formError = root.querySelector<HTMLDivElement>('#formError')!
+  const nameEl = root.querySelector<HTMLInputElement>('#name')!
+  const emailEl = root.querySelector<HTMLInputElement>('#email')!
+  const passwordEl = root.querySelector<HTMLInputElement>('#password')!
+  const avatarEl = root.querySelector<HTMLInputElement>('#avatarUrl')!
 
   form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    formError.classList.add('hidden');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Creating account...';
+    e.preventDefault()
+    formError.classList.add('hidden')
+    submitBtn.disabled = true
+    submitBtn.textContent = 'Creating account...'
 
-    const name = nameEl.value.trim();
-    const email = emailEl.value.trim();
-    const password = passwordEl.value;
-    const avatar = avatarEl.value.trim();
+    const name = nameEl.value.trim()
+    const email = emailEl.value.trim()
+    const password = passwordEl.value
+    const avatar = avatarEl.value.trim()
 
     // Safety validation
     if (!name) {
-      formError.textContent = '❌ Username is required.';
-      formError.classList.remove('hidden');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Account';
-      return;
+      formError.textContent = '❌ Username is required.'
+      formError.classList.remove('hidden')
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Create Account'
+      return
     }
 
     if (!email) {
-      formError.textContent = '❌ Email is required.';
-      formError.classList.remove('hidden');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Account';
-      return;
+      formError.textContent = '❌ Email is required.'
+      formError.classList.remove('hidden')
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Create Account'
+      return
     }
 
     if (!email.includes('@') || !email.endsWith('@stud.noroff.no')) {
       formError.textContent =
-        '❌ Invalid email. Please use your @stud.noroff.no email.';
-      formError.classList.remove('hidden');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Account';
-      return;
+        '❌ Invalid email. Please use your @stud.noroff.no email.'
+      formError.classList.remove('hidden')
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Create Account'
+      return
     }
 
     if (!password || password.length < 8) {
       formError.textContent =
-        '❌ Password is required and must be at least 8 characters.';
-      formError.classList.remove('hidden');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Account';
-      return;
+        '❌ Password is required and must be at least 8 characters.'
+      formError.classList.remove('hidden')
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Create Account'
+      return
     }
 
     // Build registration data
     const registerData: {
-      name: string;
-      email: string;
-      password: string;
-      avatar?: { url: string; alt: string };
+      name: string
+      email: string
+      password: string
+      avatar?: { url: string; alt: string }
     } = {
       name,
       email,
       password,
-    };
+    }
     if (avatar) {
-      registerData.avatar = { url: avatar, alt: `${name}'s avatar` };
+      registerData.avatar = { url: avatar, alt: `${name}'s avatar` }
     }
 
     try {
-      await registerUser(registerData);
+      await registerUser(registerData)
       showToast(
         'success',
         '✅ Registration successful! Redirecting to login...'
-      );
+      )
 
       setTimeout(() => {
-        navigateTo('/login');
-      }, 2000);
+        navigateTo('/login')
+      }, 2000)
     } catch (err) {
-      formError.textContent = (err as Error).message;
-      formError.classList.remove('hidden');
-      showToast('error', (err as Error).message);
+      formError.textContent = (err as Error).message
+      formError.classList.remove('hidden')
+      showToast('error', (err as Error).message)
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Create Account';
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Create Account'
     }
-  });
+  })
 }
