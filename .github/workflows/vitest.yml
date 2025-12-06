@@ -5,18 +5,17 @@ on: [push, pull_request]
 jobs:
     unit-tests:
         runs-on: ubuntu-latest
-        env:
-            NPM_CONFIG_OPTIONAL: false # <- ignore optional deps like fsevents
+
         steps:
             - uses: actions/checkout@v4
 
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: "npm"
+                  cache: npm
 
-            # Install dependencies safely on Linux
-            - run: npm ci
+            # Install dependencies, skipping optional deps like fsevents on Linux
+            - run: npm ci --omit=optional
 
-            # Run your tests
+            # Run unit tests
             - run: npm run test -- --run
