@@ -16,8 +16,8 @@ jobs:
                   node-version: 20
                   cache: npm
 
-            # Install dependencies, skipping optional deps (like fsevents or rollup-linux-x64-gnu)
-            - run: npm install --omit=optional
+            # Install dependencies, skipping optional deps to avoid Mac-specific packages
+            - run: npm ci --omit=optional
 
             # Run unit tests
             - run: npm run test -- --run

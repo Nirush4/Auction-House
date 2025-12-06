@@ -1,72 +1,51 @@
 {
-  "name": "json",
-  "private": true,
-  "version": "0.0.0",
+  "name": "workflow-repo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "e2e": "playwright test",
-    "prepare": "husky install"
+    "update:browserslist": "npx update-browserslist-db@latest",
+    "dev": "npx tailwindcss -i ./css/input.css -o ./css/style.css --watch",
+    "prepare": "husky install",
+    "start": "serve . -l 5500",
+    "test": "vitest --run",
+    "test:e2e": "playwright test"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@playwright/test": "^1.57.0",
-    "@tailwindcss/postcss": "^4.1.17",
-    "@tailwindcss/vite": "^4.1.17",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@types/dotenv": "^6.1.1",
-    "@types/jsdom": "^27.0.0",
-    "autoprefixer": "^10.4.22",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.39.1",
-    "globals": "^16.5.0",
-    "husky": "^9.1.7",
-    "jsdom": "^27.2.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.48.1",
-    "vite": "^7.2.2",
-    "vitest": "^4.0.15"
-  },
-  "dependencies": {
-    "baseline-browser-mapping": "^2.8.25",
-    "browserslist": "^4.28.0",
-    "caniuse-lite": "^1.0.30001754",
-    "detect-libc": "^2.1.2",
-    "electron-to-chromium": "^1.5.250",
-    "enhanced-resolve": "^5.18.3",
-    "esbuild": "^0.25.12",
-    "escalade": "^3.2.0",
-    "fdir": "^6.5.0",
-    "fraction.js": "^5.3.4",
-    "graceful-fs": "^4.2.11",
-    "jiti": "^2.6.1",
-    "lightningcss": "^1.30.2",
-    "magic-string": "^0.30.21",
-    "nanoid": "^3.3.11",
-    "node-releases": "^2.0.27",
-    "normalize-range": "^0.1.2",
-    "picocolors": "^1.1.1",
-    "picomatch": "^4.0.3",
-    "postcss-value-parser": "^4.2.0",
-    "rollup": "^4.53.2",
-    "source-map-js": "^1.2.1",
-    "tapable": "^2.3.0",
-    "tinyglobby": "^0.2.15",
-    "update-browserslist-db": "^1.1.4"
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.3"
-  },
-  "description": "This repository contains my **Semester Project 2 (SP2)** for the Front-End Development course. The project is a fully functional **Auction House web application**, built using **Vanilla TypeScript**, **Tailwind CSS**, and **modern ES2025+ JavaScript features**.",
-  "main": "postcss.config.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@types/node": "^24.7.2",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vitest": "^0.5.4",
+    "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "jsdom": "^27.0.0",
+    "lint-staged": "^16.2.4",
+    "playwright": "^1.56.0",
+    "prettier": "^3.6.2",
+    "serve": "^14.2.0",
+    "tailwindcss": "^3.4.12",
+    "typescript-eslint": "^8.46.1",
+    "vitest": "^4.0.15",
+    "rollup": "^4.53.2"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.56.0",
+    "dotenv": "^17.2.3"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.html": [
+      "prettier --write"
+    ]
+  },
+  "optionalDependencies": {}
 }
