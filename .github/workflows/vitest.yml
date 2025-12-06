@@ -7,15 +7,17 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            # Checkout repository
             - uses: actions/checkout@v4
 
+            # Setup Node.js
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
 
-            # Install dependencies, skipping optional deps like fsevents on Linux
-            - run: npm ci --omit=optional
+            # Install dependencies, skipping optional deps (like fsevents or rollup-linux-x64-gnu)
+            - run: npm install --omit=optional
 
             # Run unit tests
             - run: npm run test -- --run
