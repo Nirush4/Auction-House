@@ -1,25 +1,23 @@
-// ProfileView.ts — UPDATED WITH GLOBAL OVERLAY SYSTEM
-
 import {
   fetchProfile,
   updateProfile,
   fetchProfileListings,
   fetchProfileBids,
-} from '../api/profile';
+} from '../api/profile'
 
-import { createListing, deleteListing } from '../api/listings';
-import { getUser, saveAuth } from '../utils/storage';
+import { createListing, deleteListing } from '../api/listings'
+import { getUser, saveAuth } from '../utils/storage'
 
-import type { Profile, Listing, Bid } from '../types/index';
-import { navigateTo } from '../router';
+import type { Profile, Listing, Bid } from '../types/index'
+import { navigateTo } from '../router'
 
-import { showToast } from '../utils/toast';
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
+import { showToast } from '../utils/toast'
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
 
-import { listingCard } from '../views/home';
-import { startCountdowns } from '../utils/startCountdowns';
-import { showConfirmModal } from '../utils/confirmModal';
-import { fetchProfileWinnings, winningsCard } from '../api/winnings';
+import { listingCard } from '../views/home'
+import { startCountdowns } from '../utils/startCountdowns'
+import { showConfirmModal } from '../utils/confirmModal'
+import { fetchProfileWinnings, winningsCard } from '../api/winnings'
 
 // -------------------------------
 // Helper
@@ -28,7 +26,7 @@ function qs<T extends HTMLElement>(
   selector: string,
   parent: HTMLElement
 ): T | null {
-  return parent.querySelector<T>(selector);
+  return parent.querySelector<T>(selector)
 }
 
 // -------------------------------
@@ -97,7 +95,7 @@ function profileFormTemplate(profile: Profile): string {
 
       <p id="profileMessage" class="hidden text-sm"></p>
     </form>
-  `;
+  `
 }
 
 function createListingFormTemplate(): string {
@@ -182,7 +180,7 @@ function createListingFormTemplate(): string {
 
       <p id="listingMessage" class="hidden text-sm sm:text-base md:text-base"></p>
     </form>
-  `;
+  `
 }
 
 // -------------------------------
@@ -193,7 +191,7 @@ export function listingsSectionTemplate(
   currentUserName?: string
 ): string {
   if (!listings.length)
-    return `<p class="text-center text-gray-500 text-base sm:test-lg">No listings found.</p>`;
+    return `<p class="text-center text-gray-500 text-base sm:test-lg">No listings found.</p>`
 
   return `
     <section class="pt-10 pb-12 space-y-10 container mx-auto">
@@ -208,12 +206,12 @@ export function listingsSectionTemplate(
         ${listings.map((l) => listingCard(l, currentUserName)).join('')}
       </div>
     </section>
-  `;
+  `
 }
 
 function bidsSectionTemplate(bids: Bid[]): string {
   if (!bids.length) {
-    return `<p class="text-base sm:text-lg text-gray-600">No bids yet.</p>`;
+    return `<p class="text-base sm:text-lg text-gray-600">No bids yet.</p>`
   }
 
   return `
@@ -221,8 +219,8 @@ function bidsSectionTemplate(bids: Bid[]): string {
       ${bids
         .slice(0, 5)
         .map((bid) => {
-          const { listing } = bid;
-          if (!listing) return '';
+          const { listing } = bid
+          if (!listing) return ''
 
           const {
             id,
@@ -233,24 +231,24 @@ function bidsSectionTemplate(bids: Bid[]): string {
             created,
             seller,
             tags = [],
-          } = listing;
+          } = listing
 
           // Fallback if seller is missing or nested differently
           const actualSeller =
             seller ??
             listing?.user ?? // sometimes seller data might be under user
-            {};
+            {}
 
-          const sellerName = actualSeller?.name ?? 'Seller';
+          const sellerName = actualSeller?.name ?? 'Seller'
           const sellerAvatar =
             actualSeller?.avatar?.url ??
-            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
-          const sellerAlt = actualSeller?.avatar?.alt ?? sellerName;
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
+          const sellerAlt = actualSeller?.avatar?.alt ?? sellerName
 
           const listingDescription = rawDescription.trim()
             ? rawDescription.trim().slice(0, 35) +
               (rawDescription.trim().length > 35 ? '…' : '')
-            : 'No description provided.';
+            : 'No description provided.'
 
           const highestBid = listingBids.length
             ? Math.max(
@@ -258,18 +256,18 @@ function bidsSectionTemplate(bids: Bid[]): string {
                   (b: { amount: any }) => Number(b.amount) || 0
                 )
               )
-            : 0;
+            : 0
 
           const createdDate = created
             ? new Date(created).toLocaleDateString('en-GB')
-            : 'Unknown';
+            : 'Unknown'
 
           const mediaUrl =
             media[0]?.url ??
-            'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800';
-          const mediaAlt = media[0]?.alt ?? title;
+            'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800'
+          const mediaAlt = media[0]?.alt ?? title
 
-          const category = tags[0] ?? null;
+          const category = tags[0] ?? null
 
           return `
             <div class="group relative rounded-2xl border-7 border-gray-100 bg-white/60 backdrop-blur-md overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
@@ -332,11 +330,11 @@ function bidsSectionTemplate(bids: Bid[]): string {
                 </div>
               </div>
             </div>
-          `;
+          `
         })
         .join('')}
     </div>
-  `;
+  `
 }
 
 // -------------------------------
@@ -350,9 +348,9 @@ export function profileTemplate(
   isOwner: boolean
 ): string {
   const avatarUrl =
-    profile.avatar?.url ?? 'https://via.placeholder.com/120?text=Avatar';
+    profile.avatar?.url ?? 'https://via.placeholder.com/120?text=Avatar'
   const bannerUrl =
-    profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner';
+    profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner'
 
   return `
   <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6" aria-label="User profile">
@@ -457,7 +455,7 @@ export function profileTemplate(
       </section>
     </div>
   </section>
-  `;
+  `
 }
 
 // -------------------------------
@@ -467,97 +465,80 @@ export async function ProfileView(
   root: HTMLElement,
   requestedProfileName?: string | null
 ) {
-  const loggedInUser = getUser(); // logged-in username (string)
-  if (!loggedInUser) return navigateTo('/login');
+  const loggedInUser = getUser()
+  if (!loggedInUser) return navigateTo('/login')
 
-  showLoadingOverlay({ message: 'Loading profile...' });
+  showLoadingOverlay({ message: 'Loading profile...' })
 
-  // Determine which profile to load
-  const nameToLoad = requestedProfileName || loggedInUser;
+  const nameToLoad = requestedProfileName || loggedInUser
 
   try {
-    // Fetch profile data in parallel
     const [profile, listings, bids, winnings] = await Promise.all([
       fetchProfile(nameToLoad),
       fetchProfileListings(nameToLoad),
       fetchProfileBids(nameToLoad),
       fetchProfileWinnings(nameToLoad),
-    ]);
+    ])
 
-    const IS_OWNER = nameToLoad === loggedInUser;
+    const IS_OWNER = nameToLoad === loggedInUser
 
-    // Render profile template
     root.innerHTML = profileTemplate(
       profile,
       listings,
       bids,
       winnings,
       IS_OWNER
-    );
+    )
 
-    // Start any countdown timers for listings
-    startCountdowns(listings);
+    startCountdowns(listings)
 
-    // Attach event handlers based on ownership
     if (IS_OWNER) {
-      attachProfileHandlers(root, profile);
-      attachDeleteListingHandlers(root, profile);
+      attachProfileHandlers(root, profile)
+      attachDeleteListingHandlers(root, profile)
     } else {
-      removeOwnerUI(root); // Hide owner-only UI
+      removeOwnerUI(root)
     }
   } catch (err) {
-    root.innerHTML = `<p class="p-4 text-red-600">${
-      (err as Error).message
-    }</p>`;
+    root.innerHTML = `<p class="p-4 text-red-600">${(err as Error).message}</p>`
   } finally {
-    hideLoadingOverlay();
+    hideLoadingOverlay()
   }
 }
 
 function removeOwnerUI(root: HTMLElement) {
-  root.querySelector('#editProfileBtn')?.remove();
-  root.querySelector('#createListingBtn')?.remove();
-  root.querySelector('#profileFormContainer')?.remove();
-  root.querySelector('#createListingFormContainer')?.remove();
+  root.querySelector('#editProfileBtn')?.remove()
+  root.querySelector('#createListingBtn')?.remove()
+  root.querySelector('#profileFormContainer')?.remove()
+  root.querySelector('#createListingFormContainer')?.remove()
 }
 
 export async function loadProfileView(username?: string) {
-  const root = document.getElementById('app')!;
-  root.innerHTML = `<p class="text-gray-500 text-center mt-10 animate-pulse">Loading profile...</p>`;
+  const root = document.getElementById('app')!
+  root.innerHTML = `<p class="text-gray-500 text-center mt-10 animate-pulse">Loading profile...</p>`
 
-  const currentUser = getUser();
+  const currentUser = getUser()
 
   try {
-    // Fetch profile by username
     const profileRes = await fetch(
       `https://v2.api.noroff.dev/auction/profiles/${
         username ?? currentUser
       }?_listings=true&_bids=true&_winnings=true`
-    );
-    if (!profileRes.ok) throw new Error('Failed to fetch profile');
+    )
+    if (!profileRes.ok) throw new Error('Failed to fetch profile')
 
-    const profileJson = await profileRes.json();
-    const profile = profileJson.data;
+    const profileJson = await profileRes.json()
+    const profile = profileJson.data
 
-    // Determine if logged-in user owns this profile
-    const isOwner = profile.name === currentUser;
+    const isOwner = profile.name === currentUser
 
-    // Extract listings, bids, winnings
-    const listings = profile.listings ?? [];
-    const bids = profile.bids ?? [];
-    const winnings = profile.winnings ?? [];
+    const listings = profile.listings ?? []
+    const bids = profile.bids ?? []
+    const winnings = profile.winnings ?? []
 
-    // Render profile template
-    root.innerHTML = profileTemplate(
-      profile,
-      listings,
-      bids,
-      winnings,
-      isOwner
-    );
+    root.innerHTML = profileTemplate(profile, listings, bids, winnings, isOwner)
   } catch (err) {
-    console.error(err);
-    root.innerHTML = `<p class="text-gray-500 text-center mt-10">Failed to load profile.</p>`;
+    console.error(err)
+    root.innerHTML = `<p class="text-gray-500 text-center mt-10">Failed to load profile.</p>`
   }
 }
 
@@ -566,123 +547,116 @@ export async function loadProfileView(username?: string) {
 // -------------------------------
 
 function attachProfileHandlers(root: HTMLElement, profile: Profile) {
-  const profileFormContainer = qs<HTMLDivElement>(
-    '#profileFormContainer',
-    root
-  );
-  const editBtn = qs<HTMLButtonElement>('#editProfileBtn', root);
+  const profileFormContainer = qs<HTMLDivElement>('#profileFormContainer', root)
+  const editBtn = qs<HTMLButtonElement>('#editProfileBtn', root)
 
-  const profileForm = qs<HTMLFormElement>('#profileForm', root);
-  const profileMessage = qs<HTMLParagraphElement>('#profileMessage', root);
+  const profileForm = qs<HTMLFormElement>('#profileForm', root)
+  const profileMessage = qs<HTMLParagraphElement>('#profileMessage', root)
 
-  const submitBtn = qs<HTMLButtonElement>('#profileSubmitBtn', root);
-  const submitText = submitBtn?.querySelector('.submitText') as HTMLElement;
+  const submitBtn = qs<HTMLButtonElement>('#profileSubmitBtn', root)
+  const submitText = submitBtn?.querySelector('.submitText') as HTMLElement
   const loadingSpinner = submitBtn?.querySelector(
     '.loadingSpinner'
-  ) as HTMLElement;
+  ) as HTMLElement
 
-  const cancelBtn = qs<HTMLButtonElement>('#profileCancelBtn', root);
-  const bioDisplay = qs<HTMLParagraphElement>('#bioDisplay', root);
+  const cancelBtn = qs<HTMLButtonElement>('#profileCancelBtn', root)
+  const bioDisplay = qs<HTMLParagraphElement>('#bioDisplay', root)
 
-  // -------------------------------
-  // Edit Profile Toggle
-  // -------------------------------
   editBtn?.addEventListener('click', () => {
-    const hidden = profileFormContainer?.classList.contains('hidden');
+    const hidden = profileFormContainer?.classList.contains('hidden')
     if (hidden) {
-      profileFormContainer?.classList.remove('hidden');
-      editBtn.textContent = 'Cancel Edit';
-      editBtn.classList.replace('bg-indigo-600', 'bg-gray-600');
+      profileFormContainer?.classList.remove('hidden')
+      editBtn.textContent = 'Cancel Edit'
+      editBtn.classList.replace('bg-indigo-600', 'bg-gray-600')
 
       profileFormContainer?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
-      });
+      })
     } else {
-      profileFormContainer?.classList.add('hidden');
-      profileForm?.reset();
-      editBtn.textContent = 'Edit Profile';
-      editBtn.classList.replace('bg-gray-600', 'bg-indigo-600');
-      profileMessage?.classList.add('hidden');
+      profileFormContainer?.classList.add('hidden')
+      profileForm?.reset()
+      editBtn.textContent = 'Edit Profile'
+      editBtn.classList.replace('bg-gray-600', 'bg-indigo-600')
+      profileMessage?.classList.add('hidden')
     }
-  });
+  })
 
-  // Edit Profile Cancel
   cancelBtn?.addEventListener('click', () => {
-    profileFormContainer?.classList.add('hidden');
-    profileForm?.reset();
-    editBtn!.textContent = 'Edit Profile';
-    editBtn!.classList.replace('bg-gray-600', 'bg-indigo-600');
-    profileMessage?.classList.add('hidden');
-  });
+    profileFormContainer?.classList.add('hidden')
+    profileForm?.reset()
+    editBtn!.textContent = 'Edit Profile'
+    editBtn!.classList.replace('bg-gray-600', 'bg-indigo-600')
+    profileMessage?.classList.add('hidden')
+  })
 
   // -------------------------------
   // Profile Update Handler
   // -------------------------------
   profileForm?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!submitBtn || !submitText || !loadingSpinner) return;
+    event.preventDefault()
+    if (!submitBtn || !submitText || !loadingSpinner) return
 
-    submitBtn.disabled = true;
-    submitText.classList.add('hidden');
-    loadingSpinner.classList.remove('hidden');
+    submitBtn.disabled = true
+    submitText.classList.add('hidden')
+    loadingSpinner.classList.remove('hidden')
 
-    showLoadingOverlay({ message: 'Updating profile...' });
+    showLoadingOverlay({ message: 'Updating profile...' })
 
-    const bio = qs<HTMLTextAreaElement>('#bio', root)?.value.trim() ?? '';
+    const bio = qs<HTMLTextAreaElement>('#bio', root)?.value.trim() ?? ''
     const avatarUrl =
-      qs<HTMLInputElement>('#avatarUrl', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#avatarUrl', root)?.value.trim() ?? ''
     const avatarAlt =
-      qs<HTMLInputElement>('#avatarAlt', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#avatarAlt', root)?.value.trim() ?? ''
     const bannerUrl =
-      qs<HTMLInputElement>('#bannerUrl', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#bannerUrl', root)?.value.trim() ?? ''
     const bannerAlt =
-      qs<HTMLInputElement>('#bannerAlt', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#bannerAlt', root)?.value.trim() ?? ''
 
     try {
       const updated = await updateProfile(profile.name, {
         bio,
         avatar: avatarUrl ? { url: avatarUrl, alt: avatarAlt } : undefined,
         banner: bannerUrl ? { url: bannerUrl, alt: bannerAlt } : undefined,
-      });
+      })
 
-      showToast('success', '✅ Profile updated successfully!');
-      profileFormContainer?.classList.add('hidden');
-      editBtn!.textContent = 'Edit Profile';
-      editBtn!.classList.replace('bg-gray-600', 'bg-indigo-600');
+      showToast('success', '✅ Profile updated successfully!')
+      profileFormContainer?.classList.add('hidden')
+      editBtn!.textContent = 'Edit Profile'
+      editBtn!.classList.replace('bg-gray-600', 'bg-indigo-600')
 
-      if (bioDisplay) bioDisplay.textContent = updated.bio ?? 'No bio yet.';
+      if (bioDisplay) bioDisplay.textContent = updated.bio ?? 'No bio yet.'
 
       const avatarImg = root.querySelector<HTMLImageElement>(
         'img[class*="rounded-full"]'
-      );
+      )
       const bannerImg = root.querySelector<HTMLImageElement>(
         'img[class*="object-cover"]'
-      );
+      )
 
       if (avatarImg && updated.avatar) {
-        avatarImg.src = updated.avatar.url ?? '';
-        avatarImg.alt = updated.avatar.alt ?? updated.name;
+        avatarImg.src = updated.avatar.url ?? ''
+        avatarImg.alt = updated.avatar.alt ?? updated.name
       }
       if (bannerImg && updated.banner) {
-        bannerImg.src = updated.banner.url;
-        bannerImg.alt = updated.banner.alt ?? 'Profile banner';
+        bannerImg.src = updated.banner.url
+        bannerImg.alt = updated.banner.alt ?? 'Profile banner'
       }
 
-      profile.bio = updated.bio;
-      profile.avatar = updated.avatar;
-      profile.banner = updated.banner;
+      profile.bio = updated.bio
+      profile.avatar = updated.avatar
+      profile.banner = updated.banner
 
-      saveAuth(localStorage.getItem('accessToken') ?? '', updated, undefined);
+      saveAuth(localStorage.getItem('accessToken') ?? '', updated, undefined)
     } catch (err) {
-      showToast('error', `❌ ${(err as Error).message}`);
+      showToast('error', `❌ ${(err as Error).message}`)
     } finally {
-      hideLoadingOverlay();
-      submitBtn.disabled = false;
-      submitText.classList.remove('hidden');
-      loadingSpinner.classList.add('hidden');
+      hideLoadingOverlay()
+      submitBtn.disabled = false
+      submitText.classList.remove('hidden')
+      loadingSpinner.classList.add('hidden')
     }
-  });
+  })
 
   // -------------------------------
   // Create Listing Elements
@@ -690,77 +664,65 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   const createListingFormContainer = qs<HTMLDivElement>(
     '#createListingFormContainer',
     root
-  );
-  const createListingBtn = qs<HTMLButtonElement>('#createListingBtn', root);
-  const createListingForm = qs<HTMLFormElement>('#createListingForm', root);
-  const listingMessage = qs<HTMLParagraphElement>('#listingMessage', root);
-  const listingCancelBtn = qs<HTMLButtonElement>('#listingCancelBtn', root);
+  )
+  const createListingBtn = qs<HTMLButtonElement>('#createListingBtn', root)
+  const createListingForm = qs<HTMLFormElement>('#createListingForm', root)
+  const listingMessage = qs<HTMLParagraphElement>('#listingMessage', root)
+  const listingCancelBtn = qs<HTMLButtonElement>('#listingCancelBtn', root)
 
-  // Toggle form on Create Listing button
   createListingBtn?.addEventListener('click', () => {
-    // Show the form (idempotent: if already visible, nothing breaks)
     if (createListingFormContainer?.classList.contains('hidden')) {
-      createListingFormContainer.classList.remove('hidden');
+      createListingFormContainer.classList.remove('hidden')
 
-      // Scroll into view smoothly
       createListingFormContainer.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
-      });
+      })
     }
+  })
 
-    // Do NOT disable the button — user can click again if needed
-  });
-
-  // Cancel button inside form
   listingCancelBtn?.addEventListener('click', () => {
-    createListingFormContainer?.classList.add('hidden');
-    createListingForm?.reset();
-    createListingBtn!.textContent = 'Create New Listing';
-    createListingBtn!.classList.replace('bg-gray-600', 'bg-emerald-600');
-    listingMessage?.classList.add('hidden');
-  });
+    createListingFormContainer?.classList.add('hidden')
+    createListingForm?.reset()
+    createListingBtn!.textContent = 'Create New Listing'
+    createListingBtn!.classList.replace('bg-gray-600', 'bg-emerald-600')
+    listingMessage?.classList.add('hidden')
+  })
 
   // -------------------------------
   // Create Listing Form Submission
   // -------------------------------
   createListingForm?.addEventListener('submit', async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     const submitBtn =
-      createListingForm.querySelector<HTMLButtonElement>('button');
+      createListingForm.querySelector<HTMLButtonElement>('button')
 
-    submitBtn!.disabled = true;
-    showLoadingOverlay({ message: 'Creating your listing...' });
+    submitBtn!.disabled = true
+    showLoadingOverlay({ message: 'Creating your listing...' })
 
     const title =
-      qs<HTMLInputElement>('#listingTitle', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#listingTitle', root)?.value.trim() ?? ''
     const description =
-      qs<HTMLTextAreaElement>('#listingDescription', root)?.value.trim() ?? '';
+      qs<HTMLTextAreaElement>('#listingDescription', root)?.value.trim() ?? ''
     const imageUrl =
-      qs<HTMLInputElement>('#listingImageUrl', root)?.value.trim() ?? '';
+      qs<HTMLInputElement>('#listingImageUrl', root)?.value.trim() ?? ''
     const tagsRaw =
-      qs<HTMLInputElement>('#listingTags', root)?.value.trim() ?? '';
-    const endsAtValue = qs<HTMLInputElement>('#listingEndsAt', root)?.value;
+      qs<HTMLInputElement>('#listingTags', root)?.value.trim() ?? ''
+    const endsAtValue = qs<HTMLInputElement>('#listingEndsAt', root)?.value
 
-    listingMessage!.classList.add('hidden');
+    listingMessage!.classList.add('hidden')
 
-    // -----------------------------
-    // VALIDATION
-    // -----------------------------
     if (!title || !endsAtValue) {
-      listingMessage!.textContent = 'Title and end date are required.';
-      listingMessage!.className = 'text-sm text-red-600';
-      listingMessage!.classList.remove('hidden');
-      submitBtn!.disabled = false;
-      hideLoadingOverlay();
-      return;
+      listingMessage!.textContent = 'Title and end date are required.'
+      listingMessage!.className = 'text-sm text-red-600'
+      listingMessage!.classList.remove('hidden')
+      submitBtn!.disabled = false
+      hideLoadingOverlay()
+      return
     }
 
     try {
-      // -----------------------------
-      // API CALL
-      // -----------------------------
       await createListing({
         title,
         description,
@@ -774,86 +736,80 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
         media: imageUrl
           ? [{ url: imageUrl, alt: `${title} image` }]
           : undefined,
-      });
+      })
 
       // Success toast
-      showToast('success', '🎉 Listing created successfully!');
+      showToast('success', '🎉 Listing created successfully!')
 
-      // Reset form
-      createListingForm.reset();
+      createListingForm.reset()
 
-      // Hide form UI
-      createListingFormContainer?.classList.add('hidden');
-      createListingBtn!.textContent = 'Create New Listing';
-      createListingBtn!.classList.replace('bg-gray-600', 'bg-emerald-600');
+      createListingFormContainer?.classList.add('hidden')
+      createListingBtn!.textContent = 'Create New Listing'
+      createListingBtn!.classList.replace('bg-gray-600', 'bg-emerald-600')
 
-      // -----------------------------
-      // REDIRECT TO PROFILE
-      // -----------------------------
       setTimeout(() => {
-        hideLoadingOverlay();
-        navigateTo('/profile'); // <<--- FIXED
-      }, 900);
+        hideLoadingOverlay()
+        navigateTo('/profile')
+      }, 900)
     } catch (err) {
-      listingMessage!.textContent = (err as Error).message;
-      listingMessage!.className = 'text-sm text-red-600';
-      listingMessage!.classList.remove('hidden');
+      listingMessage!.textContent = (err as Error).message
+      listingMessage!.className = 'text-sm text-red-600'
+      listingMessage!.classList.remove('hidden')
 
-      showToast('error', '❌ Failed to create listing.');
+      showToast('error', '❌ Failed to create listing.')
 
-      setTimeout(() => hideLoadingOverlay(), 800);
+      setTimeout(() => hideLoadingOverlay(), 800)
     } finally {
-      submitBtn!.disabled = false;
+      submitBtn!.disabled = false
     }
-  });
+  })
 
   // -------------------------------
   // Custom Calendar for Ends At
   // -------------------------------
-  const endsAtInput = qs<HTMLInputElement>('#listingEndsAt', root);
-  const calendarPopup = qs<HTMLDivElement>('#calendarPopup', root);
-  const calendarDays = qs<HTMLDivElement>('#calendarDays', root);
-  const monthYear = qs<HTMLSpanElement>('#monthYear', root);
-  const prevMonthBtn = qs<HTMLButtonElement>('#prevMonth', root);
-  const nextMonthBtn = qs<HTMLButtonElement>('#nextMonth', root);
+  const endsAtInput = qs<HTMLInputElement>('#listingEndsAt', root)
+  const calendarPopup = qs<HTMLDivElement>('#calendarPopup', root)
+  const calendarDays = qs<HTMLDivElement>('#calendarDays', root)
+  const monthYear = qs<HTMLSpanElement>('#monthYear', root)
+  const prevMonthBtn = qs<HTMLButtonElement>('#prevMonth', root)
+  const nextMonthBtn = qs<HTMLButtonElement>('#nextMonth', root)
 
-  let selectedDate: Date | null = null;
-  let currentMonth: number;
-  let currentYear: number;
+  let selectedDate: Date | null = null
+  let currentMonth: number
+  let currentYear: number
 
   function initCalendar() {
-    const today = new Date();
-    currentMonth = today.getMonth();
-    currentYear = today.getFullYear();
-    renderCalendar(currentYear, currentMonth);
+    const today = new Date()
+    currentMonth = today.getMonth()
+    currentYear = today.getFullYear()
+    renderCalendar(currentYear, currentMonth)
   }
 
   function renderCalendar(year: number, month: number) {
-    if (!calendarDays || !monthYear) return;
-    calendarDays.innerHTML = '';
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    monthYear.textContent = `${todayMonthName(month)} ${year}`;
+    if (!calendarDays || !monthYear) return
+    calendarDays.innerHTML = ''
+    const firstDay = new Date(year, month, 1).getDay()
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    monthYear.textContent = `${todayMonthName(month)} ${year}`
 
-    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
-      const emptyCell = document.createElement('div');
-      calendarDays.appendChild(emptyCell);
+      const emptyCell = document.createElement('div')
+      calendarDays.appendChild(emptyCell)
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const dayBtn = document.createElement('button');
-      dayBtn.type = 'button';
-      dayBtn.textContent = d.toString();
-      dayBtn.className = 'p-2 rounded hover:bg-indigo-100 cursor-pointer';
+      const dayBtn = document.createElement('button')
+      dayBtn.type = 'button'
+      dayBtn.textContent = d.toString()
+      dayBtn.className = 'p-2 rounded hover:bg-indigo-100 cursor-pointer'
       dayBtn.addEventListener('click', () => {
-        selectedDate = new Date(year, month, d);
+        selectedDate = new Date(year, month, d)
         calendarDays
           .querySelectorAll('button')
-          .forEach((b) => b.classList.remove('bg-indigo-200'));
-        dayBtn.classList.add('bg-indigo-200');
-      });
-      calendarDays.appendChild(dayBtn);
+          .forEach((b) => b.classList.remove('bg-indigo-200'))
+        dayBtn.classList.add('bg-indigo-200')
+      })
+      calendarDays.appendChild(dayBtn)
     }
   }
 
@@ -871,79 +827,71 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
       'October',
       'November',
       'December',
-    ][monthIndex];
+    ][monthIndex]
   }
 
   prevMonthBtn?.addEventListener('click', () => {
-    currentMonth--;
+    currentMonth--
     if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
+      currentMonth = 11
+      currentYear--
     }
-    renderCalendar(currentYear, currentMonth);
-  });
+    renderCalendar(currentYear, currentMonth)
+  })
 
   nextMonthBtn?.addEventListener('click', () => {
-    currentMonth++;
+    currentMonth++
     if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
+      currentMonth = 0
+      currentYear++
     }
-    renderCalendar(currentYear, currentMonth);
-  });
+    renderCalendar(currentYear, currentMonth)
+  })
 
   endsAtInput?.addEventListener('click', () => {
-    if (!calendarPopup) return;
-    calendarPopup.classList.toggle('hidden');
+    if (!calendarPopup) return
+    calendarPopup.classList.toggle('hidden')
     if (!calendarPopup.classList.contains('hidden')) {
-      requestAnimationFrame(() => calendarPopup.classList.add('show'));
+      requestAnimationFrame(() => calendarPopup.classList.add('show'))
     } else {
-      calendarPopup.classList.remove('show');
+      calendarPopup.classList.remove('show')
     }
-  });
+  })
 
-  const hourInput = qs<HTMLInputElement>('#calendarHour', root);
-  const minuteInput = qs<HTMLInputElement>('#calendarMinute', root);
-  const selectBtn = qs<HTMLButtonElement>('#calendarSelectBtn', root);
+  const hourInput = qs<HTMLInputElement>('#calendarHour', root)
+  const minuteInput = qs<HTMLInputElement>('#calendarMinute', root)
+  const selectBtn = qs<HTMLButtonElement>('#calendarSelectBtn', root)
 
-  // ---------------------------
-  // Real-time input clamping
-  // ---------------------------
   hourInput?.addEventListener('input', () => {
-    if (!hourInput) return;
-    let val = parseInt(hourInput.value, 10);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 23) val = 23;
-    hourInput.value = val.toString().slice(0, 2);
-  });
+    if (!hourInput) return
+    let val = parseInt(hourInput.value, 10)
+    if (isNaN(val) || val < 0) val = 0
+    if (val > 23) val = 23
+    hourInput.value = val.toString().slice(0, 2)
+  })
 
   minuteInput?.addEventListener('input', () => {
-    if (!minuteInput) return;
-    let val = parseInt(minuteInput.value, 10);
-    if (isNaN(val) || val < 0) val = 0;
-    if (val > 59) val = 59;
-    minuteInput.value = val.toString().slice(0, 2);
-  });
+    if (!minuteInput) return
+    let val = parseInt(minuteInput.value, 10)
+    if (isNaN(val) || val < 0) val = 0
+    if (val > 59) val = 59
+    minuteInput.value = val.toString().slice(0, 2)
+  })
 
-  // ---------------------------
-  // Set selected date on click
-  // ---------------------------
   selectBtn?.addEventListener('click', () => {
-    if (!selectedDate || !hourInput || !minuteInput) return;
+    if (!selectedDate || !hourInput || !minuteInput) return
 
-    // Parse hour and minute
-    let hour = parseInt(hourInput.value || '0', 10);
-    let minute = parseInt(minuteInput.value || '0', 10);
+    let hour = parseInt(hourInput.value || '0', 10)
+    let minute = parseInt(minuteInput.value || '0', 10)
 
-    if (isNaN(hour) || hour < 0) hour = 0;
-    if (hour > 23) hour = 23;
-    if (isNaN(minute) || minute < 0) minute = 0;
-    if (minute > 59) minute = 59;
+    if (isNaN(hour) || hour < 0) hour = 0
+    if (hour > 23) hour = 23
+    if (isNaN(minute) || minute < 0) minute = 0
+    if (minute > 59) minute = 59
 
-    selectedDate.setHours(hour);
-    selectedDate.setMinutes(minute);
+    selectedDate.setHours(hour)
+    selectedDate.setMinutes(minute)
 
-    // Human-readable format: "26 Nov 2025, 23:59"
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'short',
@@ -951,28 +899,26 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-    };
-    endsAtInput!.value = selectedDate.toLocaleString('en-US', options);
+    }
+    endsAtInput!.value = selectedDate.toLocaleString('en-US', options)
 
-    // Animate and hide popup
-    calendarPopup?.classList.add('hidden');
-    calendarPopup?.classList.remove('show');
-  });
+    calendarPopup?.classList.add('hidden')
+    calendarPopup?.classList.remove('show')
+  })
 
-  // Hide calendar if clicked outside
   document.addEventListener('click', (e) => {
-    if (!calendarPopup || !endsAtInput) return;
+    if (!calendarPopup || !endsAtInput) return
     if (
       !(
         calendarPopup.contains(e.target as Node) ||
         endsAtInput.contains(e.target as Node)
       )
     ) {
-      calendarPopup.classList.add('hidden');
+      calendarPopup.classList.add('hidden')
     }
-  });
+  })
 
-  initCalendar();
+  initCalendar()
 }
 
 export function attachDeleteListingHandlers(
@@ -980,32 +926,30 @@ export function attachDeleteListingHandlers(
   _profile: Profile
 ) {
   const deleteButtons =
-    root.querySelectorAll<HTMLButtonElement>('.deleteListingBtn');
+    root.querySelectorAll<HTMLButtonElement>('.deleteListingBtn')
 
   deleteButtons.forEach((btn) => {
     btn.addEventListener('click', async () => {
-      const listingId = btn.dataset.listingId;
-      if (!listingId) return;
+      const listingId = btn.dataset.listingId
+      if (!listingId) return
 
-      // Show confirmation modal
       const confirmed = await showConfirmModal(
         'Are you sure you want to delete this listing?'
-      );
+      )
 
-      if (!confirmed) return; // User canceled
+      if (!confirmed) return
 
-      // Show loading overlay while deleting
-      showLoadingOverlay({ message: 'Deleting listing...' });
+      showLoadingOverlay({ message: 'Deleting listing...' })
 
       try {
-        await deleteListing(listingId);
-        showToast('success', 'Listing deleted successfully!');
-        await ProfileView(root); // refresh profile view
+        await deleteListing(listingId)
+        showToast('success', 'Listing deleted successfully!')
+        await ProfileView(root)
       } catch (err) {
-        showToast('error', `❌ ${(err as Error).message}`);
+        showToast('error', `❌ ${(err as Error).message}`)
       } finally {
-        hideLoadingOverlay();
+        hideLoadingOverlay()
       }
-    });
-  });
+    })
+  })
 }

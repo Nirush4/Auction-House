@@ -2,9 +2,8 @@ import { test, expect } from '@playwright/test'
 import dotenv from 'dotenv'
 import process from 'process'
 
-dotenv.config() // Load environment variables from .env
+dotenv.config()
 
-// Get environment variables safely
 const TEST_EMAIL = process.env.TEST_EMAIL
 const TEST_PASSWORD = process.env.TEST_PASSWORD
 
@@ -12,7 +11,6 @@ if (!TEST_EMAIL || !TEST_PASSWORD) {
   throw new Error('TEST_EMAIL or TEST_PASSWORD not defined in .env')
 }
 
-// Handles cookie modal on first load
 async function handleCookieModal(page) {
   const modal = page.locator('#cookie-modal')
 
@@ -41,10 +39,8 @@ test.describe('Login Flow with Cookie Consent', () => {
       page.click('#submitBtn'),
     ])
 
-    // Wait for possible overlay
     await expect(page.locator('#loadingOverlay')).toBeHidden({ timeout: 5000 })
 
-    // Check success toast (if present)
     const successToast = page.locator(
       '#toastContainer >> text=successfully logged in'
     )
@@ -54,7 +50,6 @@ test.describe('Login Flow with Cookie Consent', () => {
         console.warn('Success toast not found, skipping check')
       })
 
-    // Verify redirect
     await page.waitForURL('/home', { timeout: 5000 })
     expect(page.url()).toContain('/home')
   })
@@ -70,13 +65,11 @@ test.describe('Login Flow with Cookie Consent', () => {
       page.click('#submitBtn'),
     ])
 
-    // Form error appears
     const errorLocator = page.locator(
       '#formError, [role="alert"], .error-message, .notification-error'
     )
     await expect(errorLocator).toBeVisible({ timeout: 5000 })
 
-    // Toast error (if present)
     const errorToast = page.locator('#toastContainer >> text=Login failed')
     await expect(errorToast)
       .toBeVisible({ timeout: 5000 })
@@ -84,10 +77,8 @@ test.describe('Login Flow with Cookie Consent', () => {
         console.warn('Error toast not found, skipping check')
       })
 
-    // Overlay must hide
     await expect(page.locator('#loadingOverlay')).toBeHidden({ timeout: 5000 })
 
-    // URL should remain on /login
     expect(page.url()).toContain('/login')
   })
 })

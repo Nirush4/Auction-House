@@ -1,13 +1,13 @@
-import type { Listing } from '../types/index';
-import { getUser, getToken } from '../utils/storage';
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
-import { startCountdown } from '../utils/startCountdowns';
-import { showToast } from '../utils/toast';
-import { navigateTo } from '../router';
-import { openEditListingModal } from '../components/editListingModal';
-import { showConfirmModal } from '../utils/confirmModal';
+import type { Listing } from '../types/index'
+import { getUser, getToken } from '../utils/storage'
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
+import { startCountdown } from '../utils/startCountdowns'
+import { showToast } from '../utils/toast'
+import { navigateTo } from '../router'
+import { openEditListingModal } from '../components/editListingModal'
+import { showConfirmModal } from '../utils/confirmModal'
 
-let isClickListenerAttached = false;
+let isClickListenerAttached = false
 
 export async function ListingDetailsView(
   root: HTMLElement,
@@ -17,47 +17,47 @@ export async function ListingDetailsView(
     <section class="container mx-auto px-4 py-16 text-center">
       <p class="text-gray-400 text-lg animate-pulse">Loading listing details...</p>
     </section>
-  `;
+  `
 
-  showLoadingOverlay({ message: 'Fetching listing...' });
+  showLoadingOverlay({ message: 'Fetching listing...' })
 
   try {
-    const url = `https://v2.api.noroff.dev/auction/listings/${listingId}?_seller=true&_bids=true`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Failed to fetch listing');
+    const url = `https://v2.api.noroff.dev/auction/listings/${listingId}?_seller=true&_bids=true`
+    const res = await fetch(url)
+    if (!res.ok) throw new Error('Failed to fetch listing')
 
-    const json = await res.json();
-    const listing: Listing = json.data;
+    const json = await res.json()
+    const listing: Listing = json.data
 
     if (!listing) {
       root.innerHTML =
-        '<p class="text-gray-500 text-center text-lg">Listing not found.</p>';
-      return;
+        '<p class="text-gray-500 text-center text-lg">Listing not found.</p>'
+      return
     }
 
-    const currentUser = getUser() ?? undefined;
-    const token = getToken();
-    const key = localStorage.getItem('apiKey');
-    const isOwner = currentUser && listing.seller?.name === currentUser;
+    const currentUser = getUser() ?? undefined
+    const token = getToken()
+    const key = localStorage.getItem('apiKey')
+    const isOwner = currentUser && listing.seller?.name === currentUser
 
-    const startingBid = listing.startingBid ?? 0;
+    const startingBid = listing.startingBid ?? 0
     const highestBid =
       listing.bids && listing.bids.length
         ? Math.max(...listing.bids.map((b) => b.amount))
-        : startingBid;
-    const bids = listing._count?.bids ?? 0;
+        : startingBid
+    const bids = listing._count?.bids ?? 0
     const created = listing.created
       ? new Date(listing.created).toLocaleDateString('en-GB')
-      : 'Unknown';
-    const endDate = listing.endsAt ? new Date(listing.endsAt).getTime() : null;
-    const now = Date.now();
-    const hasEnded = endDate !== null && endDate <= now;
+      : 'Unknown'
+    const endDate = listing.endsAt ? new Date(listing.endsAt).getTime() : null
+    const now = Date.now()
+    const hasEnded = endDate !== null && endDate <= now
 
-    const countdownId = `countdown-${listing.id}`;
+    const countdownId = `countdown-${listing.id}`
 
     const mainImage =
       listing.media?.[0]?.url ??
-      'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800';
+      'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800'
 
     const galleryThumbnails =
       listing.media
@@ -68,12 +68,12 @@ export async function ListingDetailsView(
              class="h-24 w-24 object-cover rounded-lg cursor-pointer hover:ring-2 hover:ring-indigo-500 transition"
              data-index="${index}"/>`
         )
-        .join('') ?? '';
+        .join('') ?? ''
 
     const sellerAvatar =
       listing.seller?.avatar?.url ??
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
-    const sellerAlt = listing.seller?.name ?? 'Seller';
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
+    const sellerAlt = listing.seller?.name ?? 'Seller'
 
     root.innerHTML = `
       <section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
@@ -177,18 +177,18 @@ export async function ListingDetailsView(
           </div>
         </div>
       </section>
-    `;
+    `
 
-    setTimeout(() => startCountdown(listing), 50);
+    setTimeout(() => startCountdown(listing), 50)
 
     // Render bids
     const bidHistoryList = document.getElementById(
       'bidHistoryList'
-    ) as HTMLDivElement;
+    ) as HTMLDivElement
     if (listing.bids?.length) {
       const sortedBids = listing.bids.sort(
         (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
-      );
+      )
 
       bidHistoryList.innerHTML = `
         <div class="flex flex-col space-y-2 w-full">
@@ -222,71 +222,67 @@ export async function ListingDetailsView(
             )
             .join('')}
         </div>
-      `;
+      `
     } else {
       bidHistoryList.innerHTML = `
         <p class="py-4 px-4 text-gray-500 text-center border border-gray-200 rounded-lg">No bids yet</p>
-      `;
+      `
     }
 
     // --------------------------
     // EVENT LISTENER (UPDATED)
     // --------------------------
     if (!isClickListenerAttached) {
-      isClickListenerAttached = true;
+      isClickListenerAttached = true
 
       root.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
+        const target = e.target as HTMLElement
 
-        // Thumbnail click
-        const thumb = target.closest('[data-index]') as HTMLElement;
+        // Thumbnail click´
+        const thumb = target.closest('[data-index]') as HTMLElement
         if (thumb) {
-          const idx = parseInt(thumb.dataset.index!);
-          const newSrc = listing.media?.[idx]?.url;
+          const idx = parseInt(thumb.dataset.index!)
+          const newSrc = listing.media?.[idx]?.url
           if (newSrc) {
             const mainImg = document.getElementById(
               'mainGalleryImg'
-            ) as HTMLImageElement;
-            mainImg.classList.add('opacity-0', 'scale-105');
+            ) as HTMLImageElement
+            mainImg.classList.add('opacity-0', 'scale-105')
             setTimeout(() => {
-              mainImg.src = newSrc;
-              mainImg.classList.remove('opacity-0', 'scale-105');
-            }, 200);
+              mainImg.src = newSrc
+              mainImg.classList.remove('opacity-0', 'scale-105')
+            }, 200)
           }
-          return;
+          return
         }
 
-        // Seller avatar click
-        const sellerEl = target.closest('.sellerAvatar');
+        const sellerEl = target.closest('.sellerAvatar')
         if (sellerEl) {
-          const username = sellerEl.getAttribute('data-username');
-          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`);
-          return;
+          const username = sellerEl.getAttribute('data-username')
+          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`)
+          return
         }
 
-        // Bidder avatar click
-        const bidderEl = target.closest('.bidderAvatar');
+        const bidderEl = target.closest('.bidderAvatar')
         if (bidderEl) {
-          const username = bidderEl.getAttribute('data-username');
-          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`);
-          return;
+          const username = bidderEl.getAttribute('data-username')
+          if (username) navigateTo(`/profile/${encodeURIComponent(username)}`)
+          return
         }
 
-        // Edit listing
         if (target.closest('.editListingButton') && isOwner) {
-          openEditListingModal(listing.id);
-          return;
+          openEditListingModal(listing.id)
+          return
         }
 
-        // Delete listing
         if (target.closest('.deleteListingBtn') && isOwner) {
           const confirmed = await showConfirmModal(
             'Are you sure you want to delete this listing?'
-          );
-          if (!confirmed) return;
+          )
+          if (!confirmed) return
 
           try {
-            showLoadingOverlay({ message: 'Deleting listing...' });
+            showLoadingOverlay({ message: 'Deleting listing...' })
 
             const res = await fetch(
               `https://v2.api.noroff.dev/auction/listings/${listing.id}`,
@@ -298,46 +294,45 @@ export async function ListingDetailsView(
                   Authorization: `Bearer ${token}`,
                 },
               }
-            );
+            )
 
             if (!res.ok) {
-              const errData = await res.json();
+              const errData = await res.json()
               throw new Error(
                 errData?.errors?.[0]?.message || 'Failed to delete listing'
-              );
+              )
             }
 
-            showToast('success', 'Listing deleted successfully!');
-            navigateTo('/profile');
+            showToast('success', 'Listing deleted successfully!')
+            navigateTo('/profile')
           } catch (err) {
-            console.error(err);
-            showToast('error', (err as Error).message);
+            console.error(err)
+            showToast('error', (err as Error).message)
           } finally {
-            hideLoadingOverlay();
+            hideLoadingOverlay()
           }
-          return;
+          return
         }
 
         // Login button
         if (target.closest('.loginBtn')) {
-          navigateTo('/login');
-          return;
+          navigateTo('/login')
+          return
         }
 
-        // Place Bid
         if (target.id === 'placeBidBtn' && currentUser && token) {
           const bidInput = document.getElementById(
             'bidAmount'
-          ) as HTMLInputElement;
-          const amount = parseFloat(bidInput.value);
+          ) as HTMLInputElement
+          const amount = parseFloat(bidInput.value)
 
           if (!amount || amount <= highestBid) {
-            showToast('error', `Enter a valid bid greater than $${highestBid}`);
-            return;
+            showToast('error', `Enter a valid bid greater than $${highestBid}`)
+            return
           }
 
           try {
-            showLoadingOverlay({ message: 'Placing your bid...' });
+            showLoadingOverlay({ message: 'Placing your bid...' })
 
             const res = await fetch(
               `https://v2.api.noroff.dev/auction/listings/${listing.id}/bids`,
@@ -350,32 +345,32 @@ export async function ListingDetailsView(
                 },
                 body: JSON.stringify({ amount }),
               }
-            );
+            )
 
             if (!res.ok) {
-              const errData = await res.json();
+              const errData = await res.json()
               throw new Error(
                 errData?.errors?.[0]?.message || 'Failed to place bid'
-              );
+              )
             }
 
-            showToast('success', `Bid of $${amount} placed successfully!`);
-            bidInput.value = '';
+            showToast('success', `Bid of $${amount} placed successfully!`)
+            bidInput.value = ''
 
-            ListingDetailsView(root, listingId);
+            ListingDetailsView(root, listingId)
           } catch (err) {
-            console.error(err);
-            showToast('error', (err as Error).message);
+            console.error(err)
+            showToast('error', (err as Error).message)
           } finally {
-            hideLoadingOverlay();
+            hideLoadingOverlay()
           }
         }
-      });
+      })
     }
   } catch (err) {
-    console.error(err);
-    root.innerHTML = `<p class="text-gray-500 text-center text-lg">Failed to load listing.</p>`;
+    console.error(err)
+    root.innerHTML = `<p class="text-gray-500 text-center text-lg">Failed to load listing.</p>`
   } finally {
-    hideLoadingOverlay();
+    hideLoadingOverlay()
   }
 }
