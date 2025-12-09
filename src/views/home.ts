@@ -6,7 +6,7 @@ import {
   CategoryFilter,
   setupCategoryScroll,
 } from '../components/categoryFilter'
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
+import { showLoadingOverlay } from '../utils/overlay'
 import { navigateTo } from '../router'
 import { startCountdowns } from '../utils/startCountdowns'
 import { showToast } from '../utils/toast'
