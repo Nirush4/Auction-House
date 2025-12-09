@@ -6,7 +6,7 @@ import {
   CategoryFilter,
   setupCategoryScroll,
 } from '../components/categoryFilter'
-import { showLoadingOverlay } from '../utils/overlay'
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
 import { navigateTo } from '../router'
 import { startCountdowns } from '../utils/startCountdowns'
 import { showToast } from '../utils/toast'
@@ -18,6 +18,7 @@ export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
     ${HeroSection()}  
 
+    <!-- Category Filter Bar -->
     <section id="listItems" class="container mx-auto px-6 pt-18 sm:pt-23">
       ${CategoryFilter()}
     </section>
@@ -30,14 +31,18 @@ export async function HomeView(root: HTMLElement): Promise<void> {
         </div>
       </header>
 
-      <!-- Container for listings with skeleton placeholders -->
+      <!-- Container for listings -->
       <div id="homeContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        ${Array.from({ length: LISTINGS_PER_PAGE })
-          .map(() => listingSkeleton())
-          .join('')}
+        <div class="col-span-full text-center py-10">
+          <p class="text-gray-500">Loading listings...</p>
+        </div>
       </div>
 
-      <div id="paginationControls" class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-15"></div>
+     <div
+  id="paginationControls"
+  class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-15"
+></div>
+
     </section>
   `
 
@@ -45,7 +50,6 @@ export async function HomeView(root: HTMLElement): Promise<void> {
   setupSmoothScroll(root)
   setupProfileLinks()
 
-  // Let the browser paint skeletons before fetching real data
   requestAnimationFrame(() => fetchListings(1))
 }
 
@@ -111,7 +115,12 @@ export async function fetchListings(page = 1, tag = '') {
   const homeContent = document.getElementById('homeContent')!
   const paginationControls = document.getElementById('paginationControls')!
 
-  // Keep skeletons visible while fetching, no overlay
+  homeContent.innerHTML = Array.from({ length: LISTINGS_PER_PAGE })
+    .map(() => listingSkeleton())
+    .join('')
+
+  showLoadingOverlay({ message: 'Fetching listings...' })
+
   try {
     const params = new URLSearchParams({
       limit: LISTINGS_PER_PAGE.toString(),
@@ -125,12 +134,15 @@ export async function fetchListings(page = 1, tag = '') {
     if (tag) params.append('_tag', tag)
 
     const url = `https://v2.api.noroff.dev/auction/listings?${params.toString()}`
+
     const res = await fetch(url)
     if (!res.ok) throw new Error('Failed to fetch listings')
 
     const json = await res.json()
+
     const listings: Listing[] = json.data ?? []
     const totalListings: number = json.meta?.totalCount ?? listings.length
+
     const totalPages = Math.ceil(totalListings / LISTINGS_PER_PAGE)
 
     if (!listings.length) {
@@ -142,31 +154,31 @@ export async function fetchListings(page = 1, tag = '') {
 
     const currentUser = getUser() ?? undefined
 
-    // Fade out skeleton and show real listings
-    const tempDiv = document.createElement('div')
-    tempDiv.innerHTML = listings
+    homeContent.innerHTML = listings
       .map((l) => listingCard(l, currentUser))
       .join('')
-
-    homeContent.style.transition = 'opacity 0.5s'
+    homeContent.classList.add('transition-opacity', 'duration-500')
     homeContent.style.opacity = '0'
-
     setTimeout(() => {
-      homeContent.innerHTML = tempDiv.innerHTML
       homeContent.style.opacity = '1'
-    }, 300) // fade duration
+    }, 50)
 
     document.querySelectorAll('button[data-login]').forEach((btn) => {
-      btn.addEventListener('click', () => navigateTo('/login'))
+      btn.addEventListener('click', () => {
+        navigateTo('/login')
+      })
     })
 
     startCountdowns(listings)
+
     renderPagination(paginationControls, totalPages, page, (p) =>
       fetchListings(p, tag)
     )
   } catch (err) {
     console.error(err)
     showToast('error', (err as Error).message)
+  } finally {
+    hideLoadingOverlay()
   }
 }
 
