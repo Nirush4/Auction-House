@@ -138,7 +138,7 @@ export async function ListingDetailsView(
           </div>
 
           <div class="lg:col-span-2 space-y-6">
-            <h1 class="text-xl sm:text-4xl md:text-5xl font-extralight text-gray-900">${
+            <h1 class="text-xl font-bold sm:text-4xl md:text-5xl sm:font-extralight text-gray-900">${
               listing.title ?? 'Untitled'
             }</h1>
             <p class="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed">${
@@ -155,20 +155,55 @@ export async function ListingDetailsView(
             </div>
 
             <div class="flex flex-wrap gap-3 mt-4">
-              ${
-                isOwner
-                  ? `<button class="editListingButton bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-5 py-2 rounded-lg text-sm sm:text-base shadow-lg cursor-pointer">Edit Listing</button>
-                     <button class="deleteListingBtn bg-red-600 hover:bg-red-700 text-white px-3 sm:px-5 py-2 rounded-lg text-sm sm:text-base shadow-lg cursor-pointer">Delete Listing</button>`
-                  : currentUser
-                  ? `<div class="flex gap-2 items-center w-full flex-wrap max-w-sm">
-                       <input type="number" min="${
-                         highestBid + 1
-                       }" id="bidAmount" placeholder="Enter your bid (>$${highestBid})" class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-                       <button id="placeBidBtn" class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-6 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">Place Bid</button>
-                     </div>`
-                  : `<button class="loginBtn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">Login to Bid</button>`
-              }
-            </div>
+  ${
+    isOwner
+      ? `
+        <button class="editListingButton bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-5 py-2 rounded-lg shadow-lg cursor-pointer">
+          Edit Listing
+        </button>
+        <button class="deleteListingBtn bg-red-600 hover:bg-red-700 text-white px-3 sm:px-5 py-2 rounded-lg shadow-lg cursor-pointer">
+          Delete Listing
+        </button>
+      `
+      : hasEnded
+      ? `
+  <div class="w-full bg-red-100 border border-red-300 text-red-700 
+              px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg shadow-md 
+              flex items-start sm:items-center gap-2 sm:gap-3">
+
+    <span class="text-xl sm:text-2xl">⛔</span>
+
+    <p class="text-sm sm:text-base md:text-lg font-medium leading-snug">
+      This auction has ended. It is no longer possible to place a bid.
+    </p>
+  </div>
+`
+      : currentUser
+      ? `
+        <div class="flex gap-2 items-center w-full flex-wrap max-w-sm">
+          <input 
+            type="number" 
+            min="${highestBid + 1}"
+            id="bidAmount" 
+            placeholder="Enter your bid (>$${highestBid})"
+            class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button 
+            id="placeBidBtn" 
+            class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-6 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">
+            Place Bid
+          </button>
+        </div>
+      `
+      : `
+        <button 
+          class="loginBtn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">
+          Login to Bid
+        </button>
+      `
+  }
+</div>
+
 
             <div class="mt-8">
               <h2 class="text-base sm:text-xl font-semibold text-gray-900 mb-4">Bid History</h2>

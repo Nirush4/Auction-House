@@ -2,7 +2,7 @@ import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
 import { showToast } from '../utils/toast'
 import { listingCard } from '../views/home'
 import { startCountdowns } from '../utils/startCountdowns'
-import { getUser } from '../utils/storage'
+import { getUserProfile } from '../utils/storage'
 
 const LISTINGS_PER_PAGE = 9
 
@@ -59,7 +59,8 @@ export async function SearchView(root: HTMLElement) {
         page * LISTINGS_PER_PAGE
       )
 
-      const currentUser = getUser() ?? undefined
+      const currentUser = getUserProfile() ?? undefined
+
       resultsContainer.innerHTML = paginatedListings
         .map((listing) => listingCard(listing, currentUser))
         .join('')

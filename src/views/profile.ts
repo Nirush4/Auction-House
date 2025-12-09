@@ -6,7 +6,7 @@ import {
 } from '../api/profile'
 
 import { createListing, deleteListing } from '../api/listings'
-import { getUser, saveAuth } from '../utils/storage'
+import { getUser, getUserProfile, saveAuth } from '../utils/storage'
 
 import type { Profile, Listing, Bid } from '../types/index'
 import { navigateTo } from '../router'
@@ -188,8 +188,10 @@ function createListingFormTemplate(): string {
 // -------------------------------
 export function listingsSectionTemplate(
   listings: Listing[],
-  currentUserName?: string
+  _currentUserName?: string
 ): string {
+  const currentUser = getUserProfile() ?? undefined
+
   if (!listings.length)
     return `<p class="text-center text-gray-500 text-base sm:test-lg">No listings found.</p>`
 
@@ -203,7 +205,7 @@ export function listingsSectionTemplate(
       </header>
       <p class="text-gray-500 text-base md:text-lg">Manage your auctions and bids here</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        ${listings.map((l) => listingCard(l, currentUserName)).join('')}
+        ${listings.map((l) => listingCard(l, currentUser.name)).join('')}
       </div>
     </section>
   `
@@ -407,7 +409,7 @@ export function profileTemplate(
       </div>
     </div>
 
-    <div class="space-y-8 px-6">
+    <div class="space-y-8">
 
       <div id="profileFormContainer" class="hidden">${profileFormTemplate(
         profile
@@ -938,6 +940,9 @@ export function attachDeleteListingHandlers(
       )
 
       if (!confirmed) return
+
+      // ❗ Ensure modal is gone BEFORE re-rendering
+      document.querySelector('.confirmBtn')?.closest('div.fixed')?.remove()
 
       showLoadingOverlay({ message: 'Deleting listing...' })
 
