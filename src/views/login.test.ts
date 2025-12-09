@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { LoginView } from './login'
 import type { Profile } from '../types/index'
 
-// --- Mock all external modules ---
 vi.mock('../api/client', () => ({
   loginUser: vi.fn(),
   fetchApiKey: vi.fn(),
@@ -54,7 +53,6 @@ describe('LoginView', () => {
   })
 
   it('should successfully log in a user', async () => {
-    // Fully TypeScript-safe Profile mock
     const mockProfile: Profile = {
       id: '1',
       name: 'John Doe',
@@ -67,7 +65,6 @@ describe('LoginView', () => {
       avatar: { url: 'avatar.png', alt: 'John Avatar' },
     }
 
-    // Mock all dependencies
     ;(client.loginUser as any).mockResolvedValueOnce(undefined)
     ;(client.fetchApiKey as any).mockResolvedValueOnce(undefined)
     ;(profileApi.fetchProfile as any).mockResolvedValueOnce(mockProfile)
@@ -85,14 +82,11 @@ describe('LoginView', () => {
     const form = root.querySelector<HTMLFormElement>('#loginForm')!
     const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!
 
-    // Fill form
     emailInput.value = 'john@example.com'
     passwordInput.value = 'password123'
 
-    // Submit form
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 
-    // Let async setTimeouts run
     await vi.runAllTimersAsync()
 
     expect(client.loginUser).toHaveBeenCalledWith({
