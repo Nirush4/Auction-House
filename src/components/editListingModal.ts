@@ -1,19 +1,19 @@
-import { getListing, updateListing } from '../api/listings';
-import { showToast } from '../utils/toast';
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
-import { navigateTo } from '../router';
+import { getListing, updateListing } from '../api/listings'
+import { showToast } from '../utils/toast'
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
+import { navigateTo } from '../router'
 
 export async function openEditListingModal(listingId: string) {
-  showLoadingOverlay({ message: 'Loading listing...' });
+  showLoadingOverlay({ message: 'Loading listing...' })
 
   try {
-    const listing = await getListing(listingId);
-    hideLoadingOverlay();
+    const listing = await getListing(listingId)
+    hideLoadingOverlay()
 
     // Create modal container
-    const modal = document.createElement('div');
+    const modal = document.createElement('div')
     modal.className =
-      'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4';
+      'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4'
 
     modal.innerHTML = `
       <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-12 shadow-xl">
@@ -74,23 +74,23 @@ export async function openEditListingModal(listingId: string) {
           <p id="listingMessage" class="hidden text-sm sm:text-base md:text-base"></p>
         </form>
       </div>
-    `;
+    `
 
-    document.body.appendChild(modal);
+    document.body.appendChild(modal)
 
     // Set input values programmatically
     modal.querySelector<HTMLInputElement>('#listingTitle')!.value =
-      listing.title ?? '';
+      listing.title ?? ''
     modal.querySelector<HTMLTextAreaElement>('#listingDescription')!.value =
-      listing.description ?? '';
+      listing.description ?? ''
     modal.querySelector<HTMLInputElement>('#listingImageUrl')!.value =
-      listing.media?.[0]?.url ?? '';
+      listing.media?.[0]?.url ?? ''
     modal.querySelector<HTMLInputElement>('#listingTags')!.value = (
       listing.tags ?? []
-    ).join(', ');
+    ).join(', ')
 
     // Display Month, Year, and Time for "Ends at"
-    const endsAtDate = new Date(listing.endsAt);
+    const endsAtDate = new Date(listing.endsAt)
     modal.querySelector<HTMLInputElement>(
       '#listingEndsAt'
     )!.value = `${endsAtDate.toLocaleDateString('en-GB', {
@@ -101,7 +101,7 @@ export async function openEditListingModal(listingId: string) {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-    })}`;
+    })}`
 
     // Toast for disabled date field
     modal
@@ -110,55 +110,55 @@ export async function openEditListingModal(listingId: string) {
         showToast(
           'error',
           'End date cannot be changed after the listing is created.'
-        );
-      });
+        )
+      })
 
     // Cancel button closes modal
     modal
       .querySelector('#listingCancelBtn')
-      ?.addEventListener('click', () => modal.remove());
+      ?.addEventListener('click', () => modal.remove())
 
     // Form submit
     modal
       .querySelector('#editListingForm')
       ?.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         const title =
-          modal.querySelector<HTMLInputElement>('#listingTitle')!.value;
+          modal.querySelector<HTMLInputElement>('#listingTitle')!.value
         const description = modal.querySelector<HTMLTextAreaElement>(
           '#listingDescription'
-        )!.value;
+        )!.value
         const imageUrl =
-          modal.querySelector<HTMLInputElement>('#listingImageUrl')!.value;
+          modal.querySelector<HTMLInputElement>('#listingImageUrl')!.value
         const tags = modal
           .querySelector<HTMLInputElement>('#listingTags')!
           .value.split(',')
           .map((t) => t.trim())
-          .filter(Boolean);
+          .filter(Boolean)
 
-        const updatedPayload: any = { title, description, tags };
+        const updatedPayload: any = { title, description, tags }
         if (imageUrl) {
-          updatedPayload.media = [{ url: imageUrl, alt: title }];
+          updatedPayload.media = [{ url: imageUrl, alt: title }]
         }
 
-        showLoadingOverlay({ message: 'Updating listing...' });
+        showLoadingOverlay({ message: 'Updating listing...' })
 
         try {
-          await updateListing(listingId, updatedPayload);
+          await updateListing(listingId, updatedPayload)
 
-          hideLoadingOverlay();
-          modal.remove();
+          hideLoadingOverlay()
+          modal.remove()
 
-          showToast('success', 'Listing updated successfully!');
-          navigateTo('/profile'); // this triggers client-side router
+          showToast('success', 'Listing updated successfully!')
+          navigateTo('/profile') // this triggers client-side router
         } catch (err) {
-          hideLoadingOverlay();
-          showToast('error', (err as Error).message);
+          hideLoadingOverlay()
+          showToast('error', (err as Error).message)
         }
-      });
+      })
   } catch (err) {
-    hideLoadingOverlay();
-    showToast('error', (err as Error).message);
+    hideLoadingOverlay()
+    showToast('error', (err as Error).message)
   }
 }

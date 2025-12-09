@@ -1,31 +1,30 @@
-// src/api/winnings.ts
-import type { Listing } from '../types';
-import { getToken } from '../utils/storage';
-import { API_KEY_HEADER } from './client';
+import type { Listing } from '../types'
+import { getToken } from '../utils/storage'
+import { API_KEY_HEADER } from './client'
 
-const API_BASE = 'https://v2.api.noroff.dev/auction';
+const API_BASE = 'https://v2.api.noroff.dev/auction'
 
 export interface WinningsResponse {
-  data: Listing[];
+  data: Listing[]
   meta: {
-    isFirstPage: boolean;
-    isLastPage: boolean;
-    currentPage: number;
-    previousPage: number | null;
-    nextPage: number | null;
-    pageCount: number;
-    totalCount: number;
-  };
+    isFirstPage: boolean
+    isLastPage: boolean
+    currentPage: number
+    previousPage: number | null
+    nextPage: number | null
+    pageCount: number
+    totalCount: number
+  }
 }
 
 // Fetch user's winnings
 export async function fetchProfileWinnings(
   username: string
 ): Promise<Listing[]> {
-  const token = getToken();
-  const key = localStorage.getItem('apiKey');
+  const token = getToken()
+  const key = localStorage.getItem('apiKey')
 
-  if (!token) throw new Error('User is not logged in');
+  if (!token) throw new Error('User is not logged in')
 
   const res = await fetch(
     `${API_BASE}/profiles/${encodeURIComponent(username)}/wins`,
@@ -36,61 +35,59 @@ export async function fetchProfileWinnings(
         Authorization: `Bearer ${token}`,
       },
     }
-  );
+  )
 
   if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData?.errors?.[0]?.message || res.statusText);
+    const errorData = await res.json()
+    throw new Error(errorData?.errors?.[0]?.message || res.statusText)
   }
 
-  const json: WinningsResponse = await res.json();
-  const basicListings = json.data;
+  const json: WinningsResponse = await res.json()
+  const basicListings = json.data
 
-  // Fetch full listing details for each winning listing
   const listingsWithDetails = await Promise.all(
     basicListings.map(async (listing) => {
       const detailRes = await fetch(
         `${API_BASE}/listings/${listing.id}?_seller=true&_bids=true`
-      );
-      if (!detailRes.ok) return listing; // fallback
-      const detailJson = await detailRes.json();
-      return detailJson.data as Listing;
+      )
+      if (!detailRes.ok) return listing
+      const detailJson = await detailRes.json()
+      return detailJson.data as Listing
     })
-  );
+  )
 
-  return listingsWithDetails;
+  return listingsWithDetails
 }
 
-// Generate card HTML for winnings
 export function winningsCard(listing: Listing): string {
   const img =
     listing.media?.[0]?.url ??
-    'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800';
-  const alt = listing.media?.[0]?.alt ?? listing.title ?? 'Listing image';
-  const bids = listing._count?.bids ?? 0;
+    'https://images.unsplash.com/photo-1631913290783-490324506193?auto=format&fit=crop&q=80&w=800'
+  const alt = listing.media?.[0]?.alt ?? listing.title ?? 'Listing image'
+  const bids = listing._count?.bids ?? 0
 
-  const sellerName = listing.seller?.name ?? 'Unknown seller';
+  const sellerName = listing.seller?.name ?? 'Unknown seller'
   const sellerAvatar =
     listing.seller?.avatar?.url ??
-    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop';
-  const sellerAlt = listing.seller?.avatar?.alt ?? sellerName;
+    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
+  const sellerAlt = listing.seller?.avatar?.alt ?? sellerName
 
-  const category = listing.tags?.[0] ?? null;
+  const category = listing.tags?.[0] ?? null
 
-  const startingBid = listing.startingBid ?? 0;
+  const startingBid = listing.startingBid ?? 0
   const amountWon =
     listing.bids && listing.bids.length
       ? Math.max(...listing.bids.map((b) => b.amount))
-      : startingBid;
+      : startingBid
 
   const created = listing.created
     ? new Date(listing.created).toLocaleDateString('en-GB')
-    : 'Unknown';
+    : 'Unknown'
 
   const description = listing.description?.trim()
     ? listing.description.trim().slice(0, 35) +
       (listing.description.trim().length > 35 ? '…' : '')
-    : 'No description provided.';
+    : 'No description provided.'
 
   return `
     <div class="group relative rounded-2xl border-7 border-gray-100 bg-white/60 backdrop-blur-md overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
@@ -153,5 +150,5 @@ export function winningsCard(listing: Listing): string {
         </div>
       </div>
     </div>
-  `;
+  `
 }

@@ -1,8 +1,8 @@
 export function CookieConsentView(_root: HTMLElement): void {
-  const modal = document.createElement('div');
-  modal.id = 'cookie-modal';
+  const modal = document.createElement('div')
+  modal.id = 'cookie-modal'
   modal.className =
-    'fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50';
+    'fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50'
 
   modal.innerHTML = `
     <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 mx-6 text-gray-900 animate-fadeIn">
@@ -25,65 +25,64 @@ export function CookieConsentView(_root: HTMLElement): void {
         </div>
       </div>
     </div>
-  `;
+  `
 
-  document.body.appendChild(modal); // Append to body directly
+  document.body.appendChild(modal)
 }
 
-// Cookie utilities (same as before but typed strictly)
 function setCookie(name: string, value: string, days: number) {
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  const expires = new Date(Date.now() + days * 864e5).toUTCString()
   document.cookie = `${name}=${encodeURIComponent(
     value
-  )}; expires=${expires}; path=/; SameSite=Lax`;
+  )}; expires=${expires}; path=/; SameSite=Lax`
 }
 
 function getCookie(name: string): string | null {
-  const cookies = document.cookie.split('; ');
+  const cookies = document.cookie.split('; ')
   for (const cookie of cookies) {
-    const [key, val] = cookie.split('=');
-    if (key === name) return decodeURIComponent(val);
+    const [key, val] = cookie.split('=')
+    if (key === name) return decodeURIComponent(val)
   }
-  return null;
+  return null
 }
 
 function showModal() {
-  const modal = document.getElementById('cookie-modal');
-  if (modal) modal.classList.remove('hidden');
+  const modal = document.getElementById('cookie-modal')
+  if (modal) modal.classList.remove('hidden')
 }
 
 function hideModal() {
-  const modal = document.getElementById('cookie-modal');
-  if (modal) modal.classList.add('hidden');
+  const modal = document.getElementById('cookie-modal')
+  if (modal) modal.classList.add('hidden')
 }
 
 export function initCookieConsent(root: HTMLElement) {
-  const consent = getCookie('cookie-consent');
-  console.log('Cookie consent:', consent);
+  const consent = getCookie('cookie-consent')
+  console.log('Cookie consent:', consent)
 
   if (!consent) {
-    CookieConsentView(root);
-    console.log('Modal after insert:', document.getElementById('cookie-modal'));
-    showModal();
+    CookieConsentView(root)
+    console.log('Modal after insert:', document.getElementById('cookie-modal'))
+    showModal()
 
-    const acceptBtn = document.getElementById('accept-cookies');
-    const rejectBtn = document.getElementById('reject-cookies');
+    const acceptBtn = document.getElementById('accept-cookies')
+    const rejectBtn = document.getElementById('reject-cookies')
 
     if (!acceptBtn || !rejectBtn) {
-      console.error('Cookie consent buttons not found!');
-      return;
+      console.error('Cookie consent buttons not found!')
+      return
     }
 
     acceptBtn.addEventListener('click', () => {
-      setCookie('cookie-consent', 'accepted', 365);
-      hideModal();
-      console.log('Accepted cookies');
-    });
+      setCookie('cookie-consent', 'accepted', 365)
+      hideModal()
+      console.log('Accepted cookies')
+    })
 
     rejectBtn.addEventListener('click', () => {
-      setCookie('cookie-consent', 'rejected', 365);
-      hideModal();
-      console.log('Rejected cookies');
-    });
+      setCookie('cookie-consent', 'rejected', 365)
+      hideModal()
+      console.log('Rejected cookies')
+    })
   }
 }
