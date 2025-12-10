@@ -21,7 +21,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return data as T
 }
 
-// 🧩 Register new user
 export async function register(
   payload: RegisterPayload
 ): Promise<AuthResponse> {
@@ -33,16 +32,13 @@ export async function register(
 
   const data = await handleResponse<AuthResponse>(res)
 
-  // Normalize user object
   const user = data.user ?? data.data ?? data
   const userObj = typeof user === 'string' ? { name: user } : user
 
-  // ✅ Save token + user consistently
   saveAuth(data.accessToken, userObj, undefined)
   return data
 }
 
-// 🧩 Login existing user
 export async function login(
   credentials: AuthCredentials
 ): Promise<AuthResponse> {
@@ -57,12 +53,10 @@ export async function login(
   const user = data.user ?? data.data ?? data
   const userObj = typeof user === 'string' ? { name: user } : user
 
-  // ✅ Save token + user consistently
   saveAuth(data.accessToken, userObj, undefined)
   return data
 }
 
-// 🧩 Logout and clear session
 export async function logout() {
   localStorage.removeItem('accessToken')
   localStorage.removeItem('user')

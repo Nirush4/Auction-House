@@ -76,24 +76,23 @@ export async function ListingDetailsView(
     const sellerAlt = listing.seller?.name ?? 'Seller'
 
     root.innerHTML = `
-      <section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
-        <!-- Hero Gallery -->
-        <div class="relative w-full rounded-xl overflow-hidden shadow-xl mb-10">
-  <img id="mainGalleryImg" 
-       src="${mainImage}" 
-       alt="${listing.title}"
-       class="w-full h-95 sm:h-106 object-cover transition-transform duration-500"/>
+<section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
+  <!-- Hero Gallery -->
+  <div class="relative w-full max-w-[46rem] mx-auto rounded-xl overflow-hidden shadow-xl mb-10">
+    <img id="mainGalleryImg" 
+         src="${mainImage}" 
+         alt="${listing.title}"
+         class="w-full h-95 sm:h-120 object-cover transition-transform duration-500"/>
 
-<div id="${countdownId}"
-     class="absolute bottom-4 left-4 px-4 py-2 text-sm md:text-lg font-semibold 
-            text-white rounded-lg shadow-xl border border-white/20 
-            bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-            backdrop-blur-md flex items-center gap-2">
-  <span class="text-xl">⏳</span>
-  <span>${hasEnded ? 'Auction Ended' : 'Calculating...'}</span>
-</div>
-
-</div>
+    <div id="${countdownId}"
+         class="absolute bottom-4 left-4 px-4 py-2 text-sm md:text-lg font-semibold 
+                text-white rounded-lg shadow-xl border border-white/20 
+                bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+                backdrop-blur-md flex items-center gap-2">
+      <span class="text-xl">⏳</span>
+      <span>${hasEnded ? 'Auction Ended' : 'Calculating...'}</span>
+    </div>
+  </div>
 
         ${
           listing.media && listing.media.length > 1
@@ -138,7 +137,7 @@ export async function ListingDetailsView(
           </div>
 
           <div class="lg:col-span-2 space-y-6">
-            <h1 class="text-xl font-bold sm:text-4xl md:text-5xl sm:font-extralight text-gray-900">${
+            <h1 class="text-xl font-bold sm:text-3xl md:text-4xl sm:font-extralight text-gray-900">${
               listing.title ?? 'Untitled'
             }</h1>
             <p class="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed">${
@@ -216,7 +215,6 @@ export async function ListingDetailsView(
 
     setTimeout(() => startCountdown(listing), 50)
 
-    // Render bids
     const bidHistoryList = document.getElementById(
       'bidHistoryList'
     ) as HTMLDivElement
@@ -273,7 +271,6 @@ export async function ListingDetailsView(
       root.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement
 
-        // Thumbnail click´
         const thumb = target.closest('[data-index]') as HTMLElement
         if (thumb) {
           const idx = parseInt(thumb.dataset.index!)
@@ -349,7 +346,6 @@ export async function ListingDetailsView(
           return
         }
 
-        // Login button
         if (target.closest('.loginBtn')) {
           navigateTo('/login')
           return

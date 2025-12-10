@@ -73,9 +73,6 @@ export function getUserProfile() {
   }
 }
 
-/**
- * Generic helpers for local storage (optional)
- */
 export function getLocalItem(key: string) {
   const raw = localStorage.getItem(key)
   if (!raw || raw === 'undefined' || raw === 'null') return null

@@ -1,5 +1,16 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+
+h1,
+h2 {
+    font-family: Cormorant, serif;
+}
+
+p,
+a {
+    font-family: Roboto, sans-serif;
+}
 
 /* Custom spin animations */
 @keyframes spin-slow {

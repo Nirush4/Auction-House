@@ -52,7 +52,6 @@ describe('RegisterView', () => {
 
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 
-    // Let async timers run
     await vi.runAllTimersAsync()
 
     expect(client.registerUser).toHaveBeenCalledWith({

@@ -10,7 +10,6 @@ export async function openEditListingModal(listingId: string) {
     const listing = await getListing(listingId)
     hideLoadingOverlay()
 
-    // Create modal container
     const modal = document.createElement('div')
     modal.className =
       'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4'
@@ -20,7 +19,7 @@ export async function openEditListingModal(listingId: string) {
         <form id="editListingForm" class="space-y-4 rounded-lg">
 
           <header>
-            <h2 class="text-lg sm:text-xl font-bold">Edit Listing</h2>
+            <h2 class="text-lg sm:text-2xl font-medium">Edit Listing</h2>
             <p class="text-sm sm:text-base md:text-lg text-gray-600">
               Update your listing details below.
             </p>
@@ -78,7 +77,6 @@ export async function openEditListingModal(listingId: string) {
 
     document.body.appendChild(modal)
 
-    // Set input values programmatically
     modal.querySelector<HTMLInputElement>('#listingTitle')!.value =
       listing.title ?? ''
     modal.querySelector<HTMLTextAreaElement>('#listingDescription')!.value =
@@ -89,7 +87,6 @@ export async function openEditListingModal(listingId: string) {
       listing.tags ?? []
     ).join(', ')
 
-    // Display Month, Year, and Time for "Ends at"
     const endsAtDate = new Date(listing.endsAt)
     modal.querySelector<HTMLInputElement>(
       '#listingEndsAt'
@@ -103,7 +100,6 @@ export async function openEditListingModal(listingId: string) {
       hour12: false,
     })}`
 
-    // Toast for disabled date field
     modal
       .querySelector('#endsAtDisabledOverlay')
       ?.addEventListener('click', () => {
@@ -113,12 +109,10 @@ export async function openEditListingModal(listingId: string) {
         )
       })
 
-    // Cancel button closes modal
     modal
       .querySelector('#listingCancelBtn')
       ?.addEventListener('click', () => modal.remove())
 
-    // Form submit
     modal
       .querySelector('#editListingForm')
       ?.addEventListener('submit', async (e) => {
@@ -151,7 +145,7 @@ export async function openEditListingModal(listingId: string) {
           modal.remove()
 
           showToast('success', 'Listing updated successfully!')
-          navigateTo('/profile') // this triggers client-side router
+          navigateTo('/profile')
         } catch (err) {
           hideLoadingOverlay()
           showToast('error', (err as Error).message)

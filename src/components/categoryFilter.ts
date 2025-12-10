@@ -3,9 +3,6 @@ import { startCountdowns } from '../utils/startCountdowns'
 import { getUserProfile } from '../utils/storage'
 import { listingCard } from '../views/home'
 
-//
-// CATEGORY MAP
-//
 const categoryTagMap: Record<string, string[] | null> = {
   all: null,
 
@@ -114,9 +111,6 @@ const categoryTagMap: Record<string, string[] | null> = {
   ],
 }
 
-//
-// CATEGORY LIST USED BY UI
-//
 export const categories = [
   { id: 'all', label: 'All listings', icon: 'fa-solid fa-star' },
   { id: 'art', label: 'Art', icon: 'fa-solid fa-palette' },
@@ -133,9 +127,6 @@ export const categories = [
   { id: 'sports', label: 'Sports', icon: 'fa-solid fa-basketball' },
 ]
 
-//
-// FETCH LISTINGS BY CATEGORY — WITH SERVER-SIDE SORT + PAGINATION
-//
 export async function fetchListings(
   categoryId: string,
   page: number = 1,
@@ -144,7 +135,6 @@ export async function fetchListings(
   const tags = categoryTagMap[categoryId]
   const allResults: any[] = []
 
-  // If "all" or no tags, fetch all listings
   if (categoryId === 'all' || !tags) {
     const params = new URLSearchParams()
     if (activeOnly) params.append('_active', 'true')
@@ -168,7 +158,6 @@ export async function fetchListings(
       console.error('Failed to fetch all listings', err)
     }
   } else {
-    // Fetch listings by each tag
     for (const tag of tags) {
       const params = new URLSearchParams()
       params.append('_tag', tag)
@@ -195,18 +184,13 @@ export async function fetchListings(
     }
   }
 
-  // Remove duplicates by listing ID
   const uniqueResults = Array.from(
     new Map(allResults.map((item) => [item.id, item])).values()
   )
 
-  // Render the listings
   renderListings(uniqueResults)
 }
 
-//
-// RENDER LISTINGS TO UI
-//
 export function renderListings(listings: any[], _currentUserName?: string) {
   const container = document.getElementById('homeContent')
   if (!container) return
@@ -218,14 +202,15 @@ export function renderListings(listings: any[], _currentUserName?: string) {
       </div>`
     return
   }
-  const currentUser = getUserProfile() ?? undefined
+  const currentUser = getUserProfile()
+  const currentUserName = currentUser?.name ?? undefined
+
   container.innerHTML = listings
-    .map((listing) => listingCard(listing, currentUser.name))
+    .map((listing) => listingCard(listing, currentUserName))
     .join('')
 
   startCountdowns(listings)
 
-  // Bind login button
   const loginBtns =
     container.querySelectorAll<HTMLButtonElement>('button[data-login]')
   loginBtns.forEach((btn) =>
@@ -233,9 +218,6 @@ export function renderListings(listings: any[], _currentUserName?: string) {
   )
 }
 
-//
-// CATEGORY FILTER UI
-//
 export function CategoryFilter(activeCategory: string = 'all') {
   return `
     <div class="relative flex items-center justify-around">
@@ -259,7 +241,9 @@ export function CategoryFilter(activeCategory: string = 'all') {
               }"
           >
             <i class="${cat.icon} text-xl text-gray-500"></i>
-            <span class="text-xs whitespace-nowrap">${cat.label}</span>
+            <span class="text-xs sm:text-base whitespace-nowrap">${
+              cat.label
+            }</span>
           </button>`
           )
           .join('')}
@@ -272,9 +256,6 @@ export function CategoryFilter(activeCategory: string = 'all') {
   `
 }
 
-//
-// CATEGORY SCROLL + CLICK HANDLING
-//
 export function setupCategoryScroll() {
   const nav = document.getElementById('categoryContainer')
   const leftBtn = document.getElementById('catScrollLeft')
@@ -290,9 +271,6 @@ export function setupCategoryScroll() {
 
   let activeIndex = 0
 
-  //
-  // UPDATE ACTIVE CATEGORY + FETCH DATA
-  //
   function updateActive(index: number) {
     if (index < 0 || index >= categoryButtons.length) return
 
@@ -329,9 +307,6 @@ export function setupCategoryScroll() {
     }
   }
 
-  //
-  // CLICK HANDLERS
-  //
   leftBtn.addEventListener('click', () => updateActive(activeIndex - 1))
   rightBtn.addEventListener('click', () => updateActive(activeIndex + 1))
 
@@ -341,7 +316,6 @@ export function setupCategoryScroll() {
 
   updateArrows()
 
-  // Load initial category
   const initialCategory = categoryButtons[activeIndex].dataset.category || 'all'
   fetchListings(initialCategory, 1, true)
 }

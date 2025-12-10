@@ -1,4 +1,3 @@
-// src/api/listings.ts
 import type { Listing, MediaItem } from '../types/index'
 import { getToken } from '../utils/storage'
 import { apiClient } from './client'
@@ -38,10 +37,6 @@ export interface BidPayload {
   amount: number
 }
 
-/** ==========================
- *  Helpers
- *  ========================== */
-
 function authHeaders(): HeadersInit {
   const token = getToken()
   return token ? { Authorization: `Bearer ${token}` } : {}
@@ -57,10 +52,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
   }
   return data as T
 }
-
-/** ==========================
- *  API Functions
- *  ========================== */
 
 export async function getListings(params: ListParams = {}): Promise<Listing[]> {
   const search = new URLSearchParams()
