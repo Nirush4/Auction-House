@@ -1,6 +1,6 @@
 export function HeroSection(): string {
   return `
-  <section class="relative w-full h-[95dvh] mb-10 mt-14 md:mt-27 flex items-center justify-center overflow-hidden 
+  <section class="relative w-full h-[95dvh] mb-10 mt-14 md:mt-29 flex items-center justify-center overflow-hidden 
   bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-700 text-white">
 
     <!-- Decorative floating circles - repositioned for better balance -->
@@ -25,12 +25,12 @@ export function HeroSection(): string {
 
     <!-- Hero content -->
     <div class="relative z-10 flex flex-col items-center text-center px-6">
-      <h1 class="text-2xl sm:text-5xl font-extrabold leading-tight 
+      <h1 class="text-2xl sm:text-5xl font-medium leading-tight 
                  drop-shadow-[0_5px_15px_rgba(0,0,0,0.45)]">
-      🎯 Bid on Items You Love <br class="hidden sm:block"> <h2 class="text-2xl sm:text-4xl font-bold mb-6 text-yellow-300">Anytime. Anywhere.</h2>
+      🎯 Bid on Items You Love <br class="hidden sm:block"> <h2 class="text-2xl sm:text-4xl font-medium mb-6 text-yellow-300">Anytime. Anywhere.</h2>
       </h1>
 
-      <p class="text-sm sm:text-xl max-w-3xl mb-10 text-white/90 drop-shadow">
+      <p class="text-sm sm:text-xl max-w-3xl font-normal mb-10 text-white/90 drop-shadow">
         Discover rare items, participate in live auctions, and place bids confidently from anywhere.
       </p>
 
@@ -60,5 +60,5 @@ export function HeroSection(): string {
 
     </div>
   </section>
-  `;
+  `
 }

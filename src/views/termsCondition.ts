@@ -1,5 +1,3 @@
-// TermsCondition.ts
-
 export function TermsConditionView(root: HTMLElement): void {
   root.innerHTML = `
     <section class="container mx-auto px-6 pb-12 sm:pb-30 mt-20 sm:mt-45">
@@ -151,5 +149,5 @@ export function TermsConditionView(root: HTMLElement): void {
       </section>
 
     </section>
-  `;
+  `
 }

@@ -19,9 +19,6 @@ import { startCountdowns } from '../utils/startCountdowns'
 import { showConfirmModal } from '../utils/confirmModal'
 import { fetchProfileWinnings, winningsCard } from '../api/winnings'
 
-// -------------------------------
-// Helper
-// -------------------------------
 function qs<T extends HTMLElement>(
   selector: string,
   parent: HTMLElement
@@ -29,15 +26,14 @@ function qs<T extends HTMLElement>(
   return parent.querySelector<T>(selector)
 }
 
-// -------------------------------
-// TEMPLATES
-// -------------------------------
+// imp! TEMPLATES
+
 function profileFormTemplate(profile: Profile): string {
   return `
     <form id="profileForm" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 mt-6 sm:p-12 sm:py-25 sm:mt-20">
 
       <header>
-        <h2 class="text-lg sm:text-xl font-bold">Profile details</h2>
+        <h2 class="text-lg sm:text-2xl font-medium">Profile details</h2>
         <p class="text-sm sm:text-base text-gray-600">Update your bio, avatar and banner.</p>
       </header>
 
@@ -103,7 +99,7 @@ function createListingFormTemplate(): string {
     <form id="createListingForm" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 mt-6 sm:p-12 sm:py-25 sm:mt-20">
 
       <header>
-        <h2 class="text-lg sm:text-xl font-bold">Create New Listing</h2>
+        <h2 class="text-lg sm:text-2xl font-medium">Create New Listing</h2>
         <p class="text-sm sm:text-base md:text-lg text-gray-600">
           Add images and choose an end time (minimum 1 hour ahead).
         </p>
@@ -183,9 +179,8 @@ function createListingFormTemplate(): string {
   `
 }
 
-// -------------------------------
-// LISTINGS + BIDS SECTIONS
-// -------------------------------
+// imp! LISTINGS + BIDS SECTIONS
+
 export function listingsSectionTemplate(
   listings: Listing[],
   _currentUserName?: string
@@ -198,7 +193,7 @@ export function listingsSectionTemplate(
   return `
     <section class="pt-10 pb-12 space-y-10 container mx-auto">
       <header class="flex justify-between mb-1">
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">🛒 Your Listings</h2>
+        <h2 class="text-xl sm:text-3xl font-medium text-gray-800">🛒 Your Listings</h2>
         <span class="text-base sm:text-lg font-bold text-gray-800">${
           listings.length
         } total</span>
@@ -235,11 +230,7 @@ function bidsSectionTemplate(bids: Bid[]): string {
             tags = [],
           } = listing
 
-          // Fallback if seller is missing or nested differently
-          const actualSeller =
-            seller ??
-            listing?.user ?? // sometimes seller data might be under user
-            {}
+          const actualSeller = seller ?? listing?.user ?? {}
 
           const sellerName = actualSeller?.name ?? 'Seller'
           const sellerAvatar =
@@ -339,9 +330,8 @@ function bidsSectionTemplate(bids: Bid[]): string {
   `
 }
 
-// -------------------------------
-// PROFILE PAGE TEMPLATE
-// -------------------------------
+// imp! PROFILE PAGE TEMPLATE
+
 export function profileTemplate(
   profile: Profile,
   listings: Listing[],
@@ -374,7 +364,7 @@ export function profileTemplate(
             role="img"
           />
           <div class="text-black drop-shadow-md">
-            <h1 class="text-xl md:text-2xl font-medium">${profile.name}</h1>
+            <h3 class="text-xl md:text-2xl font-medium">${profile.name}</h3>
             <p class="text-base text-gray-500">${profile.email}</p>
             <p id="bioDisplay" class="text-base sm:text-lg mt-1 opacity-80 font-bold">${
               profile.bio ?? 'No bio yet.'
@@ -439,14 +429,14 @@ export function profileTemplate(
 
       <section>
         <header class="flex gap-5 align-middle mb-1">
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Recent Bids</h2>
+          <h2 class="text-xl sm:text-3xl font-medium text-gray-800 mb-10">Recent Bids</h2>
         </header>
         ${bidsSectionTemplate(bids)}
       </section>
 
       <!-- Winnings Section -->
       <section id="winningsSection" class="mt-6" aria-label="User winnings">
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-10">Your Winnings</h2>
+        <h2 class="text-xl sm:text-3xl font-medium text-gray-800 mb-10">Your Winnings</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           ${
             winnings.length > 0
@@ -460,9 +450,8 @@ export function profileTemplate(
   `
 }
 
-// -------------------------------
-// MAIN VIEW
-// -------------------------------
+// imp! MAIN VIEW
+
 export async function ProfileView(
   root: HTMLElement,
   requestedProfileName?: string | null
@@ -544,9 +533,7 @@ export async function loadProfileView(username?: string) {
   }
 }
 
-// -------------------------------
-// EVENT HANDLERS
-// -------------------------------
+// imp! EVENT HANDLERS
 
 function attachProfileHandlers(root: HTMLElement, profile: Profile) {
   const profileFormContainer = qs<HTMLDivElement>('#profileFormContainer', root)
@@ -592,9 +579,8 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     profileMessage?.classList.add('hidden')
   })
 
-  // -------------------------------
-  // Profile Update Handler
-  // -------------------------------
+  // imp! Profile Update Handler
+
   profileForm?.addEventListener('submit', async (event) => {
     event.preventDefault()
     if (!submitBtn || !submitText || !loadingSpinner) return
@@ -660,9 +646,8 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     }
   })
 
-  // -------------------------------
-  // Create Listing Elements
-  // -------------------------------
+  // imp! Create Listing Elements
+
   const createListingFormContainer = qs<HTMLDivElement>(
     '#createListingFormContainer',
     root
@@ -691,9 +676,8 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     listingMessage?.classList.add('hidden')
   })
 
-  // -------------------------------
-  // Create Listing Form Submission
-  // -------------------------------
+  // imp! Create Listing Form Submission
+
   createListingForm?.addEventListener('submit', async (event) => {
     event.preventDefault()
 
@@ -740,7 +724,6 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
           : undefined,
       })
 
-      // Success toast
       showToast('success', '🎉 Listing created successfully!')
 
       createListingForm.reset()
@@ -766,9 +749,8 @@ function attachProfileHandlers(root: HTMLElement, profile: Profile) {
     }
   })
 
-  // -------------------------------
-  // Custom Calendar for Ends At
-  // -------------------------------
+  // imp! Custom Calendar for Ends At
+
   const endsAtInput = qs<HTMLInputElement>('#listingEndsAt', root)
   const calendarPopup = qs<HTMLDivElement>('#calendarPopup', root)
   const calendarDays = qs<HTMLDivElement>('#calendarDays', root)
@@ -941,7 +923,6 @@ export function attachDeleteListingHandlers(
 
       if (!confirmed) return
 
-      // ❗ Ensure modal is gone BEFORE re-rendering
       document.querySelector('.confirmBtn')?.closest('div.fixed')?.remove()
 
       showLoadingOverlay({ message: 'Deleting listing...' })

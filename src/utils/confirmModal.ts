@@ -1,12 +1,10 @@
 export function showConfirmModal(message: string): Promise<boolean> {
   return new Promise((resolve) => {
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.className = `fixed inset-0 bg-black/40 flex items-center justify-center z-50`;
+    const overlay = document.createElement('div')
+    overlay.className = `fixed inset-0 bg-black/40 flex items-center justify-center z-50`
 
-    // Modal container
-    const modal = document.createElement('div');
-    modal.className = `bg-white rounded-lg p-6 mx-4 max-w-sm w-full shadow-lg text-center`;
+    const modal = document.createElement('div')
+    modal.className = `bg-white rounded-lg p-6 mx-4 max-w-sm w-full shadow-lg text-center`
 
     modal.innerHTML = `
       <p class="mb-4 text-gray-800 text-sm sm:text-base">${message}</p>
@@ -18,24 +16,23 @@ export function showConfirmModal(message: string): Promise<boolean> {
           Cancel
         </button>
       </div>
-    `;
+    `
 
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+    overlay.appendChild(modal)
+    document.body.appendChild(overlay)
 
-    // Event listeners
     modal
       .querySelector<HTMLButtonElement>('.confirmBtn')
       ?.addEventListener('click', () => {
-        document.body.removeChild(overlay);
-        resolve(true);
-      });
+        document.body.removeChild(overlay)
+        resolve(true)
+      })
 
     modal
       .querySelector<HTMLButtonElement>('.cancelBtn')
       ?.addEventListener('click', () => {
-        document.body.removeChild(overlay);
-        resolve(false);
-      });
-  });
+        document.body.removeChild(overlay)
+        resolve(false)
+      })
+  })
 }
