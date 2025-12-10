@@ -19,7 +19,7 @@ export async function openEditListingModal(listingId: string) {
         <form id="editListingForm" class="space-y-4 rounded-lg">
 
           <header>
-            <h2 class="text-lg sm:text-2xl font-medium">Edit Listing</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold">Edit Listing</h2>
             <p class="text-sm sm:text-base md:text-lg text-gray-600">
               Update your listing details below.
             </p>

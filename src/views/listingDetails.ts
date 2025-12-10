@@ -137,7 +137,7 @@ export async function ListingDetailsView(
           </div>
 
           <div class="lg:col-span-2 space-y-6">
-            <h1 class="text-xl font-bold sm:text-3xl md:text-4xl sm:font-extralight text-gray-900">${
+            <h1 class="text-2xl font-bold sm:text-3xl md:text-4xl sm:font-extralight text-gray-900">${
               listing.title ?? 'Untitled'
             }</h1>
             <p class="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed">${

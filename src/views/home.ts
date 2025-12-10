@@ -18,10 +18,10 @@ export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
     ${HeroSection()}  
 
-<section id="ending-soon-section" class="pt-12 md:pt-14 pb-12 sm:pb-20 space-y-10 container mx-auto px-6 bg-gradient-to-r from-red-50 via-red-150 to-red-50  shadow-md border border-red-200">
+<section id="ending-soon-section" class="container pt-12 md:pt-14 pb-12 sm:pb-19 space-y-10 mx-auto px-6 bg-gradient-to-r from-red-50 via-red-150 to-red-50  shadow-md border border-red-200">
   <header class="flex items-end justify-between flex-wrap gap-4">
     <div>
-      <h2 class="text-xl sm:text-3xl font-medium text-red-500">⏳ Ending Soon</h2>
+      <h2 class="text-2xl sm:text-4xl font-bold text-red-500">⏳ Ending Soon</h2>
       <p class="text-gray-700 text-base md:text-lg">Hurry! Auctions about to close</p>
     </div>
   </header>
@@ -42,7 +42,7 @@ export async function HomeView(root: HTMLElement): Promise<void> {
     <section id="listing-section" class="pt-12 md:pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 class="text-xl sm:text-3xl font-medium text-gray-800">🏠 Latest Auctions</h1>
+          <h1 class="text-2xl sm:text-4xl font-bold text-gray-800">🏠 Latest Auctions</h1>
           <p class="text-gray-500 text-base md:text-lg">Discover and bid on the newest listings</p>
         </div>
       </header>
@@ -388,7 +388,7 @@ export function listingCard(
       <!-- Details -->
       <div class="p-5 space-y-3">
         <a href="/listing/${listing.id}">
-          <h3 class="font-semibold text-xl sm:text-lg xs:text-base text-gray-900 transition-colors line-clamp-1">${
+          <h3 class="font-semibold text-base sm:text-lg text-gray-900 transition-colors line-clamp-1">${
             listing.title ?? 'Untitled'
           }</h3>
         </a>

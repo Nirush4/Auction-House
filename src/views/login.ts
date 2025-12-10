@@ -32,7 +32,7 @@ function template(): string {
 
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl md:text-3xl font-medium text-gray-800 tracking-tight">
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
             Auction House
           </h1>
           <p class="mt-2 text-gray-500 text-base sm:text-lg">
