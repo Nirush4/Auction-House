@@ -70,6 +70,11 @@ export async function SearchView(root: HTMLElement) {
       renderPagination(paginationContainer, totalPages, page, (p) =>
         fetchResults(query, p)
       )
+
+      // Scroll to listing section after fetching
+      const section = document.getElementById('searchResults')
+      if (section)
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } catch (err) {
       console.error('Fetch error:', err)
       showToast('error', (err as Error).message)
@@ -110,7 +115,10 @@ function renderPagination(
         : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
     }
   `
-  prevBtn.addEventListener('click', () => onPageClick(currentPage - 1))
+  prevBtn.addEventListener('click', () => {
+    onPageClick(currentPage - 1)
+    scrollToListings()
+  })
   container.appendChild(prevBtn)
 
   const maxPagesToShow = 5
@@ -146,7 +154,10 @@ function renderPagination(
         : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
     }
   `
-  nextBtn.addEventListener('click', () => onPageClick(currentPage + 1))
+  nextBtn.addEventListener('click', () => {
+    onPageClick(currentPage + 1)
+    scrollToListings()
+  })
   container.appendChild(nextBtn)
 
   function createPageBtn(
@@ -164,7 +175,10 @@ function renderPagination(
           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
       }
     `
-    btn.addEventListener('click', () => onClick(page))
+    btn.addEventListener('click', () => {
+      onClick(page)
+      scrollToListings()
+    })
     return btn
   }
 
@@ -173,5 +187,10 @@ function renderPagination(
     span.textContent = '...'
     span.className = 'px-2 py-1 text-gray-500'
     container.appendChild(span)
+  }
+
+  function scrollToListings() {
+    const section = document.getElementById('searchResults')
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
