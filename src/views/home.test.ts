@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HomeView, listingCard } from './home'
 
-// Mock dependencies
 vi.mock('../utils/storage', () => ({ getUser: vi.fn() }))
 vi.mock('../utils/overlay', () => ({
   showLoadingOverlay: vi.fn(),
@@ -30,7 +29,6 @@ describe('HomeView', () => {
   })
 
   it('renders skeleton and sections initially', async () => {
-    // Mock fetch to avoid network call
     vi.stubGlobal(
       'fetch',
       vi.fn(() =>
@@ -66,8 +64,8 @@ describe('listingCard', () => {
     const html = listingCard(listing)
 
     expect(html).toContain('Test Listing')
-    expect(html).toContain('This is a test listing') // fixed assertion
-    expect(html).toContain('Test') // category tag
-    expect(html).toContain('Highest Bid') // bid section
+    expect(html).toContain('This is a test listing')
+    expect(html).toContain('Test')
+    expect(html).toContain('Highest Bid')
   })
 })

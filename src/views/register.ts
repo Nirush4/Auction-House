@@ -7,7 +7,7 @@ function template(): string {
     <section class="flex justify-center pt-35 md:pt-50 px-4">
       <div class="w-full max-w-md mb-18 sm:mb-30 rounded-3xl bg-white shadow-2xl p-6 sm:p-8 md:p-10 border border-gray-200">
         <div class="text-center mb-8">
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
+          <h1 class="text-2xl md:text-3xl font-medium text-gray-800 tracking-tight">
             Auction House
           </h1>
           <p class="mt-2 text-gray-500 text-base sm:text-lg">
@@ -78,7 +78,6 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
     const password = passwordEl.value
     const avatar = avatarEl.value.trim()
 
-    // Safety validation
     if (!name) {
       formError.textContent = '❌ Username is required.'
       formError.classList.remove('hidden')
@@ -113,7 +112,6 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
       return
     }
 
-    // Build registration data
     const registerData: {
       name: string
       email: string

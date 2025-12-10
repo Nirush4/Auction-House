@@ -17,7 +17,6 @@ export interface WinningsResponse {
   }
 }
 
-// Fetch user's winnings
 export async function fetchProfileWinnings(
   username: string
 ): Promise<Listing[]> {

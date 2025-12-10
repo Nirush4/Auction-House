@@ -1,9 +1,9 @@
-import { loginUser, fetchApiKey } from '../api/client';
-import { navigateTo } from '../router';
-import { getLocalItem, getUser } from '../utils/storage';
-import { showToast } from '../utils/toast';
-import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay';
-import { fetchProfile } from '../api/profile';
+import { loginUser, fetchApiKey } from '../api/client'
+import { navigateTo } from '../router'
+import { getLocalItem, getUser } from '../utils/storage'
+import { showToast } from '../utils/toast'
+import { showLoadingOverlay, hideLoadingOverlay } from '../utils/overlay'
+import { fetchProfile } from '../api/profile'
 
 function template(): string {
   return `
@@ -32,7 +32,7 @@ function template(): string {
 
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
+          <h1 class="text-2xl md:text-3xl font-medium text-gray-800 tracking-tight">
             Auction House
           </h1>
           <p class="mt-2 text-gray-500 text-base sm:text-lg">
@@ -104,54 +104,54 @@ function template(): string {
     <!-- Toast Container -->
 <div id="toastContainer" class="fixed top-20 right-6 z-50 space-y-2"></div>
 
-  `;
+  `
 }
 
 export async function LoginView(root: HTMLElement): Promise<void> {
-  root.innerHTML = template();
+  root.innerHTML = template()
 
-  const form = root.querySelector<HTMLFormElement>('#loginForm')!;
-  const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!;
-  const formError = root.querySelector<HTMLDivElement>('#formError')!;
-  const emailEl = root.querySelector<HTMLInputElement>('#email')!;
-  const passwordEl = root.querySelector<HTMLInputElement>('#password')!;
+  const form = root.querySelector<HTMLFormElement>('#loginForm')!
+  const submitBtn = root.querySelector<HTMLButtonElement>('#submitBtn')!
+  const formError = root.querySelector<HTMLDivElement>('#formError')!
+  const emailEl = root.querySelector<HTMLInputElement>('#email')!
+  const passwordEl = root.querySelector<HTMLInputElement>('#password')!
 
   form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    formError.classList.add('hidden');
-    submitBtn.disabled = true;
+    e.preventDefault()
+    formError.classList.add('hidden')
+    submitBtn.disabled = true
 
-    showLoadingOverlay({ message: 'Logging you in...' });
+    showLoadingOverlay({ message: 'Logging you in...' })
 
     try {
       await loginUser({
         email: emailEl.value.trim(),
         password: passwordEl.value,
-      });
+      })
 
-      const accessToken = getLocalItem('accessToken');
-      if (accessToken) await fetchApiKey(accessToken);
+      const accessToken = getLocalItem('accessToken')
+      if (accessToken) await fetchApiKey(accessToken)
 
-      const userName = getUser() ?? '';
+      const userName = getUser() ?? ''
 
-      const profileData = await fetchProfile(userName);
+      const profileData = await fetchProfile(userName)
 
-      localStorage.setItem('user', JSON.stringify(profileData));
+      localStorage.setItem('user', JSON.stringify(profileData))
 
-      showToast('success', '✅ You’re successfully logged in!');
+      showToast('success', '✅ You’re successfully logged in!')
 
       setTimeout(() => {
-        hideLoadingOverlay();
-        navigateTo('/home');
-      }, 1500);
+        hideLoadingOverlay()
+        navigateTo('/home')
+      }, 1500)
     } catch (err) {
-      formError.textContent = (err as Error).message;
-      formError.classList.remove('hidden');
-      showToast('error', '❌ Login failed.');
+      formError.textContent = (err as Error).message
+      formError.classList.remove('hidden')
+      showToast('error', '❌ Login failed.')
 
-      setTimeout(() => hideLoadingOverlay(), 800);
+      setTimeout(() => hideLoadingOverlay(), 800)
     } finally {
-      submitBtn.disabled = false;
+      submitBtn.disabled = false
     }
-  });
+  })
 }
