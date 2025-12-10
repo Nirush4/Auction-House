@@ -13,7 +13,7 @@ export function renderNavbar() {
 
   return `
     <nav class="flex flex-col fixed top-0 left-0 w-full z-100 bg-white md:bg-white/80 md:backdrop-blur-xl border-b border-gray-200 shadow-sm">
-      <div class="container mx-auto px-6 py-3 md:pt-3 lg:py-0 lg:pb-1 flex items-center justify-between">
+      <div class="container mx-auto px-6 py-3 md:pt-3 lg:py-0 lg:pt-2 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="flex items-center gap-2 text-2xl sm:text-3xl font-medium tracking-tight">
           <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
