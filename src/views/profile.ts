@@ -33,7 +33,7 @@ function profileFormTemplate(profile: Profile): string {
     <form id="profileForm" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 mt-6 sm:p-12 sm:py-25 sm:mt-20">
 
       <header>
-        <h2 class="text-lg sm:text-2xl font-medium">Profile details</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold">Profile details</h2>
         <p class="text-sm sm:text-base text-gray-600">Update your bio, avatar and banner.</p>
       </header>
 
@@ -99,7 +99,7 @@ function createListingFormTemplate(): string {
     <form id="createListingForm" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 mt-6 sm:p-12 sm:py-25 sm:mt-20">
 
       <header>
-        <h2 class="text-lg sm:text-2xl font-medium">Create New Listing</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold">Create New Listing</h2>
         <p class="text-sm sm:text-base md:text-lg text-gray-600">
           Add images and choose an end time (minimum 1 hour ahead).
         </p>
@@ -191,9 +191,9 @@ export function listingsSectionTemplate(
     return `<p class="text-center text-gray-500 text-base sm:test-lg">No listings found.</p>`
 
   return `
-    <section class="pt-10 pb-12 space-y-10 container mx-auto">
+    <section class="pt-10 pb-5 sm:pb-12 space-y-10 container mx-auto">
       <header class="flex justify-between mb-1">
-        <h2 class="text-xl sm:text-3xl font-medium text-gray-800">🛒 Your Listings</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-gray-800">🛒 Your Listings</h2>
         <span class="text-base sm:text-lg font-bold text-gray-800">${
           listings.length
         } total</span>
@@ -345,7 +345,7 @@ export function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner'
 
   return `
-  <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto sm:px-6" aria-label="User profile">
+  <section class="mt-14 md:mt-28 pb-12 sm:pb-30 space-y-10 container mx-auto" aria-label="User profile">
 
     <div class="relative rounded-2xl shadow-lg">
       <img 
@@ -399,7 +399,7 @@ export function profileTemplate(
       </div>
     </div>
 
-    <div class="space-y-8">
+    <div class="space-y-8 px-6">
 
       <div id="profileFormContainer" class="hidden">${profileFormTemplate(
         profile
@@ -429,14 +429,14 @@ export function profileTemplate(
 
       <section>
         <header class="flex gap-5 align-middle mb-1">
-          <h2 class="text-xl sm:text-3xl font-medium text-gray-800 mb-10">Recent Bids</h2>
+          <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-10">Recent Bids</h2>
         </header>
         ${bidsSectionTemplate(bids)}
       </section>
 
       <!-- Winnings Section -->
-      <section id="winningsSection" class="mt-6" aria-label="User winnings">
-        <h2 class="text-xl sm:text-3xl font-medium text-gray-800 mb-10">Your Winnings</h2>
+      <section id="winningsSection" class="mt-8 sm:mt-18" aria-label="User winnings">
+        <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-10">Your Winnings</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           ${
             winnings.length > 0
