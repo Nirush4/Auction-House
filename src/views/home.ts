@@ -324,7 +324,7 @@ export function listingCard(
     'group relative rounded-2xl overflow-hidden transition-all duration-500 ' +
     (isEndingSoon
       ? 'border-2 border-red-400 shadow-lg hover:shadow-2xl'
-      : 'border-7 border-gray-100 shadow-sm')
+      : 'border-5 border-gray-100 shadow-sm')
 
   const img =
     listing.media?.[0]?.url ??
