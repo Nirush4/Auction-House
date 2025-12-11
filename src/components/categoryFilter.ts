@@ -237,10 +237,10 @@ export function CategoryFilter(activeCategory: string = 'all') {
               ${
                 cat.id === activeCategory
                   ? 'bg-gray-200 border border-gray-600 shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-200'
+                  : 'text-gray-800 hover:bg-gray-200'
               }"
           >
-            <i class="${cat.icon} text-xl text-gray-500"></i>
+            <i class="${cat.icon} text-xl text-gray-800"></i>
             <span class="text-xs sm:text-base whitespace-nowrap">${
               cat.label
             }</span>
@@ -250,7 +250,7 @@ export function CategoryFilter(activeCategory: string = 'all') {
       </nav>
 
       <button id="catScrollRight" class="p-3 bg-white/70 rounded-full shadow hover:bg-white transition hidden md:flex cursor-pointer">
-        <i class="fa-solid fa-chevron-right text-gray-600 text-xl"></i>
+        <i class="fa-solid fa-chevron-right text-gray-800 text-xl"></i>
       </button>
     </div>
   `

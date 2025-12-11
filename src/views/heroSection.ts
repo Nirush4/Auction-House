@@ -1,6 +1,6 @@
 export function HeroSection(): string {
   return `
-  <section class="relative w-full h-[95dvh] mb-10 mt-14 lg:mt-29 flex items-center justify-center overflow-hidden 
+  <section class="relative w-full h-[95dvh] mb-15 sm:mb-25 mt-14 lg:mt-20 flex items-center justify-center overflow-hidden 
   bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-700 text-white">
 
     <!-- Decorative floating circles - repositioned for better balance -->

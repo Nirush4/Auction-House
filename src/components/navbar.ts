@@ -11,9 +11,23 @@ export function renderNavbar() {
   const authed = isAuthenticated()
   const user = getUser()
 
+  const searchInput = `
+    <div class="flex items-center bg-gray-200 rounded-lg px-3 py-3 w-full lg:max-w-[250px]">
+      <i class="fas fa-search text-indigo-600 mr-2"></i>
+      <input 
+        id="navbarSearch"
+        type="text"
+        placeholder="Search auctions..."
+        class="bg-transparent focus:outline-none w-full text-gray-700 placeholder-gray-400 text-sm sm:text-base"
+        autocomplete="off"
+      />
+    </div>
+  `
+
   return `
-    <nav class="flex flex-col fixed top-0 left-0 w-full z-100 bg-white md:bg-white/80 md:backdrop-blur-xl border-b border-gray-200 shadow-sm">
-      <div class="container mx-auto px-6 py-3 md:pt-3 lg:py-0 lg:pt-2 flex items-center justify-between">
+    <nav class="flex flex-col fixed top-0 left-0 w-full z-100 bg-white lg:bg-white/90 backdrop-blur-xl border-b border-gray-200 shadow-sm">
+      <div class="container mx-auto border-b-2 border-gray-200 lg:border-0 px-6 py-3 md:pt-3 lg:py-4 flex items-center justify-between">
+
         <!-- Logo -->
         <a href="/" class="flex items-center gap-2 text-2xl sm:text-3xl font-medium tracking-tight">
           <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -22,7 +36,7 @@ export function renderNavbar() {
           <span class="font-medium text-gray-800">House</span>
         </a>
 
-        <!-- Hamburger menu for md & lg screens -->
+        <!-- Hamburger menu for mobile -->
         <button id="menuBtn" class="lg:hidden flex flex-col justify-center items-center w-8 h-8 gap-[6px] group cursor-pointer" aria-label="Toggle Menu">
           <span class="block w-6 h-[2px] bg-gray-800 rounded transition-all duration-300 origin-center"></span>
           <span class="block w-6 h-[2px] bg-gray-800 rounded transition-all duration-300 origin-center"></span>
@@ -30,57 +44,61 @@ export function renderNavbar() {
         </button>
 
         <!-- Desktop menu -->
-        <div id="desktopMenu" class="hidden lg:flex items-center justify-center gap-2">
+        <div id="desktopMenu" class="hidden lg:flex items-center gap-4">
 
-          <!-- Nav links -->
-          <a href="/home" class="relative font-medium text-lg px-4 p-2 mb-2 pb-0 text-gray-700 transition group">
-            Home
-            <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
-          </a>
+          <!-- Shared search input -->
+          ${searchInput}
 
-          ${
-            authed
-              ? `
-              <a href="/create" class="relative text-lg px-4 p-2 mb-2 pb-0 font-medium text-gray-700 transition group">
-                Create
-                <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
-              </a>
-              <a id="navbarProfile" href="/profile" class="relative flex items-center gap-2 flex-wrap px-4 p-2 mb-2 pb-0 text-indigo-600 font-semibold transition group">
-                <span class="truncate max-w-[120px] text-lg">Hi, ${
-                  user?.name || 'Profile'
-                }</span>
-                <span class="inline-block bg-indigo-600 text-white text-base font-medium px-3 py-2 rounded-full">
-                  ${user?.credits ?? 1000} credits
-                </span>
-                <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
-              </a>
-              <button id="logoutBtn" class="ml-2 px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition cursor-pointer">Logout</button>
-              `
-              : `
-              <a href="/login" class="px-5 py-2 rounded-full text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Login</a>
-              <a href="/register" class="px-5 py-2 rounded-full text-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-100 hover:shadow-sm transition">Register</a>
-              `
-          }
+          <!-- Nav links container -->
+          <div class="flex items-center justify-center gap-2 ml-6">
+
+            <a href="/home" class="relative font-medium text-lg px-4 p-2 mb-2 pb-0 text-gray-700 transition group">
+              Home
+              <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+
+            ${
+              authed
+                ? `
+                <a href="/create" class="relative text-lg px-4 p-2 mb-2 pb-0 font-medium text-gray-700 transition group">
+                  Create
+                  <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a id="navbarProfile" href="/profile" class="relative flex items-center lg:min-w-60 gap-2 px-4 p-2 mb-2 pb-0 text-indigo-600 font-semibold transition group">
+                  <span class="truncate max-w-[120px] text-lg">Hi, ${
+                    user?.name || 'Profile'
+                  }</span>
+                  <span class="inline-block bg-indigo-600 text-white text-base font-medium px-3 py-2 rounded-full">
+                    ${user?.credits ?? 1000} credits
+                  </span>
+                  <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <button id="logoutBtn" class="ml-2 px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition cursor-pointer">Logout</button>
+                `
+                : `
+                <a href="/login" class="px-5 py-2 rounded-full text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Login</a>
+                <a href="/register" class="px-5 py-2 rounded-full text-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-100 hover:shadow-sm transition">Register</a>
+                `
+            }
+          </div>
+
         </div>
       </div>
 
       <!-- Mobile menu -->
-      <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-500 bg-white/90 backdrop-blur-xl border-t border-gray-200 shadow-inner px-5">
-        <div class="flex flex-col space-y-3 py-4">
-          <input
-            id="navbarSearchMobile"
-            type="text"
-            placeholder="Search auctions..."
-            class="block w-full px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm transition-all duration-200"
-          />
+      <div id="mobileMenu" class="lg:hidden container mx-auto px-6 max-h-0 overflow-hidden transition-all duration-500 ">
+        <div class="flex flex-col space-y-3 py-5">
+
+          <!-- Shared search input for mobile, same markup & style -->
+          ${searchInput
+            .replace('id="navbarSearch"', 'id="navbarSearchMobile"')
+            .replace('max-w-[250px]', 'max-w-full')}
+
           <a href="/home" class="block px-4 py-2 rounded-full text-gray-700 hover:bg-gray-100 transition text-base">Home</a>
           ${
             authed
               ? `
-               <a href="/create" class="block px-4 py-2 rounded-full text-gray-700 hover:bg-gray-100 transition text-base">
-                Create
-                <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              <a href="/create" class="block px-4 py-2 rounded-full text-gray-700 hover:bg-gray-100 transition text-base">Create</a>
               <a id="mobileProfile" href="/profile" class="flex items-center justify-between px-4 py-2 rounded-full text-indigo-600 font-semibold hover:text-indigo-700 hover:bg-gray-100 transition">
                 <span class="truncate text-base">Hi, ${
                   user?.name || 'Profile'
@@ -98,16 +116,6 @@ export function renderNavbar() {
           }
         </div>
       </div>
-
-      <!-- Desktop search -->
-      <div class="hidden lg:flex container items-center justify-center px-6 pt-1 md:mb-4 mx-auto">
-        <input 
-          id="navbarSearch"
-          type="text"
-          placeholder="Search auctions..."
-          class="px-4 max-w-160 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm w-full transition-all duration-200"
-        />
-      </div>
     </nav>
   `
 }
@@ -115,7 +123,6 @@ export function renderNavbar() {
 export function setupNavbarToggle() {
   const menuBtn = document.getElementById('menuBtn')
   const desktopMenu = document.getElementById('desktopMenu')
-
   if (!menuBtn || !desktopMenu) return
 
   menuBtn.addEventListener('click', () => {

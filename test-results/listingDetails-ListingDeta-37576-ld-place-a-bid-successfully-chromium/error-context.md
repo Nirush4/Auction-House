@@ -1,0 +1,82 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner:
+      - navigation [ref=e3]:
+        - generic [ref=e4]:
+          - link "Auction House" [ref=e5] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e6]: Auction
+            - generic [ref=e7]: House
+          - generic [ref=e8]:
+            - textbox "Search auctions..." [ref=e11]
+            - generic [ref=e12]:
+              - link "Home" [ref=e13] [cursor=pointer]:
+                - /url: /home
+                - text: Home
+              - link "Login" [ref=e14] [cursor=pointer]:
+                - /url: /login
+              - link "Register" [ref=e15] [cursor=pointer]:
+                - /url: /register
+    - main [ref=e16]:
+      - paragraph [ref=e17]: Failed to load listing.
+    - contentinfo [ref=e18]:
+      - contentinfo [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]:
+              - paragraph [ref=e23]: Auction House
+              - paragraph [ref=e24]: Discover, bid, and win exclusive items in our trusted online auction marketplace.
+            - generic [ref=e25]:
+              - heading "Quick Links" [level=3] [ref=e26]
+              - list [ref=e27]:
+                - listitem [ref=e28]:
+                  - link "Home" [ref=e29] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=e30]:
+                  - link "Login" [ref=e31] [cursor=pointer]:
+                    - /url: /login
+                - listitem [ref=e32]:
+                  - link "Register" [ref=e33] [cursor=pointer]:
+                    - /url: /register
+            - generic [ref=e34]:
+              - heading "Support" [level=3] [ref=e35]
+              - list [ref=e36]:
+                - listitem [ref=e37]:
+                  - link "About Us" [ref=e38] [cursor=pointer]:
+                    - /url: /about
+                - listitem [ref=e39]:
+                  - link "Privacy Policy" [ref=e40] [cursor=pointer]:
+                    - /url: /privacy-policy
+                - listitem [ref=e41]:
+                  - link "Terms & Conditions" [ref=e42] [cursor=pointer]:
+                    - /url: /terms-condition
+            - generic [ref=e43]:
+              - heading "Contact Us" [level=3] [ref=e44]
+              - paragraph [ref=e45]: Noroff 123, 0587 Oslo
+              - paragraph [ref=e46]: +47 123 45 678
+              - paragraph [ref=e47]: nirraj03327@stud.noroff.no
+              - generic [ref=e48]:
+                - link [ref=e49] [cursor=pointer]:
+                  - /url: https://facebook.com
+                - link [ref=e51] [cursor=pointer]:
+                  - /url: https://twitter.com
+                - link [ref=e53] [cursor=pointer]:
+                  - /url: https://linkedin.com
+          - paragraph [ref=e56]:
+            - text: © 2025 Auction SPA. All rights reserved. Design and built by
+            - link "NIRUSH." [ref=e57] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/nirushan-rajamanoharan/
+  - generic [ref=e61]:
+    - heading "We Value Your Privacy" [level=2] [ref=e62]
+    - paragraph [ref=e63]:
+      - text: Our website uses cookies to personalize your experience, enhance security, and analyze traffic. By clicking "Accept All Cookies", you consent to our use of cookies as described in our
+      - link "Privacy Policy" [ref=e64] [cursor=pointer]:
+        - /url: /privacy-policy
+      - text: .
+    - generic [ref=e65]:
+      - button "Accept All Cookies" [ref=e66] [cursor=pointer]
+      - button "Only Necessary Cookies" [ref=e67] [cursor=pointer]
+```
