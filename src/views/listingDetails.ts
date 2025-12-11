@@ -76,7 +76,7 @@ export async function ListingDetailsView(
     const sellerAlt = listing.seller?.name ?? 'Seller'
 
     root.innerHTML = `
-<section class="container mx-auto px-6 mt-20 sm:mt-35 mb-12 sm:mb-30">
+<section class="container mx-auto px-6 mt-22 lg:mt-30 mb-12 sm:mb-30">
   <!-- Hero Gallery -->
   <div class="relative w-full max-w-[46rem] mx-auto rounded-xl overflow-hidden shadow-xl mb-10">
     <img id="mainGalleryImg" 
