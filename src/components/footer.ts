@@ -22,7 +22,7 @@ export function renderFooter(): string {
                 <input
                   type="email"
                   id="subscribe-email"
-                  placeholder="your.email@stud.noroff.no"
+                  placeholder="Enter your email address"
                   aria-label="Email address"
                   required
                   class="flex-grow rounded-lg text-sm sm:text-base border border-gray-700 bg-gray-800 px-4 py-3 sm:px-6 sm:py-4 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:indigo-pink-400 transition w-full sm:w-auto"
