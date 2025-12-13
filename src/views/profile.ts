@@ -345,7 +345,7 @@ export function profileTemplate(
     profile.banner?.url ?? 'https://via.placeholder.com/1200x300?text=Banner'
 
   return `
-  <section class="mt-14 lg:mt-22 pb-12 sm:pb-30 space-y-10 container mx-auto" aria-label="User profile">
+  <section class="mt-14 lg:mt-20 pb-12 sm:pb-25 space-y-10 container mx-auto" aria-label="User profile">
 
     <div class="relative rounded-2xl shadow-lg">
       <img 
