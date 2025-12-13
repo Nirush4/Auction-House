@@ -55,32 +55,6 @@ export async function HomeView(root: HTMLElement): Promise<void> {
     </section>
   `
 
-  function handleHomeClick(e: Event) {
-    const target = e.target as HTMLElement
-
-    // Edit listing
-    const editBtn = target.closest('.editListingBtn') as HTMLElement | null
-    if (editBtn) {
-      const listingId = editBtn.dataset.listingId
-      if (listingId) openEditListingModal(listingId)
-      return
-    }
-
-    // Internal SPA links
-    const link = target.closest('a') as HTMLAnchorElement | null
-    if (link && link.getAttribute('href')?.startsWith('/')) {
-      e.preventDefault()
-      navigateTo(link.getAttribute('href')!)
-      return
-    }
-
-    // Login buttons
-    const loginBtn = target.closest('[data-login]')
-    if (loginBtn) {
-      navigateTo('/login')
-    }
-  }
-
   setupCategoryScroll()
   setupSmoothScroll(root)
   setupProfileLinks()
@@ -477,3 +451,11 @@ export function listingCard(
     </div>
   `
 }
+
+document.addEventListener('click', async (e) => {
+  const btn = (e.target as HTMLElement).closest('.editListingBtn')
+  if (!btn) return
+  const listingId = btn.getAttribute('data-listing-id')
+  if (!listingId) return
+  openEditListingModal(listingId)
+})
