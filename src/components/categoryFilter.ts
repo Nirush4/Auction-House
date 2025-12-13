@@ -294,11 +294,14 @@ export function setupCategoryScroll() {
 
     fetchListings(selectedCategory, 1, true)
     updateArrows()
+
+    categoryButtons[index].scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+      block: 'nearest',
+    })
   }
 
-  //
-  // ARROW VISIBILITY
-  //
   function updateArrows() {
     if (leftBtn && rightBtn) {
       leftBtn.style.display = activeIndex > 0 ? 'flex' : 'none'

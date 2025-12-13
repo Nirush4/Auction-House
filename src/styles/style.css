@@ -181,3 +181,77 @@ a {
     background: rgba(79, 70, 229, 0.05);
     /* subtle hover effect */
 }
+
+/* Thumbnail highlight */
+#galleryThumbnails img.selected,
+#galleryThumbnails img.ring-4 {
+    box-shadow: 0 0 0 3px #6366f1;
+    /* Indigo-500 */
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Countdown pulse animation near auction end */
+.countdown-text {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+
+    0%,
+    100% {
+        color: #ef4444;
+    }
+
+    /* Red-500 */
+    50% {
+        color: #f87171;
+    }
+
+    /* Red-400 */
+}
+
+/* Hover shadow on avatars */
+.sellerAvatar:hover,
+.bidderAvatar:hover {
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Thumbnail highlight */
+#galleryThumbnails img.selected,
+#galleryThumbnails img.ring-4 {
+    box-shadow: 0 0 0 3px #6366f1;
+    /* Indigo-500 */
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Countdown pulse animation near auction end */
+.countdown-text {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+
+    0%,
+    100% {
+        color: #ef4444;
+    }
+
+    /* Red-500 */
+    50% {
+        color: #f87171;
+    }
+
+    /* Red-400 */
+}
+
+/* Hover shadow on avatars */
+.sellerAvatar:hover,
+.bidderAvatar:hover {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.7);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
