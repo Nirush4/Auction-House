@@ -12,13 +12,15 @@ import { startCountdowns } from '../utils/startCountdowns'
 import { showToast } from '../utils/toast'
 import { openEditListingModal } from '../components/editListingModal'
 
-const LISTINGS_PER_PAGE = 9
+const LISTINGS_PER_PAGE = 12
+
+// imp! HOME
 
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
     ${HeroSection()}  
 
-<section id="ending-soon-section" class="container pt-12 md:pt-14 pb-12 sm:pb-19 space-y-10 mx-auto px-6 bg-gradient-to-r from-red-50 via-red-150 to-red-50  shadow-md border border-red-200">
+<section id="ending-soon-section" class="container pt-12 md:pt-14 pb-12 sm:pb-19 space-y-10 mx-auto px-6 bg-gradient-to-r from-red-50 via-red-150 to-red-50  shadow-md border-2 border-red-200">
   <header class="flex items-end justify-between flex-wrap gap-4">
     <div>
       <h2 class="text-2xl sm:text-4xl font-bold text-red-500">⏳ Ending Soon</h2>
@@ -26,8 +28,8 @@ export async function HomeView(root: HTMLElement): Promise<void> {
     </div>
   </header>
 
-  <div id="endingSoonContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    ${Array.from({ length: 3 })
+  <div id="endingSoonContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    ${Array.from({ length: 4 })
       .map(() => listingSkeleton())
       .join('')}
   </div>
@@ -39,7 +41,7 @@ export async function HomeView(root: HTMLElement): Promise<void> {
       ${CategoryFilter()}
     </section>
 
-    <section id="listing-section" class="pt-12 md:pt-14 pb-12 sm:pb-30 space-y-10 container mx-auto px-6">
+    <section id="listing-section" class="pt-12 md:pt-14 pb-12 sm:pb-25 space-y-10 container mx-auto px-6">
       <header class="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 class="text-2xl sm:text-4xl font-bold text-gray-800">🏠 Latest Auctions</h1>
@@ -97,7 +99,7 @@ function renderEndingSoon(listings: Listing[]) {
   const endingSoonListings = listings
     .filter((l) => l.endsAt && new Date(l.endsAt) > now)
     .sort((a, b) => new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime())
-    .slice(0, 3)
+    .slice(0, 4)
 
   if (!endingSoonListings.length) {
     container.innerHTML =
@@ -353,18 +355,43 @@ export function listingCard(
     <div class="${cardExtraClasses} bg-white backdrop-blur-md hover:-translate-y-1">
 
       <!-- Seller -->
-      <a href="/profile/${encodeURIComponent(
-        sellerName
-      )}" class="flex items-center gap-3 pt-1 mx-5 my-3 cursor-pointer hover:opacity-80 transition">
-        <img src="${sellerAvatar}" alt="${sellerAlt}" class="h-8 w-8 rounded-full object-cover border" />
-        <span class="text-sm sm:text-base font-semibold text-white ${
-          isEndingSoon
-            ? 'bg-gradient-to-r from-red-400 via-red-500 to-red-600'
-            : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'
-        } px-2 py-1 rounded-lg shadow-md hover:scale-105 transition-transform">
-          ${sellerName}
-        </span>
-      </a>
+<a href="/profile/${encodeURIComponent(sellerName)}"
+   class="flex items-center gap-3 pt-1 mx-5 my-3 cursor-pointer hover:opacity-80 transition">
+
+  <!-- Avatar -->
+  <img 
+    src="${sellerAvatar}" 
+    alt="${sellerAlt}" 
+    class="h-12 w-12 rounded-full object-cover 
+           border border-gray-300 shadow-sm
+           transition-transform duration-200 ease-out
+           group-hover:scale-105"
+  />
+
+  <!-- Username + verified -->
+  <div class="flex flex-col">
+    <div class="flex items-center gap-1.5">
+      <span class="text-base font-semibold text-gray-900 tracking-wide">
+        ${sellerName}
+      </span>
+
+      <!-- Verified Badge -->
+      <span 
+        title="Verified Seller"
+        class="inline-flex items-center justify-center h-4 w-4 
+               rounded-full bg-blue-500 text-white text-[10px] 
+               shadow-sm border border-white/80
+               group-hover:scale-110 transition-transform">
+        ✔
+      </span>
+    </div>
+
+    <span class="text-xs text-gray-500 italic">
+      ${isEndingSoon ? 'Auction Ending Soon' : 'Verified Seller'}
+    </span>
+  </div>
+</a>
+
 
       <!-- Image & Countdown -->
       <a href="/listing/${listing.id}">

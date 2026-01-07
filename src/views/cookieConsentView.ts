@@ -58,11 +58,9 @@ function hideModal() {
 
 export function initCookieConsent(root: HTMLElement) {
   const consent = getCookie('cookie-consent')
-  console.log('Cookie consent:', consent)
 
   if (!consent) {
     CookieConsentView(root)
-    console.log('Modal after insert:', document.getElementById('cookie-modal'))
     showModal()
 
     const acceptBtn = document.getElementById('accept-cookies')
@@ -76,13 +74,11 @@ export function initCookieConsent(root: HTMLElement) {
     acceptBtn.addEventListener('click', () => {
       setCookie('cookie-consent', 'accepted', 365)
       hideModal()
-      console.log('Accepted cookies')
     })
 
     rejectBtn.addEventListener('click', () => {
       setCookie('cookie-consent', 'rejected', 365)
       hideModal()
-      console.log('Rejected cookies')
     })
   }
 }

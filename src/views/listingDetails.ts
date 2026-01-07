@@ -6,6 +6,7 @@ import { showToast } from '../utils/toast'
 import { navigateTo } from '../router'
 import { openEditListingModal } from '../components/editListingModal'
 import { showConfirmModal } from '../utils/confirmModal'
+import { fetchProfile } from '../api/profile'
 
 let isClickListenerAttached = false
 
@@ -19,7 +20,7 @@ export async function ListingDetailsView(
     </section>
   `
 
-  showLoadingOverlay({ message: 'Fetching listing...' })
+  showLoadingOverlay({})
 
   try {
     const url = `https://v2.api.noroff.dev/auction/listings/${listingId}?_seller=true&_bids=true`
@@ -76,7 +77,7 @@ export async function ListingDetailsView(
     const sellerAlt = listing.seller?.name ?? 'Seller'
 
     root.innerHTML = `
-<section class="container mx-auto px-6 mt-22 lg:mt-30 mb-12 sm:mb-30">
+<section class="container mx-auto px-6 mt-22 lg:mt-29 mb-12 sm:mb-25">
   <!-- Hero Gallery -->
   <div class="relative w-full max-w-[46rem] mx-auto rounded-xl overflow-hidden shadow-xl mb-10">
     <img id="mainGalleryImg" 
@@ -172,7 +173,7 @@ export async function ListingDetailsView(
 
     <span class="text-xl sm:text-2xl">⛔</span>
 
-    <p class="text-sm sm:text-base md:text-lg font-medium leading-snug">
+    <p class="text-sm sm:text-base font-medium leading-snug">
       This auction has ended. It is no longer possible to place a bid.
     </p>
   </div>
@@ -205,7 +206,7 @@ export async function ListingDetailsView(
 
 
             <div class="mt-8">
-              <h2 class="text-base sm:text-xl font-semibold text-gray-900 mb-4">Bid History</h2>
+              <h3 class="text-base sm:text-xl font-semibold sm:mt-10 text-gray-900 mb-4">Bid History</h3>
               <ul id="bidHistoryList" class="space-y-2"></ul>
             </div>
           </div>
@@ -262,9 +263,8 @@ export async function ListingDetailsView(
       `
     }
 
-    // --------------------------
-    // EVENT LISTENER (UPDATED)
-    // --------------------------
+    // imp! EVENT LISTENER (UPDATED)
+
     if (!isClickListenerAttached) {
       isClickListenerAttached = true
 
@@ -351,19 +351,24 @@ export async function ListingDetailsView(
           return
         }
 
-        if (target.id === 'placeBidBtn' && currentUser && token) {
+        if (target.id === 'placeBidBtn') {
+          const currentUser = getUser() ?? ''
+          const token = getToken()
+          if (!currentUser || !token) return navigateTo('/login')
+
           const bidInput = document.getElementById(
             'bidAmount'
           ) as HTMLInputElement
           const amount = parseFloat(bidInput.value)
-
           if (!amount || amount <= highestBid) {
             showToast('error', `Enter a valid bid greater than $${highestBid}`)
             return
           }
 
           try {
-            showLoadingOverlay({ message: 'Placing your bid...' })
+            showLoadingOverlay({})
+            const profileData = await fetchProfile(currentUser)
+            localStorage.setItem('user', JSON.stringify(profileData))
 
             const res = await fetch(
               `https://v2.api.noroff.dev/auction/listings/${listing.id}/bids`,
@@ -388,7 +393,22 @@ export async function ListingDetailsView(
             showToast('success', `Bid of $${amount} placed successfully!`)
             bidInput.value = ''
 
-            ListingDetailsView(root, listingId)
+            const newBidHtml = `
+          <div class="flex flex-col sm:flex-row justify-between items-center border border-green-400 rounded-lg p-3 bg-green-50 hover:bg-green-100 transition-colors bidderAvatar cursor-pointer" data-username="${currentUser}">
+            <div class="flex items-center w-full sm:w-auto mb-2 sm:mb-0">
+              <img src="${
+                profileData.avatar?.url ??
+                'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
+              }" alt="${currentUser}" class="h-8 w-8 rounded-full object-cover mr-3"/>
+              <span class="font-medium text-gray-800 text-sm sm:text-base">${currentUser}</span>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:space-x-4 items-end sm:items-center w-full sm:w-auto text-right">
+              <span class="font-semibold text-indigo-600 text-sm sm:text-base">$${amount}</span>
+              <span class="text-gray-500 text-xs sm:text-sm">${new Date().toLocaleString()}</span>
+            </div>
+          </div>`
+
+            bidHistoryList.insertAdjacentHTML('afterbegin', newBidHtml)
           } catch (err) {
             console.error(err)
             showToast('error', (err as Error).message)
