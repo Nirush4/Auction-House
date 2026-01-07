@@ -1,6 +1,25 @@
 @import "tailwindcss";
 
 
+
+@font-face {
+    font-family: 'Italiana';
+    src: url('/assets/fonts/Italiana-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+h1,
+h2 {
+    font-family: 'Italiana', sans-serif;
+}
+
+p,
+a {
+    font-family: Roboto, sans-serif;
+}
+
 /* Custom spin animations */
 @keyframes spin-slow {
     0% {

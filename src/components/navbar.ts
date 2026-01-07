@@ -1,45 +1,39 @@
-import { isAuthenticated, clearAuth } from '../utils/storage';
-import { navigateTo } from '../router';
-import type { Profile } from '../types'; // use the central type
+import { isAuthenticated, clearAuth } from '../utils/storage'
+import { navigateTo } from '../router'
+import type { Profile } from '../types'
 
-// ----------------------------
-// Storage helpers
-// ----------------------------
 export function getUser(): Profile | null {
-  const raw = localStorage.getItem('user');
-  return raw ? JSON.parse(raw) : null;
+  const raw = localStorage.getItem('user')
+  return raw ? JSON.parse(raw) : null
 }
 
-// ----------------------------
-// Navbar rendering
-// ----------------------------
 export function renderNavbar() {
-  const authed = isAuthenticated();
-  const user = getUser();
+  const authed = isAuthenticated()
+  const user = getUser()
 
   return `
-    <nav class="flex flex-col align-middle fixed top-0 left-0 w-full z-100 bg-white md:bg-white/80 md:backdrop-blur-xl border-b border-gray-200 shadow-sm">
-      <div class="container mx-auto px-6  py-3 md:pt-3 md:py-0 md:pb-1 flex items-center justify-between">
+    <nav class="flex flex-col fixed top-0 left-0 w-full z-100 bg-white md:bg-white/80 md:backdrop-blur-xl border-b border-gray-200 shadow-sm">
+      <div class="container mx-auto px-6 py-3 md:pt-3 lg:py-0 lg:pt-2 flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-2 text-2xl font-bold tracking-tight">
+        <a href="/" class="flex items-center gap-2 text-2xl sm:text-3xl font-medium tracking-tight">
           <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             Auction
           </span>
-          <span class="text-gray-800">House</span>
+          <span class="font-medium text-gray-800">House</span>
         </a>
 
-        <!-- Hamburger for mobile -->
-        <button id="menuBtn" class="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[6px] group cursor-pointer" aria-label="Toggle Menu">
+        <!-- Hamburger menu for md & lg screens -->
+        <button id="menuBtn" class="lg:hidden flex flex-col justify-center items-center w-8 h-8 gap-[6px] group cursor-pointer" aria-label="Toggle Menu">
           <span class="block w-6 h-[2px] bg-gray-800 rounded transition-all duration-300 origin-center"></span>
           <span class="block w-6 h-[2px] bg-gray-800 rounded transition-all duration-300 origin-center"></span>
           <span class="block w-6 h-[2px] bg-gray-800 rounded transition-all duration-300 origin-center"></span>
         </button>
 
         <!-- Desktop menu -->
-        <div id="desktopMenu" class="hidden md:flex items-center gap-2">
+        <div id="desktopMenu" class="hidden lg:flex items-center justify-center gap-2">
 
           <!-- Nav links -->
-          <a href="/home" class="relative text-base px-4 p2-2 font-medium text-gray-700 transition group">
+          <a href="/home" class="relative font-medium text-lg px-4 p-2 mb-2 pb-0 text-gray-700 transition group">
             Home
             <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
           </a>
@@ -47,15 +41,15 @@ export function renderNavbar() {
           ${
             authed
               ? `
-              <a href="/create" class="relative text-base px-4 p2-2 font-medium text-gray-700 transition group">
+              <a href="/create" class="relative text-lg px-4 p-2 mb-2 pb-0 font-medium text-gray-700 transition group">
                 Create
                 <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <a id="navbarProfile" href="/profile" class="relative flex items-center gap-2 flex-wrap px-4 p2-2 text-indigo-600 font-semibold transition group">
-                <span class="truncate max-w-[120px]">Hi, ${
+              <a id="navbarProfile" href="/profile" class="relative flex items-center gap-2 flex-wrap px-4 p-2 mb-2 pb-0 text-indigo-600 font-semibold transition group">
+                <span class="truncate max-w-[120px] text-lg">Hi, ${
                   user?.name || 'Profile'
                 }</span>
-                <span class="inline-block bg-indigo-600 text-white text-sm font-medium px-2 py-1 rounded-full">
+                <span class="inline-block bg-indigo-600 text-white text-base font-medium px-3 py-2 rounded-full">
                   ${user?.credits ?? 1000} credits
                 </span>
                 <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
@@ -63,15 +57,16 @@ export function renderNavbar() {
               <button id="logoutBtn" class="ml-2 px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition cursor-pointer">Logout</button>
               `
               : `
-              <a href="/login" class="px-5 py-2 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Login</a>
-              <a href="/register" class="px-5 py-2 rounded-full font-semibold text-gray-700 border border-gray-300 hover:bg-gray-100 hover:shadow-sm transition">Register</a>
+              <a href="/login" class="px-5 py-2 rounded-full text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md hover:shadow-lg hover:scale-105 transition">Login</a>
+              <a href="/register" class="px-5 py-2 rounded-full text-lg font-semibold text-gray-700 border border-gray-300 hover:bg-gray-100 hover:shadow-sm transition">Register</a>
               `
           }
         </div>
       </div>
 
       <!-- Mobile menu -->
-<div id="mobileMenu" class="md:hidden max-h-0 overflow-hidden transition-all duration-500 bg-white/90 backdrop-blur-xl border-t border-gray-200 shadow-inner px-5">        <div class="flex flex-col space-y-3 py-4">
+      <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-500 bg-white/90 backdrop-blur-xl border-t border-gray-200 shadow-inner px-5">
+        <div class="flex flex-col space-y-3 py-4">
           <input
             id="navbarSearchMobile"
             type="text"
@@ -90,7 +85,7 @@ export function renderNavbar() {
                 <span class="truncate text-base">Hi, ${
                   user?.name || 'Profile'
                 }</span>
-                <span class="inline-block bg-indigo-100 text-indigo-800 text-base font-medium px-2 py-1 rounded-full">
+                <span class="inline-block bg-indigo-600 text-white text-sm font-medium px-3 py-2 rounded-full">
                   ${user?.credits ?? 0} credits
                 </span>
               </a>
@@ -103,70 +98,76 @@ export function renderNavbar() {
           }
         </div>
       </div>
-      <div class="hidden container md:flex items-center justify-center px-6 md:mb-4 mx-auto">
-            <input 
-              id="navbarSearch"
-              type="text"
-              placeholder="Search auctions..."
-              class="px-4 max-w-160 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm w-full transition-all duration-200"
-            />
-          </div>
+
+      <!-- Desktop search -->
+      <div class="hidden lg:flex container items-center justify-center px-6 pt-1 md:mb-4 mx-auto">
+        <input 
+          id="navbarSearch"
+          type="text"
+          placeholder="Search auctions..."
+          class="px-4 max-w-160 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm w-full transition-all duration-200"
+        />
+      </div>
     </nav>
-  `;
+  `
 }
 
-// ----------------------------
-// Logout
-// ----------------------------
+export function setupNavbarToggle() {
+  const menuBtn = document.getElementById('menuBtn')
+  const desktopMenu = document.getElementById('desktopMenu')
+
+  if (!menuBtn || !desktopMenu) return
+
+  menuBtn.addEventListener('click', () => {
+    desktopMenu.classList.toggle('hidden')
+  })
+}
+
 export function setupNavbarActions() {
-  const logoutBtn = document.getElementById('logoutBtn');
-  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  const logoutBtn = document.getElementById('logoutBtn')
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn')
 
   function handleLogout() {
-    clearAuth();
-    localStorage.removeItem('user');
-    navigateTo('/login');
+    clearAuth()
+    localStorage.removeItem('user')
+    navigateTo('/login')
   }
 
-  if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
+  if (logoutBtn) logoutBtn.addEventListener('click', handleLogout)
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout)
 }
 
-// ----------------------------
-// Search
-// ----------------------------
 export function setupNavbarSearch() {
   const desktopInput = document.getElementById(
     'navbarSearch'
-  ) as HTMLInputElement | null;
+  ) as HTMLInputElement | null
   const mobileInput = document.getElementById(
     'navbarSearchMobile'
-  ) as HTMLInputElement | null;
+  ) as HTMLInputElement | null
 
-  let debounceTimer: ReturnType<typeof setTimeout>;
+  let debounceTimer: ReturnType<typeof setTimeout>
 
   function navigateToSearch(query: string) {
-    const encoded = encodeURIComponent(query);
-    history.pushState({}, '', `/search?q=${encoded}`);
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    const encoded = encodeURIComponent(query)
+    history.pushState({}, '', `/search?q=${encoded}`)
+    window.dispatchEvent(new PopStateEvent('popstate'))
   }
 
   function handleInput(e: Event) {
-    const value = (e.target as HTMLInputElement).value.trim();
-    clearTimeout(debounceTimer);
+    const value = (e.target as HTMLInputElement).value.trim()
+    clearTimeout(debounceTimer)
     debounceTimer = setTimeout(() => {
-      if (value.length > 0) navigateToSearch(value);
-    }, 300);
+      if (value.length > 0) navigateToSearch(value)
+    }, 900)
   }
 
-  if (desktopInput) desktopInput.addEventListener('input', handleInput);
-  if (mobileInput) mobileInput.addEventListener('input', handleInput);
+  if (desktopInput) desktopInput.addEventListener('input', handleInput)
+  if (mobileInput) mobileInput.addEventListener('input', handleInput)
 
-  // Set input values on page load if URL has query
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialQuery = urlParams.get('q')?.trim() || '';
+  const urlParams = new URLSearchParams(window.location.search)
+  const initialQuery = urlParams.get('q')?.trim() || ''
   if (initialQuery.length > 0) {
-    if (desktopInput) desktopInput.value = initialQuery;
-    if (mobileInput) mobileInput.value = initialQuery;
+    if (desktopInput) desktopInput.value = initialQuery
+    if (mobileInput) mobileInput.value = initialQuery
   }
 }

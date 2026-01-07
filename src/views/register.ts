@@ -78,7 +78,6 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
     const password = passwordEl.value
     const avatar = avatarEl.value.trim()
 
-    // Safety validation
     if (!name) {
       formError.textContent = '❌ Username is required.'
       formError.classList.remove('hidden')
@@ -113,7 +112,6 @@ export async function RegisterView(root: HTMLElement): Promise<void> {
       return
     }
 
-    // Build registration data
     const registerData: {
       name: string
       email: string
