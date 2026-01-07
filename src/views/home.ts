@@ -14,6 +14,8 @@ import { openEditListingModal } from '../components/editListingModal'
 
 const LISTINGS_PER_PAGE = 12
 
+// imp! HOME
+
 export async function HomeView(root: HTMLElement): Promise<void> {
   root.innerHTML = `
     ${HeroSection()}  
