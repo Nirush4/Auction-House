@@ -135,6 +135,20 @@ npm run dev
 npm run build
 ```
 
+## Testing
+
+### Run unit tests
+
+```bash
+npm test
+```
+
+### Run e2e tests
+
+```bash
+npm run e2e
+```
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
