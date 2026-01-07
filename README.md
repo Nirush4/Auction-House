@@ -9,11 +9,9 @@ The goal is to create a responsive, accessible, and user-friendly interface that
 
 ## 🚀 Live Project & Resources
 
-- **Live Demo:** [https://your-project-name.netlify.app](https://your-project-name.netlify.app)
-- **API Docs:** [Noroff Auction House API v2](https://docs.noroff.dev/docs/v2/auction/overview)
-- **Auth API Docs:** [Noroff Auth API v2](https://docs.noroff.dev/docs/v2/auth/overview)
-- **Design File (Figma):** [View Design](https://www.figma.com/)
-- **Project Planning:** [Trello Board](https://trello.com/)
+- **Live Demo:** [Live](https://auctionn-house.netlify.app/)
+- **Design File (Figma):** [View Design](https://www.figma.com/design/24nEKpFa9DxvuXji5oADrA/Auction-House?node-id=0-1&t=Y3NHqNFoxxfqlW0W-1)
+- **Project Planning:** [Kanban Board](https://github.com/users/Nirush4/projects/12)
 
 ---
 
