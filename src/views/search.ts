@@ -71,7 +71,6 @@ export async function SearchView(root: HTMLElement) {
         fetchResults(query, p)
       )
 
-      // Scroll to listing section after fetching
       const section = document.getElementById('searchResults')
       if (section)
         section.scrollIntoView({ behavior: 'smooth', block: 'start' })
