@@ -12,7 +12,7 @@ import { startCountdowns } from '../utils/startCountdowns'
 import { showToast } from '../utils/toast'
 import { openEditListingModal } from '../components/editListingModal'
 
-const LISTINGS_PER_PAGE = 12
+const LISTINGS_PER_PAGE = 9
 
 // imp! HOME
 
