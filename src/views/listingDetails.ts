@@ -367,8 +367,6 @@ export async function ListingDetailsView(
 
           try {
             showLoadingOverlay({})
-            const profileData = await fetchProfile(currentUser)
-            localStorage.setItem('user', JSON.stringify(profileData))
 
             const res = await fetch(
               `https://v2.api.noroff.dev/auction/listings/${listing.id}/bids`,
@@ -391,6 +389,8 @@ export async function ListingDetailsView(
             }
 
             showToast('success', `Bid of $${amount} placed successfully!`)
+            const profileData = await fetchProfile(currentUser)
+            localStorage.setItem('user', JSON.stringify(profileData))
             bidInput.value = ''
 
             const newBidHtml = `
