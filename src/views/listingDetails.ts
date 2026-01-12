@@ -77,142 +77,194 @@ export async function ListingDetailsView(
     const sellerAlt = listing.seller?.name ?? 'Seller'
 
     root.innerHTML = `
-<section class="container mx-auto px-6 mt-22 lg:mt-29 mb-12 sm:mb-25">
-  <!-- Hero Gallery -->
-  <div class="relative w-full max-w-[46rem] mx-auto rounded-xl overflow-hidden shadow-xl mb-10">
-    <img id="mainGalleryImg" 
-         src="${mainImage}" 
-         alt="${listing.title}"
-         class="w-full h-95 sm:h-120 object-cover transition-transform duration-500"/>
-
-    <div id="${countdownId}"
-         class="absolute bottom-4 left-4 px-4 py-2 text-sm md:text-lg font-semibold 
-                text-white rounded-lg shadow-xl border border-white/20 
-                bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-                backdrop-blur-md flex items-center gap-2">
-      <span class="text-xl">⏳</span>
-      <span>${hasEnded ? 'Auction Ended' : 'Calculating...'}</span>
-    </div>
-  </div>
-
-        ${
-          listing.media && listing.media.length > 1
-            ? `<div class="flex gap-2 justify-center mb-8 overflow-x-auto" id="galleryThumbnails">${galleryThumbnails}</div>`
-            : ''
-        }
-
-        <div class="grid lg:grid-cols-3 gap-8">
-          <div class="lg:col-span-1 space-y-6">
-            <div class="bg-white/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg flex items-center gap-4 cursor-pointer sellerAvatar" data-username="${
-              listing.seller?.name ?? ''
-            }">
-              <img src="${sellerAvatar}" alt="${sellerAlt}" class="h-12 sm:h-16 w-12 sm:w-16 rounded-full border-2 border-indigo-600 object-cover"/>
-              <div>
-                <p class="font-bold text-base sm:text-xl text-gray-900">${
-                  listing.seller?.name ?? 'Unknown Seller'
-                }</p>
-                <p class="text-gray-500 text-sm sm:text-base">Created: ${created}</p>
-              </div>
-            </div>
-
-            <div class="bg-white/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-lg space-y-4">
-              <div class="flex justify-between">
-                <span class="text-gray-500 font-medium text-base sm:text-lg">Category</span>
-                <span class="font-semibold text-gray-900">${
-                  listing.category ?? 'N/A'
-                }</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-500 font-medium text-base sm:text-lg">Starting Bid</span>
-                <span class="font-semibold text-green-700">$${startingBid}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-500 font-medium text-base sm:text-lg">Highest Bid</span>
-                <span class="font-semibold text-purple-700">$${highestBid}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-500 font-medium text-base sm:text-lg">Total Bids</span>
-                <span class="font-semibold text-yellow-700">${bids}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-2 space-y-6">
-            <h1 class="text-2xl font-bold sm:text-3xl md:text-4xl sm:font-extralight text-gray-900">${
-              listing.title ?? 'Untitled'
-            }</h1>
-            <p class="text-gray-700 text-base sm:text-lg md:text-xl leading-relaxed">${
-              listing.description ?? 'No description provided.'
-            }</p>
-
-            <div class="flex flex-wrap gap-2">
-              ${(listing.tags ?? [])
-                .map(
-                  (tag) =>
-                    `<span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm cursor-pointer hover:bg-indigo-200 transition">${tag}</span>`
-                )
-                .join('')}
-            </div>
-
-            <div class="flex flex-wrap gap-3 mt-4">
-  ${
-    isOwner
-      ? `
-        <button class="editListingButton bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-5 py-2 rounded-lg shadow-lg cursor-pointer">
-          Edit Listing
-        </button>
-        <button class="deleteListingBtn bg-red-600 hover:bg-red-700 text-white px-3 sm:px-5 py-2 rounded-lg shadow-lg cursor-pointer">
-          Delete Listing
-        </button>
-      `
-      : hasEnded
-      ? `
-  <div class="w-full bg-red-100 border border-red-300 text-red-700 
-              px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg shadow-md 
-              flex items-start sm:items-center gap-2 sm:gap-3">
-
-    <span class="text-xl sm:text-2xl">⛔</span>
-
-    <p class="text-sm sm:text-base font-medium leading-snug">
-      This auction has ended. It is no longer possible to place a bid.
+<section class="max-w-7xl mx-auto px-6 py-12  sm:py-25 mt-10 sm:mt-5">
+  <!-- HEADER -->
+  <div class="mb-10 border-b border-gray-200 pb-3 sm:pb-6">
+    <h1 class="text-2xl sm:text-4xl font-extralight text-gray-900 mb-3">
+      ${listing.title ?? 'Untitled listing'}
+    </h1>
+    <p class="text-sm sm:text-base text-gray-500">
+      Listed on ${created} · Category: ${listing.category ?? 'N/A'}
     </p>
   </div>
-`
-      : currentUser
-      ? `
-        <div class="flex gap-2 items-center w-full flex-wrap max-w-sm">
-          <input 
-            type="number" 
-            min="${highestBid + 1}"
-            id="bidAmount" 
-            placeholder="Enter your bid (>$${highestBid})"
-            class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <button 
-            id="placeBidBtn" 
-            class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-6 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">
-            Place Bid
-          </button>
+
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-12">
+    <!-- LEFT CONTENT -->
+    <div class="lg:col-span-3 space-y-10">
+      <!-- IMAGE -->
+      <div class="relative">
+        <img
+          id="mainGalleryImg"
+          src="${mainImage}"
+          alt="${listing.title}"
+          class="w-full h-[400px] sm:h-[520px] object-cover rounded-lg border border-gray-200"
+        />
+
+        <!-- EVENT / COUNTDOWN -->
+        <div
+          id="${countdownId}"
+          class="absolute top-4 right-4 flex items-center gap-3
+                 px-5 py-3 rounded-xl shadow-lg
+                 bg-indigo-600 text-white
+                 text-sm sm:text-base font-semibold tracking-wide">
+          <span class="inline-flex h-2 w-2 rounded-full bg-white animate-pulse"></span>
+          <span>${hasEnded ? 'Auction ended' : 'Ending soon'}</span>
         </div>
-      `
-      : `
-        <button 
-          class="loginBtn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-3 rounded-lg shadow-lg hover:scale-105 transition-transform cursor-pointer">
-          Login to Bid
-        </button>
-      `
-  }
-</div>
+      </div>
 
+      ${
+        listing.media && listing.media.length > 1
+          ? `
+          <div id="galleryThumbnails"
+               class="grid grid-cols-4 sm:grid-cols-5 gap-3">
+            ${galleryThumbnails}
+          </div>`
+          : ''
+      }
 
-            <div class="mt-8">
-              <h3 class="text-base sm:text-xl font-semibold sm:mt-10 text-gray-900 mb-4">Bid History</h3>
-              <ul id="bidHistoryList" class="space-y-2"></ul>
-            </div>
+      <!-- DESCRIPTION -->
+      <div class="sm:space-y-4">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900">
+          Description
+        </h2>
+        <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+          ${listing.description ?? 'No description provided.'}
+        </p>
+      </div>
+
+      <!-- TAGS -->
+      <div class="flex flex-wrap gap-2">
+        ${(listing.tags ?? [])
+          .map(
+            (tag) =>
+              `<span class="px-3 py-1 rounded-full text-sm
+                     bg-indigo-50 text-indigo-700">
+                ${tag}
+              </span>`
+          )
+          .join('')}
+      </div>
+
+      <!-- BID HISTORY -->
+      <div class="pt-6 border-t border-gray-200">
+        <h3 class="text-base sm:text-xl font-semibold text-gray-900 mb-4">
+          Bid History
+        </h3>
+        <ul id="bidHistoryList" class="space-y-3"></ul>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="lg:col-span-2">
+      <div class="sticky top-24 space-y-6">
+        <!-- PRICE BOX -->
+        <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm space-y-4">
+          <div class="flex justify-between text-sm sm:text-base">
+            <span class="text-gray-500">Starting bid</span>
+            <span class="font-medium text-base sm:text-lg text-gray-900">$${startingBid}</span>
+          </div>
+          <div class="flex justify-between text-sm sm:text-base">
+            <span class="text-gray-500">Highest bid</span>
+            <span class="font-semibold text-base sm:text-lg text-indigo-600">$${highestBid}</span>
+          </div>
+          <div class="flex justify-between text-sm sm:text-base">
+            <span class="text-gray-500">Total bids</span>
+            <span class="font-medium text-base sm:text-lg text-gray-900">${bids}</span>
+          </div>
+
+          <div class="pt-4 border-t border-gray-200 space-y-3">
+            ${
+              isOwner
+                ? `
+                  <button
+                    class="editListingButton w-full py-2.5 rounded-lg
+                           bg-indigo-600 text-white text-sm font-medium
+                           hover:bg-indigo-700 transition cursor-pointer">
+                    Edit Listing
+                  </button>
+                  <button
+                    class="deleteListingBtn w-full py-2.5 rounded-lg
+                           bg-red-600 text-white text-sm font-medium
+                           hover:bg-red-700 transition cursor-pointer">
+                    Delete Listing
+                  </button>
+                `
+                : hasEnded
+                ? `
+                  <!-- ENDED STATE -->
+                  <div
+                    class="w-full p-4 rounded-xl
+                           bg-gray-100 border border-gray-300
+                           text-gray-700 text-sm sm:text-base
+                           flex items-center gap-3">
+                    <span class="text-lg">🔒</span>
+                    <span class="font-medium">
+                      This auction has ended. Bidding is now closed.
+                    </span>
+                  </div>
+                `
+                : currentUser
+                ? `
+                  <!-- ACTIVE BIDDING -->
+                  <input
+                    id="bidAmount"
+                    type="number"
+                    min="${highestBid + 1}"
+                    placeholder="Enter your bid"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3
+                           text-sm sm:text-base
+                           focus:ring-2 focus:ring-indigo-500
+                           focus:border-indigo-500
+                           transition"
+                  />
+                  <button
+                    id="placeBidBtn"
+                    class="w-full py-3 rounded-lg
+                           bg-green-600 text-white
+                           text-sm sm:text-base font-semibold
+                           hover:bg-green-700
+                           active:scale-[0.98]
+                           transition">
+                    Place Bid
+                  </button>
+                `
+                : `
+                  <button
+                    class="loginBtn w-full py-3 rounded-lg
+                           bg-indigo-600 text-white
+                           text-sm sm:text-base font-semibold
+                           hover:bg-indigo-700 transition cursor-pointer">
+                    Login to Bid
+                  </button>
+                `
+            }
           </div>
         </div>
-      </section>
-    `
+
+        <!-- SELLER -->
+        <div
+          class="flex items-center gap-4 border border-gray-200 rounded-xl p-4
+                 bg-white shadow-sm hover:bg-gray-50 cursor-pointer sellerAvatar"
+          data-username="${listing.seller?.name ?? ''}">
+          <img
+            src="${sellerAvatar}"
+            alt="${sellerAlt}"
+            class="h-12 w-12 rounded-full object-cover"
+          />
+          <div>
+            <p class="text-sm sm:text-base font-semibold text-gray-900">
+              ${listing.seller?.name ?? 'Unknown seller'}
+            </p>
+            <p class="text-xs sm:text-sm text-gray-500">
+              View seller profile
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+`
 
     setTimeout(() => startCountdown(listing), 50)
 
@@ -229,27 +281,30 @@ export async function ListingDetailsView(
           ${sortedBids
             .map(
               (bid) => `
-              <div class="flex flex-col sm:flex-row justify-between items-center border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors bidderAvatar" data-username="${
+              <div class="flex justify-between bg-gray-800 items-center border  rounded-lg p-3 bidderAvatar" data-username="${
                 bid.bidder.name
               }">
-                <div class="flex items-center w-full sm:w-auto mb-2 sm:mb-0">
+                <div class="flex flex-col gap-1 items-start w-full sm:w-auto mb-2 sm:mb-0">
+                <div class="flex ">
                   <img src="${
                     bid.bidder.avatar?.url ??
                     'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop'
                   }" alt="${
                 bid.bidder.name
-              }" class="h-8 w-8 rounded-full object-cover mr-3"/>
-                  <span class="font-medium text-gray-800 text-sm sm:text-base">${
+              }" class="h-8 w-8 rounded-full flex flex-col object-cover mr-3"/>
+                  <span class="font-medium text-gray-200 text-sm sm:text-base">${
                     bid.bidder.name
                   }</span>
-                </div>
-                <div class="flex flex-col sm:flex-row sm:space-x-4 items-end sm:items-center w-full sm:w-auto text-right">
-                  <span class="font-semibold text-indigo-600 text-sm sm:text-base">$${
-                    bid.amount
-                  }</span>
-                  <span class="text-gray-500 text-xs sm:text-sm">${new Date(
+                   </div>
+                  <span class="text-gray-400 text-sm">${new Date(
                     bid.created
                   ).toLocaleString()}</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:space-x-4 items-end sm:items-center w-full sm:w-auto text-right">
+                  <span class="font-semibold text-gray-100 text-base sm:text-lg">$${
+                    bid.amount
+                  }</span>
+                  
                 </div>
               </div>
             `

@@ -1,4 +1,6 @@
 import { initRouter, router } from './router'
+import './styles/style.css'
+
 import {
   renderNavbar,
   setupNavbarActions,
