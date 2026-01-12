@@ -179,13 +179,13 @@ export async function ListingDetailsView(
                   <button
                     class="editListingButton w-full py-2.5 rounded-lg
                            bg-indigo-600 text-white text-sm font-medium
-                           hover:bg-indigo-700 transition">
+                           hover:bg-indigo-700 transition cursor-pointer">
                     Edit Listing
                   </button>
                   <button
                     class="deleteListingBtn w-full py-2.5 rounded-lg
                            bg-red-600 text-white text-sm font-medium
-                           hover:bg-red-700 transition">
+                           hover:bg-red-700 transition cursor-pointer">
                     Delete Listing
                   </button>
                 `
@@ -233,7 +233,7 @@ export async function ListingDetailsView(
                     class="loginBtn w-full py-3 rounded-lg
                            bg-indigo-600 text-white
                            text-sm sm:text-base font-semibold
-                           hover:bg-indigo-700 transition">
+                           hover:bg-indigo-700 transition cursor-pointer">
                     Login to Bid
                   </button>
                 `
