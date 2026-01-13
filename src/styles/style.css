@@ -211,13 +211,7 @@ a {
     /* Red-400 */
 }
 
-/* Hover shadow on avatars */
-.sellerAvatar:hover,
-.bidderAvatar:hover {
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
-    cursor: pointer;
-    transition: box-shadow 0.3s ease;
-}
+
 
 /* Thumbnail highlight */
 #galleryThumbnails img.selected,
@@ -246,12 +240,4 @@ a {
     }
 
     /* Red-400 */
-}
-
-/* Hover shadow on avatars */
-.sellerAvatar:hover,
-.bidderAvatar:hover {
-    box-shadow: 0 0 5px rgba(99, 102, 241, 0.7);
-    cursor: pointer;
-    transition: box-shadow 0.3s ease;
 }
