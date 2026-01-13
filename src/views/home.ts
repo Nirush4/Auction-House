@@ -345,6 +345,10 @@ export function listingCard(
   const created = listing.created
     ? new Date(listing.created).toLocaleDateString('en-GB')
     : 'Unknown'
+  const title = listing.title?.trim()
+    ? listing.title.trim().slice(0, 20) +
+      (listing.title.trim().length > 20 ? '…' : '')
+    : 'No titile provided.'
   const description = listing.description?.trim()
     ? listing.description.trim().slice(0, 35) +
       (listing.description.trim().length > 35 ? '…' : '')
@@ -416,12 +420,12 @@ export function listingCard(
       <div class="p-5 space-y-3">
         <a href="/listing/${listing.id}">
           <h3 class="font-semibold text-base sm:text-lg text-gray-900 transition-colors line-clamp-1">${
-            listing.title ?? 'Untitled'
+            title ?? 'Untitled'
           }</h3>
         </a>
         <p class="text-sm sm:text-[14px] text-gray-600 line-clamp-2 leading-snug">${description}</p>
 
-        <div class="flex justify-between items-center text-sm sm:text-xs xs:text-[10px] text-gray-600">
+        <div class="flex justify-between items-center text-sm gap-5 sm:text-xs xs:text-[10px] text-gray-600">
           <p class="text-gray-500 text-xs sm:text-[14px]">Created: <span class="font-medium text-gray-800">${created}</span></p>
           <p class="text-gray-700 text-xs sm:text-[14px] font-bold">Highest Bid: <span class="font-bold text-indigo-600 text-lg sm:text-base">$${highestBid}</span></p>
         </div>
