@@ -10,6 +10,7 @@ import { fetchProfile } from '../api/profile'
 
 let isClickListenerAttached = false
 
+//
 export async function ListingDetailsView(
   root: HTMLElement,
   listingId: string
