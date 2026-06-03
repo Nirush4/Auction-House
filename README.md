@@ -7,6 +7,16 @@ The goal is to create a responsive, accessible, and user-friendly interface that
 
 ---
 
+## 📸 Preview
+
+<img width="1496" height="828" alt="Screenshot 2026-06-03 at 4 17 26 PM" src="https://github.com/user-attachments/assets/6da64143-aea0-4000-8880-f3d20a68f37a" />
+<img width="1498" height="829" alt="image" src="https://github.com/user-attachments/assets/d4321579-2536-46f5-add7-0439616a2a1c" />
+<img width="1497" height="829" alt="Screenshot 2026-06-03 at 4 18 40 PM" src="https://github.com/user-attachments/assets/643555b1-9fa6-45b9-90e2-d9c5624fdb88" />
+<img width="1496" height="829" alt="image" src="https://github.com/user-attachments/assets/532c38a8-bac1-4693-baf4-24a2165611dd" />
+<img width="1498" height="827" alt="image" src="https://github.com/user-attachments/assets/11694eb1-f22a-485e-a041-5188f50ca61d" />
+
+---
+
 ## 🚀 Live Project & Resources
 
 - **Live Demo:** [Live](https://auctionn-house.netlify.app/)
